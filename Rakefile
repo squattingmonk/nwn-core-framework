@@ -17,6 +17,9 @@ directory "build"
 
 rule '.ncs' => [->(f){ source_for_ncs(f) },"build"] do |t|
   system "nwnsc -loqeyw -i Utils -i src -r #{t.name} #{t.source}"
+  if File.file?(t.name)
+    FileUtils.touch t.name, :mtime => File.mtime(t.source)
+  end
 end
 
 def source_for_ncs(ncs)
