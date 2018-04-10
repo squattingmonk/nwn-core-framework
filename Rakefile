@@ -8,13 +8,14 @@ task :erf => :compile do
 end
 
 NSS_SOURCES = FileList.new("src/*.nss")
-
+NCS_TARGETS = NSS_SOURCES.pathmap("%{^src/,build/}X.ncs")
 
 desc "Compile NWScript files"
-#task :compile => NSS_SOURCES.ext('ncs')
-task :compile => NSS_SOURCES.pathmap("%{^src/,build/}X.ncs")
+task :compile => NCS_TARGETS
 
-rule '.ncs' => ->(f){ source_for_ncs(f) } do |t|
+directory "build"
+
+rule '.ncs' => [->(f){ source_for_ncs(f) },"build"] do |t|
   system "nwnsc -loqeyw -i Utils -i src -r #{t.name} #{t.source}"
 end
 
