@@ -33,5 +33,5 @@ task :tags do
   system "ctags -f 'src/tags' -h .ncs --language-force=c src/*.nss"
 end
 
-CLEAN.include('build/*.ncs')
+CLEAN.include('build')
 CLOBBER.include('src/tags', '*.erf')
