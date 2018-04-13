@@ -1,10 +1,10 @@
 // -----------------------------------------------------------------------------
-//    File: hook_module01.nss
+//    File: hook_module02.nss
 //  System: Core Framework (event hook-in script)
 //     URL: https://github.com/squattingmonk/nwn-core-framework
 // Authors: Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
 // -----------------------------------------------------------------------------
-// OnAcquireItem event hook-in script. Place this script on the OnAcquireItem
+// OnActivateItem event hook-in script. Place this script on the OnActivateItem
 // event under Module Properties.
 // -----------------------------------------------------------------------------
 
@@ -13,13 +13,11 @@
 
 void main()
 {
-    // Tag-based item acquire code. This runs before the event is processed so
-    // the tag-based script can set an ABORT status if needed.
-    object oItem = GetModuleItemAcquired();
-    int nState = RunTagBasedScript(oItem, X2_ITEM_EVENT_ACQUIRE);
+    object oItem = GetItemActivated();
+    int nState = RunTagBasedScript(oItem, X2_ITEM_EVENT_ACTIVATE);
     if (nState != X2_EXECUTE_SCRIPT_END)
     {
-        object oPC = GetModuleItemAcquiredBy();
-        RunEvent(MODULE_EVENT_ON_ACQUIRE_ITEM, oPC);
+        object oPC = GetItemActivator();
+        RunEvent(MODULE_EVENT_ON_ACTIVATE_ITEM, oPC);
     }
 }
