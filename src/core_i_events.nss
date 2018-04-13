@@ -4,7 +4,7 @@
 //     URL: https://github.com/squattingmonk/nwn-core-framework
 // Authors: Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
 // -----------------------------------------------------------------------------
-// This is the master include file for Core Framework functions.
+// This file holds functions for managing event hooks.
 // -----------------------------------------------------------------------------
 // The scripts contains herein are based on those included in Edward Beck's
 // HCR2, EPOlson's Common Scripting Framework, and William Bull's Memetic AI.
@@ -16,15 +16,14 @@
 #include "core_i_constants"
 #include "core_c_config"
 
-
 // -----------------------------------------------------------------------------
 //                               Global Variables
 // -----------------------------------------------------------------------------
-// The currently excecuting plugin. We set this here so that plugins calling
-// this function will not get an incorrect value if they call another plugin
-// before getting the value.
+//
+// The currently excecuting event. We set this here so that scripts calling this
+// function will not get an incorrect value if they call another event before
+// getting the value.
 object EVENT_CURRENT  = GetLocalObject(EVENTS, EVENT_LAST);
-
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
@@ -195,6 +194,12 @@ void BuildPluginBlacklist(object oTarget);
 // - EVENT_STATE_ABORT: a script cancelled remaining scripts in the queue
 // - EVENT_STATE_DENIED: a script specified that the event should cancelled
 int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF);
+//
+// ---< RunTagBasedScript >---
+// ---< core_i_events >---
+// Runs the tagbased script for oItem corresponding to nEvent. Returns whether
+// to abort the event.
+int RunTagBasedScript(object oItem, int nEvent);
 
 // -----------------------------------------------------------------------------
 //                             Function Definitions
@@ -603,4 +608,14 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // Clean up
     DeleteLocalString(oEvent, EVENT_CURRENT_PLUGIN);
     return nState;
+}
+
+int RunTagBasedScript(object oItem, int nEvent)
+{
+    string sScript = GetTag(oItem);
+
+    SetLocalInt(OBJECT_SELF, "X2_L_LAST_ITEM_EVENT", nEvent);
+    DeleteLocalInt(OBJECT_SELF, "X2_L_LAST_RETVAR");
+    RunLibraryScript(sScript);
+    return GetLocalInt(OBJECT_SELF, "X2_L_LAST_RETVAR");
 }

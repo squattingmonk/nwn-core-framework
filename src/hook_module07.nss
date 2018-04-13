@@ -33,12 +33,15 @@ void main()
     // Initialize the datapoints
     PLUGINS = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_PLUGINS, lTarget);
     EVENTS  = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_EVENTS,  lTarget);
+    TIMERS  = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_TIMERS,  lTarget);
     SetDatapoint(CORE_PLUGINS, PLUGINS);
     SetDatapoint(CORE_EVENTS,  EVENTS);
+    SetDatapoint(CORE_TIMERS,  TIMERS);
 
     // Protect them so we manage them programatically
     SetUseableFlag(PLUGINS, FALSE);
     SetUseableFlag(EVENTS,  FALSE);
+    SetUseableFlag(TIMERS,  FALSE);
 
     // Register all plugins specified in the core config file
     LoadPlugins(INSTALLED_PLUGINS);

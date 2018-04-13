@@ -15,9 +15,10 @@
 // -----------------------------------------------------------------------------
 
 // Data structures
-const string CORE_CONTROL   = "CORE_CONTROL";
-const string CORE_EVENTS    = "CORE_EVENTS";
-const string CORE_PLUGINS   = "CORE_PLUGINS";
+const string CORE_CONTROL = "CORE_CONTROL";
+const string CORE_EVENTS  = "CORE_EVENTS";
+const string CORE_PLUGINS = "CORE_PLUGINS";
+const string CORE_TIMERS  = "CORE_TIMERS";
 
 const string EVENT  = "EVENT";
 const string PLUGIN = "PLUGIN";
@@ -32,6 +33,7 @@ const string SPELLHOOK_EVENT_SCRIPT = "hook_spellhook";
 // If these objects do not exist, they will be initialized OnModuleLoad.
 object PLUGINS = GetDatapoint(CORE_PLUGINS, FALSE);
 object EVENTS  = GetDatapoint(CORE_EVENTS,  FALSE);
+object TIMERS  = GetDatapoint(CORE_TIMERS,  FALSE);
 
 // -----------------------------------------------------------------------------
 //                              Framework Variables
@@ -67,10 +69,10 @@ const string EVENT_CURRENT_PLUGIN   = "EVENT_CURRENT_PLUGIN";   // Name of the p
 const string EVENT_SOURCE_BLACKLIST = "EVENT_SOURCE_BLACKLIST"; // List of blacklisted plugins or objects
 const string EVENT_TRIGGERED        = "EVENT_TRIGGERED";        // The object triggering the event
 
-const string EVENT_STATE           = "EVENT_STATE"; // State of the event queue
-const int    EVENT_STATE_OK        = 0x00;          // normal (default)
-const int    EVENT_STATE_ABORT     = 0x01;          // stops further event queue processing
-const int    EVENT_STATE_DENIED    = 0x02;          // request denied
+const string EVENT_STATE            = "EVENT_STATE";    // State of the event queue
+const int    EVENT_STATE_OK         = 0x00;             // normal (default)
+const int    EVENT_STATE_ABORT      = 0x01;             // stops further event queue processing
+const int    EVENT_STATE_DENIED     = 0x02;             // request denied
 
 const string EVENT_PRIORITY         = "EVENT_PRIORITY"; // List of event script priorities
 const float  EVENT_PRIORITY_FIRST   =   9999.0;         // The script is always first
@@ -82,6 +84,19 @@ const float  EVENT_PRIORITY_DEFAULT = -11111.0;         // The script will only 
 const string EVENT_LAST      = "EVENT_LAST";
 const string EVENT_LAST_INIT = "EVENT_LAST_INIT";
 
+// ----- Timer Management ------------------------------------------------------
+
+const string TIMER_EXISTS     = "TIMER_EXISTS";     // Denotes that a timer with the given ID exists
+const string TIMER_INTERVAL   = "TIMER_INTERVAL";   // The interval between execution of the timer's script
+const string TIMER_ITERATIONS = "TIMER_ITERATIONS"; // The number of times the timer will run
+const string TIMER_JITTER     = "TIMER_JITTER";     // An amount of variance on the timer's delay
+const string TIMER_NEXT_ID    = "TIMER_NEXT_ID";    // The ID for the next timer
+const string TIMER_REMAINING  = "TIMER_REMAINING";  // The number of iterations remaining
+const string TIMER_RUNNING    = "TIMER_RUNNING";    // Whether the timer is currently running
+const string TIMER_EVENT      = "TIMER_EVENT";      // The event to execute when the timer elapses
+const string TIMER_TARGET     = "TIMER_TARGET";     // The object on which the timer's script will run
+const string TIMER_TARGETS_PC = "TIMER_TARGETS_PC"; // Whether the timer's target is a PC
+
 // ----- Player Management -----------------------------------------------------
 
 const string PC_CD_KEY         = "PC_CD_KEY";
@@ -89,6 +104,10 @@ const string PC_PLAYER_NAME    = "PC_PLAYER_NAME";
 const string PLAYERS_IN_MODULE = "PLAYERS_IN_MODULE";
 const string LOGIN_BOOT        = "LOGIN_BOOT";
 const string LOGIN_DEATH       = "LOGIN_DEATH";
+
+// ----- Miscellaneous ---------------------------------------------------------
+
+const string CURRENT_HOUR = "CURRENT_HOUR";
 
 
 // -----------------------------------------------------------------------------
@@ -212,3 +231,20 @@ const string CORE_EVENT_ON_SPELLHOOK                  = "OnSpellhook";
 const string CORE_EVENT_ON_PLUGIN_ACTIVATE            = "OnPluginActivate";
 const string CORE_EVENT_ON_PLUGIN_DEACTIVATE          = "OnPluginDeactivate";
 const string CORE_EVENT_ON_HOUR                       = "OnHour";
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+//                                   Constants
+// -----------------------------------------------------------------------------
+
+
+
+
+
+
