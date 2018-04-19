@@ -175,8 +175,8 @@ const string DOOR_EVENT_ON_DEATH                      = "OnDoorDeath";
 const string DOOR_EVENT_ON_FAIL_TO_OPEN               = "OnDoorFailToOpen";
 const string DOOR_EVENT_ON_HEARTBEAT                  = "OnDoorHeartbeat";
 const string DOOR_EVENT_ON_LOCK                       = "OnDoorLock";
-const string DOOR_EVENT_ON_PHYSICAL_ATTACKED          = "OnDoorPhysicalAttacked";
 const string DOOR_EVENT_ON_OPEN                       = "OnDoorOpen";
+const string DOOR_EVENT_ON_PHYSICAL_ATTACKED          = "OnDoorPhysicalAttacked";
 const string DOOR_EVENT_ON_SPELL_CAST_AT              = "OnDoorSpellCastAt";
 const string DOOR_EVENT_ON_UNLOCK                     = "OnDoorUnLock";
 const string DOOR_EVENT_ON_USER_DEFINED               = "OnDoorUserDefined";
@@ -231,20 +231,3 @@ const string CORE_EVENT_ON_SPELLHOOK                  = "OnSpellhook";
 const string CORE_EVENT_ON_PLUGIN_ACTIVATE            = "OnPluginActivate";
 const string CORE_EVENT_ON_PLUGIN_DEACTIVATE          = "OnPluginDeactivate";
 const string CORE_EVENT_ON_HOUR                       = "OnHour";
-
-
-
-
-
-
-
-
-// -----------------------------------------------------------------------------
-//                                   Constants
-// -----------------------------------------------------------------------------
-
-
-
-
-
-

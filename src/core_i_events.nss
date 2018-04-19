@@ -45,7 +45,7 @@ void AddScriptSource(object oTarget, object oSource = OBJECT_SELF);
 // ---< core_i_events >---
 // Removes oSource as a source of local scripts for oObject.
 // Note: plugin objects should not be removed using this function: use
-// SetSourceBlacklisted() instead
+// SetSourceBlacklisted() instead.
 void RemoveScriptSource(object oTarget, object oSource = OBJECT_SELF);
 
 // ---< SetSourceBlacklisted >---
