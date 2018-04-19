@@ -20,8 +20,8 @@ const string CORE_EVENTS  = "CORE_EVENTS";
 const string CORE_PLUGINS = "CORE_PLUGINS";
 const string CORE_TIMERS  = "CORE_TIMERS";
 
-const string EVENT  = "EVENT";
-const string PLUGIN = "PLUGIN";
+const string EVENT  = "core_event";
+const string PLUGIN = "core_plugin";
 
 // Script names
 const string SPELLHOOK_EVENT_SCRIPT = "hook_spellhook";

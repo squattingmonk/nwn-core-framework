@@ -343,7 +343,7 @@ void SortEventScripts(object oTarget, string sEvent = "")
         fCurrent = GetListFloat(oTarget, i, sEvent);
 
         // Inner loop: counts the priorities higher than the current one
-        for (i = 0; i < nCount; i++)
+        for (j = 0; j < nCount; j++)
         {
             // Don't compare priorities with themselves
             if (i == j)
@@ -360,10 +360,10 @@ void SortEventScripts(object oTarget, string sEvent = "")
 
 void DumpEventScripts(object oTarget, string sEvent = "")
 {
-    int i, nIndex, nCount = CountIntList(oTarget);
+    int i, nIndex, nCount = CountIntList(oTarget, sEvent);
     for (i = 0; i < nCount; i++)
     {
-        nIndex = GetListInt(oTarget);
+        nIndex = GetListInt(oTarget, i, sEvent);
         Debug("Script: "   +               GetListString(oTarget, nIndex, sEvent));
         Debug("Source: "   +       GetName(GetListObject(oTarget, nIndex, sEvent)));
         Debug("Priority: " + FloatToString(GetListFloat (oTarget, nIndex, sEvent)) + "\n");
