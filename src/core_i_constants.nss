@@ -15,13 +15,11 @@
 // -----------------------------------------------------------------------------
 
 // Data structures
-const string CORE_CONTROL = "CORE_CONTROL";
-const string CORE_EVENTS  = "CORE_EVENTS";
-const string CORE_PLUGINS = "CORE_PLUGINS";
-const string CORE_TIMERS  = "CORE_TIMERS";
-
-const string EVENT  = "core_event";
-const string PLUGIN = "core_plugin";
+const string CORE_EVENTS     = "CORE_EVENTS";
+const string CORE_PLUGINS    = "CORE_PLUGINS";
+const string CORE_TIMERS     = "CORE_TIMERS";
+const string CORE_DATA_ITEM  = "core_dataitem";
+const string CORE_DATA_POINT = "core_datapoint";
 
 // Script names
 const string SPELLHOOK_EVENT_SCRIPT = "hook_spellhook";
@@ -33,7 +31,7 @@ const string SPELLHOOK_EVENT_SCRIPT = "hook_spellhook";
 // If these objects do not exist, they will be initialized OnModuleLoad.
 object PLUGINS = GetDatapoint(CORE_PLUGINS, FALSE);
 object EVENTS  = GetDatapoint(CORE_EVENTS,  FALSE);
-object TIMERS  = GetDatapoint(CORE_TIMERS,  FALSE);
+object TIMERS  = GetDatapoint(CORE_TIMERS);
 
 // -----------------------------------------------------------------------------
 //                              Framework Variables
@@ -49,9 +47,6 @@ const string PLUGIN_ID          = "*ID";
 const string PLUGIN_DESCRIPTION = "*Description";
 const string PLUGIN_LIBRARIES   = "*Libraries";
 const string PLUGIN_STATUS      = "*Status";
-
-// A prefix for plugin blueprints.
-const string PLUGIN_PREFIX = "PLUGIN_";
 
 // Acceptable values for the plugin's activation status.
 const int PLUGIN_STATUS_OFF = 0;

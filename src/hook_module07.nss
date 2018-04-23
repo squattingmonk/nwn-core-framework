@@ -10,7 +10,6 @@
 
 #include "x2_inc_switches"
 #include "core_i_framework"
-#include "core_i_framework"
 
 void main()
 {
@@ -27,21 +26,18 @@ void main()
 
     DebugSystem(DEBUG_SYSTEM_CORE, "Initializing Core Framework...");
 
-    object   oTarget = GetWaypointByTag(CORE_CONTROL);
-    location lTarget = (GetIsObjectValid(oTarget) ? GetLocation(oTarget) : GetStartingLocation());
-
-    // Initialize the datapoints
-    PLUGINS = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_PLUGINS, lTarget);
-    EVENTS  = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_EVENTS,  lTarget);
-    TIMERS  = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_TIMERS,  lTarget);
-    SetDatapoint(CORE_PLUGINS, PLUGINS);
+    // Set up our datapoints
+    location lLoc = GetStartingLocation();
+    EVENTS  = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_DATA_POINT, lLoc, FALSE, CORE_EVENTS);
+    PLUGINS = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_DATA_POINT, lLoc, FALSE, CORE_PLUGINS);
+    SetName(EVENTS,  DATA_PREFIX + "Core Events");
+    SetName(PLUGINS, DATA_PREFIX + "Core Plugins");
     SetDatapoint(CORE_EVENTS,  EVENTS);
-    SetDatapoint(CORE_TIMERS,  TIMERS);
+    SetDatapoint(CORE_PLUGINS, PLUGINS);
 
-    // Protect them so we manage them programatically
-    SetUseableFlag(PLUGINS, FALSE);
+    // Manage them programatically
     SetUseableFlag(EVENTS,  FALSE);
-    SetUseableFlag(TIMERS,  FALSE);
+    SetUseableFlag(PLUGINS, FALSE);
 
     // Register all plugins specified in the core config file
     LoadPlugins(INSTALLED_PLUGINS);

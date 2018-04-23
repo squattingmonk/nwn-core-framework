@@ -44,7 +44,7 @@ object EVENT_CURRENT  = GetLocalObject(EVENTS,  EVENT_LAST);
 //
 // Note: while plugin setup can be done in the OnLibraryLoad() routine of the
 // library sPlugin, you can also create a plugin blueprint with the resref
-// "PLUG_" + sPlugin.
+// sPlugin.
 object LoadPlugin(string sPlugin);
 
 // ---< LoadPlugins >---
@@ -219,11 +219,11 @@ void CacheEventSources(object oSelf, object oSources, string sEvent);
 
 // ---< InitializeEvent >---
 // ---< core_i_framework >---
-// Creates and prioritizes a list of scripts to execute when the event
-// represented by oEvent is run on oSelf. oInit is the object triggering the
-// event (e.g., the PC entering an area for an OnEnter script). This is an
-// internal function that need not be used by the builder.
-void InitializeEvent(object oEvent, object oSelf, object oInit);
+// Creates and prioritizes a list of scripts to execute when sEvent runs on
+// oSelf. oInit is the object triggering the event (e.g., the PC entering an
+// area for an OnEnter script). Returns the event object. This is an internal
+// function that need not be used by the builder.
+object InitializeEvent(string sEvent, object oSelf, object oInit);
 
 // ---< BuildPluginBlacklist >---
 // ---< core_i_framework >---
@@ -333,9 +333,9 @@ object LoadPlugin(string sPlugin)
         // It's possible the builder has pre-created a plugin object with all
         // the necessary variables on it. Try to create it. If it's not valid,
         // we can generate one from scratch.
-        oPlugin = CreateItemOnObject(PLUGIN_PREFIX + sPlugin, PLUGINS, 1, sPlugin);
+        oPlugin = CreateItemOnObject(sPlugin, PLUGINS);
         if (!GetIsObjectValid(oPlugin))
-            oPlugin = CreateItemOnObject(PLUGIN, PLUGINS, 1, sPlugin);
+            oPlugin = CreateItemOnObject(CORE_DATA_ITEM, PLUGINS, 1, sPlugin);
 
         // Make the Core aware of this plugin
         SetLocalObject(PLUGINS, sPlugin, oPlugin);
@@ -343,7 +343,6 @@ object LoadPlugin(string sPlugin)
         AddListObject (PLUGINS, oPlugin);
 
         // Run activation routines
-        SetLocalString(PLUGINS, PLUGIN_LAST, sPlugin);
         SetLocalObject(PLUGINS, PLUGIN_LAST, oPlugin);
         LoadLibrary(sPlugin);
         ActivatePlugin(oPlugin);
@@ -574,9 +573,9 @@ void DumpEventScripts(object oTarget, string sEvent = "")
     for (i = 0; i < nCount; i++)
     {
         nIndex = GetListInt(oTarget, i, sEvent);
-        Debug("Script: "   +               GetListString(oTarget, nIndex, sEvent));
-        Debug("Source: "   +       GetName(GetListObject(oTarget, nIndex, sEvent)));
-        Debug("Priority: " + FloatToString(GetListFloat (oTarget, nIndex, sEvent)) + "\n");
+        DebugSystem(DEBUG_SYSTEM_CORE, "Script: "   +               GetListString(oTarget, nIndex, sEvent));
+        DebugSystem(DEBUG_SYSTEM_CORE, "Source: "   +       GetName(GetListObject(oTarget, nIndex, sEvent)));
+        DebugSystem(DEBUG_SYSTEM_CORE, "Priority: " + FloatToString(GetListFloat (oTarget, nIndex, sEvent)) + "\n");
     }
 }
 
@@ -586,7 +585,9 @@ object GetEvent(string sEvent)
 
     if (!GetIsObjectValid(oEvent))
     {
-        oEvent = CreateItemOnObject(EVENT, EVENTS);
+        DebugSystem(DEBUG_SYSTEM_CORE, "Generating new event: " + sEvent);
+
+        oEvent = CreateItemOnObject(CORE_DATA_ITEM, EVENTS);
         SetLocalObject(EVENTS, sEvent, oEvent);
         SetName(oEvent, sEvent);
 
@@ -684,9 +685,9 @@ void CacheEventSources(object oSelf, object oSources, string sEvent)
     SetLocalInt(oSelf, sEvent, FALSE);
 }
 
-void InitializeEvent(object oEvent, object oSelf, object oInit)
+object InitializeEvent(string sEvent, object oSelf, object oInit)
 {
-    string sEvent = GetName(oEvent);
+    object oEvent = GetEvent(sEvent);
 
     // Creatures maintain their own list of script sources. All other objects
     // source their scripts from the object initiating the event.
@@ -701,6 +702,8 @@ void InitializeEvent(object oEvent, object oSelf, object oInit)
     // been changed.
     if (!GetLocalInt(oSelf, sEvent))
     {
+        DebugSystem(DEBUG_SYSTEM_CORE, "Initializing " + sEvent);
+
         // Clean up
         DeleteStringList(oSelf, sEvent);
         DeleteObjectList(oSelf, sEvent);
@@ -737,6 +740,8 @@ void InitializeEvent(object oEvent, object oSelf, object oInit)
         // Mark the event as initialized
         SetLocalInt(oSelf, sEvent, TRUE);
     }
+
+    return oEvent;
 }
 
 void BuildPluginBlacklist(object oTarget)
@@ -764,10 +769,10 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     if (!GetIsObjectValid(oInit))
         oInit = oSelf;
 
-    object oEvent = GetEvent(sEvent);
+    DebugSystem(DEBUG_SYSTEM_CORE, "Running event " + sEvent);
 
     // Initialize the script list for this event
-    InitializeEvent(oEvent, oSelf, oInit);
+    object oEvent = InitializeEvent(sEvent, oSelf, oInit);
 
     // Ensure the blacklist is built
     BuildPluginBlacklist(oSelf);
