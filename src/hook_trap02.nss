@@ -8,7 +8,7 @@
 // under the Trap tab of the object's properties.
 // -----------------------------------------------------------------------------
 
-#include "core_i_events"
+#include "core_i_framework"
 
 void main()
 {

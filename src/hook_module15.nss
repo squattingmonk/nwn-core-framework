@@ -8,7 +8,7 @@
 // OnPlayerUnEquipItem event under Module Properties.
 // -----------------------------------------------------------------------------
 
-#include "core_i_events"
+#include "core_i_framework"
 #include "x2_inc_switches"
 
 void main()

@@ -9,8 +9,8 @@
 // -----------------------------------------------------------------------------
 
 #include "x2_inc_switches"
-#include "core_i_plugins"
-#include "core_i_events"
+#include "core_i_framework"
+#include "core_i_framework"
 
 void main()
 {

@@ -8,7 +8,7 @@
 // under Module Properties.
 // -----------------------------------------------------------------------------
 
-#include "core_i_events"
+#include "core_i_framework"
 
 void main()
 {
