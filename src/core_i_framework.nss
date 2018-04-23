@@ -734,12 +734,12 @@ object InitializeEvent(string sEvent, object oSelf, object oInit)
         // Sort the events by priority
         SortEventScripts(oSelf, sEvent);
 
-        // Debug
-        DumpEventScripts(oSelf, sEvent);
-
         // Mark the event as initialized
         SetLocalInt(oSelf, sEvent, TRUE);
     }
+
+    // Debug
+    DumpEventScripts(oSelf, sEvent);
 
     return oEvent;
 }
@@ -812,6 +812,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
 
         // Execute the script and return the saved state
         SetLocalObject(PLUGINS, PLUGIN_LAST, oSource);
+        DebugSystem(DEBUG_SYSTEM_CORE, "Executing " + sScript);
         RunLibraryScript(sScript, oSelf);
         nExecuted++;
 
