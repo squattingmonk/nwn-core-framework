@@ -67,12 +67,6 @@ int GetSourceBlacklisted(object oSource, object oTarget = OBJECT_SELF);
 // Returns the event object representing the currently executing event.
 object GetCurrentEvent();
 
-// ---< GetEventName >---
-// ---< core_i_events >---
-// Returns the name of the event represented by oEvent. If oEvent is invalid,
-// returns the name of the currently executing event.
-string GetEventName(object oEvent = OBJECT_INVALID);
-
 // ---< GetEventTriggeredBy >---
 // ---< core_i_events >---
 // Returns the object that last triggered the event represented by oEvent. For
@@ -233,14 +227,6 @@ object GetCurrentEvent()
     return EVENT_CURRENT;
 }
 
-string GetEventName(object oEvent = OBJECT_INVALID)
-{
-    if (!GetIsObjectValid(oEvent))
-        oEvent = EVENT_CURRENT;
-
-    return GetLocalString(oEvent, EVENT_NAME);
-}
-
 object GetEventTriggeredBy(object oEvent = OBJECT_INVALID)
 {
     if (!GetIsObjectValid(oEvent))
@@ -378,7 +364,7 @@ object GetEvent(string sEvent)
     {
         oEvent = CreateItemOnObject(EVENT, EVENTS);
         SetLocalObject(EVENTS, sEvent, oEvent);
-        SetLocalString(oEvent, EVENT_NAME, sEvent);
+        SetName(oEvent, sEvent);
 
         // Register hook-in scripts from the plugins
         int i, nPlugins = CountObjectList(PLUGINS);
@@ -476,7 +462,7 @@ void CacheEventSources(object oSelf, object oSources, string sEvent)
 
 void InitializeEvent(object oEvent, object oSelf, object oInit)
 {
-    string sEvent = GetLocalString(oEvent, EVENT_NAME);
+    string sEvent = GetName(oEvent);
 
     // Creatures maintain their own list of script sources. All other objects
     // source their scripts from the object initiating the event.
