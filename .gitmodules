@@ -1,3 +1,3 @@
-[submodule "Utils"]
-	path = Utils
+[submodule "sm-utils"]
+	path = sm-utils
 	url = https://github.com/squattingmonk/sm-utils
