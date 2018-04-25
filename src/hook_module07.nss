@@ -14,7 +14,8 @@
 void main()
 {
     // Start debugging
-    SetDebugLevel(DEBUG_LEVEL_CORE, DEBUG_SYSTEM_CORE);
+    SetDebugLevel(DEFAULT_DEBUG_LEVEL);
+    SetDebugLogging(DEBUG_LOGGING);
 
     // Set the spellhook event
     SetModuleOverrideSpellscript(SPELLHOOK_EVENT_SCRIPT);
@@ -24,7 +25,7 @@ void main()
     if (ENABLE_TAGBASED_SCRIPTS)
         SetModuleSwitch(MODULE_SWITCH_ENABLE_TAGBASED_SCRIPTS, FALSE);
 
-    DebugSystem(DEBUG_SYSTEM_CORE, "Initializing Core Framework...");
+    Debug("Initializing Core Framework...");
 
     // Set up our datapoints
     location lLoc = GetStartingLocation();

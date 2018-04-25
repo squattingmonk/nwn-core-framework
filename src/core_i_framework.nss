@@ -325,7 +325,7 @@ object LoadPlugin(string sPlugin)
     if (sPlugin == "")
         return OBJECT_INVALID;
 
-    DebugSystem(DEBUG_SYSTEM_CORE, "Loading plugin " + sPlugin);
+    Debug("Loading plugin " + sPlugin);
     object oPlugin = GetLocalObject(PLUGINS, sPlugin);
 
     if (!GetIsObjectValid(oPlugin))
@@ -379,10 +379,7 @@ void ActivatePlugin(object oPlugin, int bForce = FALSE)
         SetLocalInt(oPlugin, PLUGIN_STATUS, PLUGIN_STATUS_ON);
     }
     else
-    {
-        Debug("Plugin " + sPlugin + " is already activated!",
-                DEBUG_LEVEL_WARNING, DEBUG_SYSTEM_CORE);
-    }
+        Debug("Plugin " + sPlugin + " is already activated!", DEBUG_LEVEL_WARNING);
 }
 
 void DeactivatePlugin(object oPlugin, int bForce = FALSE)
@@ -398,10 +395,7 @@ void DeactivatePlugin(object oPlugin, int bForce = FALSE)
         SetLocalInt(oPlugin, PLUGIN_STATUS, PLUGIN_STATUS_OFF);
     }
     else
-    {
-        Debug("Plugin " + sPlugin + " is already deactivated!",
-                DEBUG_LEVEL_WARNING, DEBUG_SYSTEM_CORE);
-    }
+        Debug("Plugin " + sPlugin + " is already deactivated!", DEBUG_LEVEL_WARNING);
 }
 
 object GetPlugin(string sPlugin)
@@ -569,13 +563,17 @@ void SortEventScripts(object oTarget, string sEvent = "")
 
 void DumpEventScripts(object oTarget, string sEvent = "")
 {
-    int i, nIndex, nCount = CountIntList(oTarget, sEvent);
-    for (i = 0; i < nCount; i++)
+    if (IsDebugging(DEBUG_LEVEL_NOTICE))
     {
-        nIndex = GetListInt(oTarget, i, sEvent);
-        DebugSystem(DEBUG_SYSTEM_CORE, "Script: "   +               GetListString(oTarget, nIndex, sEvent));
-        DebugSystem(DEBUG_SYSTEM_CORE, "Source: "   +       GetName(GetListObject(oTarget, nIndex, sEvent)));
-        DebugSystem(DEBUG_SYSTEM_CORE, "Priority: " + FloatToString(GetListFloat (oTarget, nIndex, sEvent)) + "\n");
+        Debug("Dumping event scripts for " + sEvent);
+        int i, nIndex, nCount = CountIntList(oTarget, sEvent);
+        for (i = 0; i < nCount; i++)
+        {
+            nIndex = GetListInt(oTarget, i, sEvent);
+            Debug("Script: "   +               GetListString(oTarget, nIndex, sEvent));
+            Debug("Source: "   +       GetName(GetListObject(oTarget, nIndex, sEvent)));
+            Debug("Priority: " + FloatToString(GetListFloat (oTarget, nIndex, sEvent)) + "\n");
+        }
     }
 }
 
@@ -585,7 +583,7 @@ object GetEvent(string sEvent)
 
     if (!GetIsObjectValid(oEvent))
     {
-        DebugSystem(DEBUG_SYSTEM_CORE, "Generating new event: " + sEvent);
+        Debug("Generating new event: " + sEvent);
 
         oEvent = CreateItemOnObject(CORE_DATA_ITEM, EVENTS);
         SetLocalObject(EVENTS, sEvent, oEvent);
@@ -702,7 +700,7 @@ object InitializeEvent(string sEvent, object oSelf, object oInit)
     // been changed.
     if (!GetLocalInt(oSelf, sEvent))
     {
-        DebugSystem(DEBUG_SYSTEM_CORE, "Initializing " + sEvent);
+        Debug("Initializing " + sEvent);
 
         // Clean up
         DeleteStringList(oSelf, sEvent);
@@ -769,7 +767,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     if (!GetIsObjectValid(oInit))
         oInit = oSelf;
 
-    DebugSystem(DEBUG_SYSTEM_CORE, "Running event " + sEvent);
+    Debug("Running event " + sEvent);
 
     // Initialize the script list for this event
     object oEvent = InitializeEvent(sEvent, oSelf, oInit);
@@ -812,7 +810,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
 
         // Execute the script and return the saved state
         SetLocalObject(PLUGINS, PLUGIN_LAST, oSource);
-        DebugSystem(DEBUG_SYSTEM_CORE, "Executing " + sScript);
+        Debug("Executing " + sScript);
         RunLibraryScript(sScript, oSelf);
         nExecuted++;
 

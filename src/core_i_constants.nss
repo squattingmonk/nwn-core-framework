@@ -37,9 +37,6 @@ object TIMERS  = GetDatapoint(CORE_TIMERS);
 //                              Framework Variables
 // -----------------------------------------------------------------------------
 
-// I really don't like system debugging. TODO?
-const string DEBUG_SYSTEM_CORE = "DEBUG_SYSTEM_CORE";
-
 // ----- Plugin Management -----------------------------------------------------
 
 // Local variable names used for plugin objects.

@@ -23,14 +23,29 @@
 //                                   Debugging
 // -----------------------------------------------------------------------------
 
-// This is the level of debug messages that will be written to the log and
-// displayed to online DMs.
+// This is a maskable setting that controls where debug messages are logged. Any
+// listed destinations will have debug messages sent to them. You can specify
+// multiple levels using | (e.g., DEBUG_LOG_FILE | DEBUG_LOG_DM).
+// Possible values:
+// - DEBUG_LOG_NONE: all logging is disabled
+// - DEBUG_LOG_FILE: debug messages are written to the log file
+// - DEBUG_LOG_DM: debug messages are sent to all online DMs
+// - DEBUG_LOG_PC: debug messages are sent to the first online PC
+// - DEBUG_LOG_ALL: debug messages are sent to the log files, DMs, and first PC
+int DEBUG_LOGGING = DEBUG_LOG_ALL;
+
+// This is the level of debug messages to generate. All debug messages of this
+// level or higher will be logged to DEBUG_LOGGING. This is only the default
+// level for the module. You can set a higher level on an object by calling
+// SetDebugLevel() on it. Alternatively, you may use the toolset to add a local
+// int named DEBUG_LEVEL on the object; the value should be 0-3, where a higher
+// value means higher verbosity.
 // Possible values:
 // - DEBUG_LEVEL_CRITICAL: errors severe enough to stop the script
 // - DEBUG_LEVEL_ERROR: indicates the script malfunctioned in some way
 // - DEBUG_LEVEL_WARNING: indicates unexpected behavior may occur
 // - DEBUG_LEVEL_NOTICE: information to track the flow of functions
-const int DEBUG_LEVEL_CORE = DEBUG_LEVEL_NOTICE;
+const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_NOTICE;
 
 // -----------------------------------------------------------------------------
 //                               Plugin Management
