@@ -1,0 +1,7 @@
+# Build directory
+build/
+
+# Packaged files
+*.erf
+*.hak
+*.mod
