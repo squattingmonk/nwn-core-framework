@@ -10,7 +10,7 @@ warned.
 - [sm-utils](https://github.com/squattingmonk/sm-utils)
 - [nwnsc](https://gitlab.com/glorwinger/nwnsc)
 - [nwn-lib](https://github.com/niv/nwn-tools)
-- Ruby to run the install script
+- Ruby and rake to run the install script
 
 ## Installation
 Get the code:
@@ -21,7 +21,7 @@ git clone https://github.com/squattingmonk/nwn-core-framework --recurse-submodul
 Run the build script:
 ```
 cd nwn-core-framework
-rake erf
+rake pack
 ```
 
 The erf will be placed into the nwn-core-framework directory. You can copy it 
