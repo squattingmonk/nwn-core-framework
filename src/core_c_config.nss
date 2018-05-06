@@ -47,6 +47,16 @@ int DEBUG_LOGGING = DEBUG_LOG_ALL;
 // - DEBUG_LEVEL_NOTICE: information to track the flow of functions
 const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_NOTICE;
 
+// This controls the level of debug messages to generate on heartbeat events.
+// This can be used to prevent the excessive generation of debug messages that
+// may clutter the log.
+// Possible values:
+// - DEBUG_LEVEL_CRITICAL: errors severe enough to stop the script
+// - DEBUG_LEVEL_ERROR: indicates the script malfunctioned in some way
+// - DEBUG_LEVEL_WARNING: indicates unexpected behavior may occur
+// - DEBUG_LEVEL_NOTICE: information to track the flow of functions
+const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
+
 // -----------------------------------------------------------------------------
 //                               Plugin Management
 // -----------------------------------------------------------------------------

@@ -313,6 +313,11 @@ int GetCurrentTimer();
 // to abort the event.
 int RunTagBasedScript(object oItem, int nEvent);
 
+// ---< SetEventDebugLevel >---
+// ---< core_i_framework >---
+// Temporarily sets the debug level of the module to nLevel. This can be used
+// OnHeartbeat to stop excessive debug messages.
+void SetEventDebugLevel(int nLevel);
 
 // -----------------------------------------------------------------------------
 //                             Function Definitions
@@ -1038,4 +1043,15 @@ int RunTagBasedScript(object oItem, int nEvent)
     DeleteLocalInt(OBJECT_SELF, "X2_L_LAST_RETVAR");
     RunLibraryScript(sScript);
     return GetLocalInt(OBJECT_SELF, "X2_L_LAST_RETVAR");
+}
+
+void SetEventDebugLevel(int nLevel)
+{
+    object oModule = GetModule();
+    int nOldLevel = GetDebugLevel(oModule);
+    if (nOldLevel > nLevel)
+    {
+        SetDebugLevel(nLevel, oModule);
+        DelayCommand(0.0, SetDebugLevel(nOldLevel, oModule));
+    }
 }
