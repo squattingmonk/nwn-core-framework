@@ -3,10 +3,10 @@ require 'fileutils'
 desc 'Unpacks [file] into a directory of the same name'
 task :unpack, [:file] do |t, args|
   args.with_defaults(:file => CONFIG[:file])
-  dirname = args.file.ext('')
+  dirname = File.join "tmp", args.file.ext('')
   FileUtils.mkdir_p dirname
   FileUtils.cd dirname
-  system "nwn-erf -x -f ../#{args.file}"
+  system "nwn-erf -x -f ../../#{args.file}"
   FileUtils.rm Dir.glob('*.ncs')
 
   gffs = FileList.new('*')

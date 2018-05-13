@@ -26,5 +26,5 @@ task :default => :compile
 
 directory 'build'
 
-CLEAN.include('build')
+CLEAN.include('build', 'tmp')
 CLOBBER.include('*.erf', '*.mod', '*.hak')
