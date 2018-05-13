@@ -1,0 +1,134 @@
+--- !nwn-lib.elv.es,2013-07:struct
+__data_type: FAC
+__struct_id: 4294967295
+FactionList:
+  type: list
+  value:
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    FactionGlobal: {type: word, value: 1}
+    FactionName: {type: cexostr, value: PC}
+    FactionParentID: {type: dword, value: 4294967295}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 1
+    FactionGlobal: {type: word, value: 1}
+    FactionName: {type: cexostr, value: Hostile}
+    FactionParentID: {type: dword, value: 4294967295}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 2
+    FactionGlobal: {type: word, value: 1}
+    FactionName: {type: cexostr, value: Commoner}
+    FactionParentID: {type: dword, value: 4294967295}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 3
+    FactionGlobal: {type: word, value: 1}
+    FactionName: {type: cexostr, value: Merchant}
+    FactionParentID: {type: dword, value: 4294967295}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 4
+    FactionGlobal: {type: word, value: 1}
+    FactionName: {type: cexostr, value: Defender}
+    FactionParentID: {type: dword, value: 4294967295}
+RepList:
+  type: list
+  value:
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    FactionID1: {type: dword, value: 0}
+    FactionID2: {type: dword, value: 1}
+    FactionRep: {type: dword, value: 0}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 1
+    FactionID1: {type: dword, value: 0}
+    FactionID2: {type: dword, value: 2}
+    FactionRep: {type: dword, value: 50}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 2
+    FactionID1: {type: dword, value: 0}
+    FactionID2: {type: dword, value: 3}
+    FactionRep: {type: dword, value: 50}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 3
+    FactionID1: {type: dword, value: 0}
+    FactionID2: {type: dword, value: 4}
+    FactionRep: {type: dword, value: 50}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 4
+    FactionID1: {type: dword, value: 1}
+    FactionID2: {type: dword, value: 1}
+    FactionRep: {type: dword, value: 100}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 5
+    FactionID1: {type: dword, value: 1}
+    FactionID2: {type: dword, value: 2}
+    FactionRep: {type: dword, value: 0}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 6
+    FactionID1: {type: dword, value: 1}
+    FactionID2: {type: dword, value: 3}
+    FactionRep: {type: dword, value: 0}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 7
+    FactionID1: {type: dword, value: 1}
+    FactionID2: {type: dword, value: 4}
+    FactionRep: {type: dword, value: 0}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 8
+    FactionID1: {type: dword, value: 2}
+    FactionID2: {type: dword, value: 1}
+    FactionRep: {type: dword, value: 0}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 9
+    FactionID1: {type: dword, value: 2}
+    FactionID2: {type: dword, value: 2}
+    FactionRep: {type: dword, value: 100}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 10
+    FactionID1: {type: dword, value: 2}
+    FactionID2: {type: dword, value: 3}
+    FactionRep: {type: dword, value: 50}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 11
+    FactionID1: {type: dword, value: 2}
+    FactionID2: {type: dword, value: 4}
+    FactionRep: {type: dword, value: 100}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 12
+    FactionID1: {type: dword, value: 3}
+    FactionID2: {type: dword, value: 1}
+    FactionRep: {type: dword, value: 0}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 13
+    FactionID1: {type: dword, value: 3}
+    FactionID2: {type: dword, value: 2}
+    FactionRep: {type: dword, value: 50}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 14
+    FactionID1: {type: dword, value: 3}
+    FactionID2: {type: dword, value: 3}
+    FactionRep: {type: dword, value: 100}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 15
+    FactionID1: {type: dword, value: 3}
+    FactionID2: {type: dword, value: 4}
+    FactionRep: {type: dword, value: 100}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 16
+    FactionID1: {type: dword, value: 4}
+    FactionID2: {type: dword, value: 1}
+    FactionRep: {type: dword, value: 0}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 17
+    FactionID1: {type: dword, value: 4}
+    FactionID2: {type: dword, value: 2}
+    FactionRep: {type: dword, value: 50}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 18
+    FactionID1: {type: dword, value: 4}
+    FactionID2: {type: dword, value: 3}
+    FactionRep: {type: dword, value: 100}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 19
+    FactionID1: {type: dword, value: 4}
+    FactionID2: {type: dword, value: 4}
+    FactionRep: {type: dword, value: 100}

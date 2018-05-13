@@ -26,3 +26,13 @@ rake pack
 
 The erf will be placed into the nwn-core-framework directory. You can copy it 
 to your NWN installation's /erf directory and then import it into your module.
+
+Alternatively, you may build the demo module by running the following:
+```
+cd nwn-core-framework
+rake demo:pack
+```
+
+The mod will be placed into the nwn-core-framework directory. You can copy it 
+to your NWN installation's /modules directory and then import it into your 
+module.

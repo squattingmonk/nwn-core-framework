@@ -13,6 +13,6 @@
 
 # Demo module configuration. These settings overwrite the defaults.
 :demo:
-    :nss: 'demo/src/*.nss'
+    :nss: ['src/*.nss', 'sm-utils/src/*.nss', 'demo/src/*.nss']
     :gff: 'demo/src/*.*.yml'
     :file: 'core_framework.mod'

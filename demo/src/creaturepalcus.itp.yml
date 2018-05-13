@@ -1,0 +1,264 @@
+--- !nwn-lib.elv.es,2013-07:struct
+__data_type: ITP
+__struct_id: 4294967295
+MAIN:
+  type: list
+  value:
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    LIST:
+      type: list
+      value:
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 48}
+        STRREF: {type: dword, value: 63235}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        LIST:
+          type: list
+          value:
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 5}
+            STRREF: {type: dword, value: 6695}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 6}
+            STRREF: {type: dword, value: 6696}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 7}
+            STRREF: {type: dword, value: 6697}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 8}
+            STRREF: {type: dword, value: 6698}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 9}
+            STRREF: {type: dword, value: 201}
+        STRREF: {type: dword, value: 6694}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 20}
+        STRREF: {type: dword, value: 6712}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 21}
+        STRREF: {type: dword, value: 6713}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 22}
+        STRREF: {type: dword, value: 6714}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        LIST:
+          type: list
+          value:
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 34}
+            STRREF: {type: dword, value: 6727}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 35}
+            STRREF: {type: dword, value: 6728}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 36}
+            STRREF: {type: dword, value: 6729}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 37}
+            STRREF: {type: dword, value: 6730}
+        STRREF: {type: dword, value: 541}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        LIST:
+          type: list
+          value:
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 14}
+            STRREF: {type: dword, value: 6706}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 15}
+            STRREF: {type: dword, value: 6707}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 16}
+            STRREF: {type: dword, value: 6708}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 17}
+            STRREF: {type: dword, value: 6709}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 18}
+            STRREF: {type: dword, value: 6710}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 19}
+            STRREF: {type: dword, value: 537}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 50}
+            STRREF: {type: dword, value: 201}
+        STRREF: {type: dword, value: 6705}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        LIST:
+          type: list
+          value:
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 10}
+            STRREF: {type: dword, value: 6701}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 11}
+            STRREF: {type: dword, value: 6702}
+        STRREF: {type: dword, value: 6700}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 49}
+        STRREF: {type: dword, value: 63246}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 13}
+        STRREF: {type: dword, value: 1592}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        LIST:
+          type: list
+          value:
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 23}
+            STRREF: {type: dword, value: 6716}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 24}
+            STRREF: {type: dword, value: 6717}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 25}
+            STRREF: {type: dword, value: 6718}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 47}
+            STRREF: {type: dword, value: 6699}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 26}
+            STRREF: {type: dword, value: 6719}
+        STRREF: {type: dword, value: 6715}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 12}
+        STRREF: {type: dword, value: 6703}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        LIST:
+          type: list
+          value:
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 27}
+            STRREF: {type: dword, value: 2058}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 28}
+            STRREF: {type: dword, value: 6722}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 29}
+            STRREF: {type: dword, value: 201}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 30}
+            STRREF: {type: dword, value: 2116}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 31}
+            STRREF: {type: dword, value: 6723}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 32}
+            STRREF: {type: dword, value: 2155}
+          - !nwn-lib.elv.es,2013-07:struct
+            __struct_id: 0
+            ID: {type: byte, value: 33}
+            STRREF: {type: dword, value: 6725}
+        STRREF: {type: dword, value: 547}
+    STRREF: {type: dword, value: 6693}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    LIST:
+      type: list
+      value:
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 38}
+        STRREF: {type: dword, value: 23}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 39}
+        STRREF: {type: dword, value: 25}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 40}
+        STRREF: {type: dword, value: 27}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 42}
+        STRREF: {type: dword, value: 31}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 41}
+        STRREF: {type: dword, value: 29}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 43}
+        STRREF: {type: dword, value: 33}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 44}
+        STRREF: {type: dword, value: 35}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 45}
+        STRREF: {type: dword, value: 201}
+    STRREF: {type: dword, value: 6731}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    LIST:
+      type: list
+      value:
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 0}
+        STRREF: {type: dword, value: 6688}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 1}
+        STRREF: {type: dword, value: 6689}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 2}
+        STRREF: {type: dword, value: 6690}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 3}
+        STRREF: {type: dword, value: 6691}
+      - !nwn-lib.elv.es,2013-07:struct
+        __struct_id: 0
+        ID: {type: byte, value: 4}
+        STRREF: {type: dword, value: 6692}
+    STRREF: {type: dword, value: 6687}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    ID: {type: byte, value: 46}
+    STRREF: {type: dword, value: 6732}

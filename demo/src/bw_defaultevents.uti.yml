@@ -1,0 +1,156 @@
+--- !nwn-lib.elv.es,2013-07:struct
+__data_type: UTI
+__struct_id: 4294967295
+AddCost: {type: dword, value: 0}
+BaseItem: {type: int, value: 24}
+Charges: {type: byte, value: 0}
+Comment: {type: cexostr, value: This is a template for a data item used by the Core
+    Framework.}
+Cost: {type: dword, value: 0}
+Cursed: {type: byte, value: 0}
+DescIdentified:
+  type: cexolocstr
+  value:
+    0: This plugin supplies the default BioWare events for the module and creature
+      object types.
+Description:
+  type: cexolocstr
+  value: {}
+Identified: {type: byte, value: 1}
+LocalizedName:
+  type: cexolocstr
+  value:
+    0: "[Plugin] Default BioWare Events"
+ModelPart1: {type: byte, value: 1}
+PaletteID: {type: byte, value: 0}
+Plot: {type: byte, value: 0}
+PropertiesList:
+  type: list
+  value: []
+StackSize: {type: word, value: 1}
+Stolen: {type: byte, value: 1}
+Tag: {type: cexostr, value: bw_defaultevents}
+TemplateResRef: {type: resref, value: bw_defaultevents}
+VarTable:
+  type: list
+  value:
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnAcquireItem}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: x2_mod_def_aqu}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnActivateItem}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: x2_mod_def_act}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnClientEnter}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: x3_mod_def_enter}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnModuleLoad}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: x2_mod_def_load}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnPlayerDeath}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_o0_death}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnPlayerDying}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_o0_dying}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnPlayerEquipItem}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: x2_mod_def_equ}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnPlayerRespawn}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_o0_respawn}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnPlayerRest}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: x2_mod_def_rest}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnPlayerUnEquipItem}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: x2_mod_def_unequ}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnUnAcquireItem}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: x2_mod_def_unaqu}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureBlocked}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_defaulte}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureCombatRoundEnd}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_default3}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureConversation}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_default4}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureDamaged}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_default6}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureDeath}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_default7}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureDisturbed}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_default8}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureHeartbeat}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_default1}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreaturePerception}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_default2}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreaturePhysicalAttacked}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_default5}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureRested}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_defaulta}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureSpawn}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_default9}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureSpellCastAt}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_defaultb}
+  - !nwn-lib.elv.es,2013-07:struct
+    __struct_id: 0
+    Name: {type: cexostr, value: OnCreatureUserDefined}
+    Type: {type: dword, value: 3}
+    Value: {type: cexostr, value: nw_c2_defaultd}

@@ -1,0 +1,70 @@
+--- !nwn-lib.elv.es,2013-07:struct
+__data_type: IFO
+__struct_id: 4294967295
+Expansion_Pack: {type: word, value: 3}
+Mod_Area_list:
+  type: list
+  value:
+  - !nwn-lib.elv.es,2013-07:struct {__struct_id: 6, Area_Name: {type: resref, value: startingarea}}
+Mod_CacheNSSList:
+  type: list
+  value: []
+Mod_Creator_ID: {type: int, value: 2}
+Mod_CustomTlk: {type: cexostr, value: ''}
+Mod_CutSceneList:
+  type: list
+  value: []
+Mod_DawnHour: {type: byte, value: 6}
+Mod_Description:
+  type: cexolocstr
+  value: {}
+Mod_DuskHour: {type: byte, value: 18}
+Mod_Entry_Area: {type: resref, value: startingarea}
+Mod_Entry_Dir_X: {type: float, value: 0.0}
+Mod_Entry_Dir_Y: {type: float, value: 1.0}
+Mod_Entry_X: {type: float, value: 10.0}
+Mod_Entry_Y: {type: float, value: 10.0}
+Mod_Entry_Z: {type: float, value: 0.0}
+Mod_Expan_List:
+  type: list
+  value: []
+Mod_GVar_List:
+  type: list
+  value: []
+Mod_HakList:
+  type: list
+  value: []
+Mod_ID: {type: void, value: !binary "U1e3IlIFxuotSsc0+R6e8w=="}
+Mod_IsSaveGame: {type: byte, value: 0}
+Mod_MinGameVer: {type: cexostr, value: '1.74'}
+Mod_MinPerHour: {type: byte, value: 2}
+Mod_Name:
+  type: cexolocstr
+  value:
+    0: core_framework
+Mod_OnAcquirItem: {type: resref, value: hook_module01}
+Mod_OnActvtItem: {type: resref, value: hook_module02}
+Mod_OnClientEntr: {type: resref, value: hook_module03}
+Mod_OnClientLeav: {type: resref, value: hook_module04}
+Mod_OnCutsnAbort: {type: resref, value: hook_module05}
+Mod_OnHeartbeat: {type: resref, value: hook_module06}
+Mod_OnModLoad: {type: resref, value: hook_module07}
+Mod_OnModStart: {type: resref, value: ''}
+Mod_OnPlrChat: {type: resref, value: hook_module08}
+Mod_OnPlrDeath: {type: resref, value: hook_module09}
+Mod_OnPlrDying: {type: resref, value: hook_module10}
+Mod_OnPlrEqItm: {type: resref, value: hook_module11}
+Mod_OnPlrLvlUp: {type: resref, value: hook_module12}
+Mod_OnPlrRest: {type: resref, value: hook_module14}
+Mod_OnPlrUnEqItm: {type: resref, value: hook_module15}
+Mod_OnSpawnBtnDn: {type: resref, value: hook_module13}
+Mod_OnUnAqreItem: {type: resref, value: hook_module16}
+Mod_OnUsrDefined: {type: resref, value: hook_module17}
+Mod_StartDay: {type: byte, value: 1}
+Mod_StartHour: {type: byte, value: 13}
+Mod_StartMonth: {type: byte, value: 6}
+Mod_StartMovie: {type: resref, value: ''}
+Mod_StartYear: {type: dword, value: 1372}
+Mod_Tag: {type: cexostr, value: MODULE}
+Mod_Version: {type: dword, value: 3}
+Mod_XPScale: {type: byte, value: 10}
