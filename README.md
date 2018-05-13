@@ -7,7 +7,6 @@ This system is in alpha. Things will change and will break. You have been
 warned.
 
 ## Prerequisites
-- [sm-utils](https://github.com/squattingmonk/sm-utils)
 - [nwnsc](https://gitlab.com/glorwinger/nwnsc)
 - [nwn-lib](https://github.com/niv/nwn-tools)
 - Ruby and rake to run the install script
