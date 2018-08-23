@@ -1,3 +1,6 @@
 [submodule "sm-utils"]
 	path = sm-utils
 	url = https://github.com/squattingmonk/sm-utils
+[submodule "rakelib"]
+	path = rakelib
+	url = https://github.com/squattingmonk/sm-packer
