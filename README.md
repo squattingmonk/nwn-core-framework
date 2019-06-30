@@ -1,15 +1,15 @@
 # Core Framework
 
-This project is a framework for managing a [Neverwinter 
+This project is a framework for managing a [Neverwinter
 Nights](https://neverwintervault.org) module.
 
-This system is in alpha. Things will change and will break. You have been 
+This system is in alpha. Things will change and will break. You have been
 warned.
 
 ## Prerequisites
 - [nwnsc](https://gitlab.com/glorwinger/nwnsc)
-- [nwn-lib](https://github.com/niv/nwn-lib)
-- [nwn-packer](https://github.com/squattingmonk/nwn-packer)
+- [neverwinter.nim](https://github.com/niv/neverwinter.nim)
+- [nasher.nim](https://github.com/squattingmonk/nasher)
 
 ## Installation
 Get the code:
@@ -20,17 +20,19 @@ git clone https://github.com/squattingmonk/nwn-core-framework --recurse-submodul
 Run the build script:
 ```
 cd nwn-core-framework
-rake install
+nasher pack
+nasher install core_framework.erf
 ```
 
-The erf will be placed into your Neverwinter Nights install directory in the 
-/erf folder. From there you can use the toolset to import it into your module. 
+The erf will be placed into your Neverwinter Nights install directory in the
+/erf folder. From there you can use the toolset to import it into your module.
 
 Alternatively, you may build the demo module by running the following:
 ```
 cd nwn-core-framework
-rake demo:install
+nasher pack demo
+nasher install core_framework.mod
 ```
 
-The module will be placed into your Neverwinter Nights install directory in the 
+The module will be placed into your Neverwinter Nights install directory in the
 /mod folder.
