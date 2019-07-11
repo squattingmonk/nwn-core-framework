@@ -20,8 +20,7 @@ git clone https://github.com/squattingmonk/nwn-core-framework --recurse-submodul
 Run the build script:
 ```
 cd nwn-core-framework
-nasher pack
-nasher install core_framework.erf
+nasher install
 ```
 
 The erf will be placed into your Neverwinter Nights install directory in the
@@ -30,8 +29,7 @@ The erf will be placed into your Neverwinter Nights install directory in the
 Alternatively, you may build the demo module by running the following:
 ```
 cd nwn-core-framework
-nasher pack demo
-nasher install core_framework.mod
+nasher isntall demo
 ```
 
 The module will be placed into your Neverwinter Nights install directory in the
