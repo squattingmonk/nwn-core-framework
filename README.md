@@ -9,7 +9,7 @@ warned.
 ## Prerequisites
 - [nwnsc](https://gitlab.com/glorwinger/nwnsc)
 - [neverwinter.nim](https://github.com/niv/neverwinter.nim)
-- [nasher.nim](https://github.com/squattingmonk/nasher)
+- [nasher.nim](https://github.com/squattingmonk/nasher.nim)
 
 ## Installation
 Get the code:
