@@ -29,7 +29,7 @@ The erf will be placed into your Neverwinter Nights install directory in the
 Alternatively, you may build the demo module by running the following:
 ```
 cd nwn-core-framework
-nasher isntall demo
+nasher install demo
 ```
 
 The module will be placed into your Neverwinter Nights install directory in the
