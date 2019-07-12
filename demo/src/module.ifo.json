@@ -80,10 +80,6 @@
     "type": "list",
     "value": []
   },
-  "Mod_ID": {
-    "type": "void",
-    "value": "SW·\"R\u0005Æê-JÇ4ù\u001Ežó"
-  },
   "Mod_IsSaveGame": {
     "type": "byte",
     "value": 0
