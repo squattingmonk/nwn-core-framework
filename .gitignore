@@ -1,10 +1,7 @@
-# Build directory
-build/
-
-# Unpack directory
-tmp/
-
-# Packaged files
+# Ignore packed files
 *.erf
 *.hak
 *.mod
+
+# Ignore the nasher directory
+.nasher/
