@@ -29,8 +29,8 @@ const string SPELLHOOK_EVENT_SCRIPT = "hook_spellhook";
 // -----------------------------------------------------------------------------
 
 // If these objects do not exist, they will be initialized OnModuleLoad.
-object PLUGINS = GetDatapoint(CORE_PLUGINS, FALSE);
-object EVENTS  = GetDatapoint(CORE_EVENTS,  FALSE);
+object PLUGINS = GetDatapoint(CORE_PLUGINS, OBJECT_INVALID, FALSE);
+object EVENTS  = GetDatapoint(CORE_EVENTS,  OBJECT_INVALID, FALSE);
 object TIMERS  = GetDatapoint(CORE_TIMERS);
 
 // -----------------------------------------------------------------------------
