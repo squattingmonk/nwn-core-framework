@@ -14,7 +14,7 @@ warned.
 ## Installation
 Get the code:
 ```
-git clone https://github.com/squattingmonk/nwn-core-framework --recurse-submodules
+git clone https://github.com/squattingmonk/nwn-core-framework.git
 ```
 
 Run the build script:
