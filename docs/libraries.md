@@ -115,9 +115,9 @@ RunLibraryScripts("MyFunction, "MyOtherFunction", oPC);
 ## Advanced Usage
 For longer libraries, string comparison in a large if/else tree may be tedious
 and slow. Using `nEntry` to identify the script to run can help, and it enables
-more complicated routing. For example, in this long library, we use a 
-switch/case statement to limit the number of comparisons we have to make. The 
-hex formatting and bitwise operations make it a little easier to visually 
+more complicated routing. For example, in this long library, we use a
+switch/case statement to limit the number of comparisons we have to make. The
+hex formatting and bitwise operations make it a little easier to visually
 distinguish related scripts, but it's not really necessary:
 
 ``` c
@@ -199,16 +199,16 @@ void OnLibraryScript(string sScript, int nEntry)
                  case 0x02: prr_GetDatabaseInt();                      break;
 
                  case 0x03: prr_SetHasMetNPC();                        break;
-                 case 0x04: prr_GetHasMetNPC();                  	   break;
+                 case 0x04: prr_GetHasMetNPC();                        break;
 
-                 case 0x05: prr_GetReactionHate();               	   break;
-                 case 0x06: prr_GetReactionNeutral();            	   break;
-                 case 0x07: prr_GetReactionLike();               	   break;
+                 case 0x05: prr_GetReactionHate();                     break;
+                 case 0x06: prr_GetReactionNeutral();                  break;
+                 case 0x07: prr_GetReactionLike();                     break;
 
-                 case 0x08: prr_SkillCheckHigh();                	   break;
-                 case 0x09: prr_SkillCheckMid();                 	   break;
-                 case 0x0A: prr_SkillCheckLow();                 	   break;
-                 case 0x0B: prr_SkillCheckCustom();              	   break;
+                 case 0x08: prr_SkillCheckHigh();                      break;
+                 case 0x09: prr_SkillCheckMid();                       break;
+                 case 0x0A: prr_SkillCheckLow();                       break;
+                 case 0x0B: prr_SkillCheckCustom();                    break;
              }   break;
 
         case 0x0300:
