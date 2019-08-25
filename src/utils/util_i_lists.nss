@@ -17,7 +17,7 @@
 //                                   Constants
 // -----------------------------------------------------------------------------
 
-// Acceptable values for nListType in ExplodeList() and CompressList().
+// Acceptable values for nListType in SplitList() and JoinList().
 const int LIST_TYPE_FLOAT  = 0;
 const int LIST_TYPE_INT    = 1;
 const int LIST_TYPE_STRING = 2;
@@ -26,13 +26,13 @@ const int LIST_TYPE_STRING = 2;
 //                              Function Prototypes
 // -----------------------------------------------------------------------------
 
-// ---< ExplodeList >---
+// ---< SplitList >---
 // ---< util_i_lists >---
-// Takes a comma-separated string list and creates an exploded list of nListType
-// with the given name on oTarget.
+// Splits a comma-separated string list into a local variable list of the given
+// type.
 // Parameters:
 // - oTarget: the object on which to create the list
-// - sList: the CSV list to explode
+// - sList: the CSV list to operate on
 // - sListName: the name of the list to create or add to
 // - bAddUnique: only add items to the list if they are not already there?
 // - nListType: the type of list to create
@@ -40,28 +40,27 @@ const int LIST_TYPE_STRING = 2;
 //   - LIST_TYPE_STRING (default)
 //   - LIST_TYPE_FLOAT
 //   - LIST_TYPE_INT
-void ExplodeList(object oTarget, string sList, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING);
+void SplitList(object oTarget, string sList, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING);
 
-// ---< CompressList >---
+// ---< JoinList >---
 // ---< util_i_lists >---
-// Creates a comma-separated string list from the local variable list of
-// nListType with the given name on oTarget.
+// Joins a local variable list of a given type into a comma-separated list.
 // Parameters:
-// - oTarget: the object on which to find the list to compress
-// - sListName: the name of the list to compress
+// - oTarget: the object on which to find the local variable list
+// - sListName: the name of the local variable list
 // - bAddUnique: only add items to the list if they are not already there?
-// - nListType: the type of list to compress
+// - nListType: the type of the local variable list
 //   Possible values:
 //   - LIST_TYPE_STRING (default)
 //   - LIST_TYPE_FLOAT
 //   - LIST_TYPE_INT
-string CompressList(object oTarget, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING);
+string JoinList(object oTarget, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING);
 
 // -----------------------------------------------------------------------------
 //                           Function Implementations
 // -----------------------------------------------------------------------------
 
-void ExplodeList(object oTarget, string sList, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING)
+void SplitList(object oTarget, string sList, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING)
 {
     int    offset, len = GetStringLength(sList);
     string item, text  = sList;
@@ -104,7 +103,7 @@ void ExplodeList(object oTarget, string sList, string sListName = "", int bAddUn
     }
 }
 
-string CompressList(object oTarget, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING)
+string JoinList(object oTarget, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING)
 {
     int nCount;
 
