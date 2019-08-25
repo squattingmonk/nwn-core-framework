@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 //    File: util_i_csvlists.nss
 //  System: Utilities (include script)
-//     URL: https://github.com/squattingmonk/sm-utils
+//     URL: https://github.com/squattingmonk/nwn-core-framework
 // Authors: Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
 // -----------------------------------------------------------------------------
 // This file holds utility functions for manipulating CSV lists. These are

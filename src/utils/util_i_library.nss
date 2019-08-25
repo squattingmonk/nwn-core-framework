@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 //    File: util_i_library.nss
 //  System: Utilities (include script)
-//     URL: https://github.com/squattingmonk/sm-utils
+//     URL: https://github.com/squattingmonk/nwn-core-framework
 // Authors: Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
 // -----------------------------------------------------------------------------
 // This script contains boilerplate code for creating a library dispatcher. It
