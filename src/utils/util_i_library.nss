@@ -124,6 +124,13 @@ void SetLibraryReturnValue(int nValue)
     SetLocalInt(OBJECT_SELF, LIB_RETURN, nValue);
 }
 
+// These are dummy implementations to prevent nwnsc from complaining that they
+// do not exist. If you want to compile in the toolset rather than using nwnsc,
+// comment these lines out.
+#pragma default_function(OnLibraryLoad)
+#pragma default_function(OnLibraryScript)
+
+
 // -----------------------------------------------------------------------------
 //                                 Main Routine
 // -----------------------------------------------------------------------------
