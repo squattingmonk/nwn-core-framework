@@ -12,7 +12,7 @@
 // Remember: any changes to this file will not be reflected in the module unless
 // you recompile all scripts in which this file is included (however remotely).
 // -----------------------------------------------------------------------------
-// Aknowledgment:
+// Acknowledgment:
 // The scripts contained in this package are adapted from those included in
 // Edward Beck's HCR2 and EPOlson's Common Scripting Framework.
 // -----------------------------------------------------------------------------
@@ -63,7 +63,7 @@ const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
 // This is a comma-separated list of plugins that should be loaded OnModuleLoad.
 // The order indicates priority.
-const string INSTALLED_PLUGINS = "auth, dlg, pqj";
+const string INSTALLED_PLUGINS = "";
 
 // -----------------------------------------------------------------------------
 //                               Event Management
@@ -82,11 +82,11 @@ const string INSTALLED_PLUGINS = "auth, dlg, pqj";
 //   or placeable, or on the area or persistent object (such as a trigger or
 //   AoE) the object is in.
 // By default, local scripts have priority over global scripts. You can change
-// this for all scripts here or set thr priorities of scripts in the object
+// this for all scripts here or set the priorities of scripts in the object
 // variables on a case-by-case basis.
 
 // This is the default priority for global event hook-in scripts (i.e., on a
-// plugin object) that do not have a proprioty explicitly set.  It can be a
+// plugin object) that do not have a priority explicitly set.  It can be a
 // value from 0.0 - 10.0 (where a higher priority = earlier run time). If you
 // set this to a negative number, hook-in scripts with no explicit priority will
 // not run (not recommended).
@@ -95,8 +95,8 @@ const float GLOBAL_EVENT_PRIORITY = 5.0;
 
 // This is the default priority for local event hook-in scripts (i.e., set on an
 // object besides a plugin) that do not have a priority explicitly assigned.
-// This can be a value from 0.0 - 10.0 (where a hgher priority = earlier run
-// time). If you set this to a negative number, local hook-nin scripts with no
+// This can be a value from 0.0 - 10.0 (where a higher priority = earlier run
+// time). If you set this to a negative number, local hook-in scripts with no
 // explicit priority will not run (not recommended). It is recommended that you
 // set this higher than the value of GLOBAL_EVENT_PRIORITY. This ensures local
 // event scripts will run before most globally defined scripts.
@@ -106,10 +106,10 @@ const float LOCAL_EVENT_PRIORITY = 7.0;
 // This controls whether the Core handles tag-based scripting on its own. If
 // this is TRUE, tag-based scripts will be called as library scripts rather than
 // stand-alone scripts, allowing you to greatly reduce the number of tag-based
-// scripts in the module. If you have traditional ag-based scripts, those will
+// scripts in the module. If you have traditional tag-based scripts, those will
 // continue to work. The only reason you might want to turn this off is to
 // completely disable tag-based scripting or to use a plugin to call the desired
-// scripts (e.g., make a plaugin for the BioWare X2 functions, which handle
+// scripts (e.g., make a plugin for the BioWare X2 functions, which handle
 // tag-based scripting on their own).
 // Default value: TRUE
 const int ENABLE_TAGBASED_SCRIPTS = TRUE;
@@ -127,7 +127,7 @@ const int ENABLE_ON_HOUR_EVENT = TRUE;
 // the last PC exists the area. This is a good event for area cleanup scripts.
 const int ENABLE_ON_AREA_EMPTY_EVENT = TRUE;
 
-// This is the number of seconds after an area is emptied of player to run the
+// This is the number of seconds after an area is emptied of players to run the
 // OnAreaEmpty scripts for that area.
 // Default value: 180.0 (3 real-life minutes)
 const float ON_AREA_EMPTY_EVENT_DELAY = 180.0;

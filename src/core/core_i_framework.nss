@@ -309,7 +309,7 @@ int GetCurrentTimer();
 
 // ---< RunTagBasedScript >---
 // ---< core_i_framework >---
-// Runs the tagbased script for oItem corresponding to nEvent. Returns whether
+// Runs the tag-based script for oItem corresponding to nEvent. Returns whether
 // to abort the event.
 int RunTagBasedScript(object oItem, int nEvent);
 
