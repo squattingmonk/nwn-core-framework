@@ -28,13 +28,10 @@ void main()
     Debug("Initializing Core Framework...");
 
     // Set up our datapoints
-    location lLoc = GetStartingLocation();
-    EVENTS  = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_DATA_POINT, lLoc, FALSE, CORE_EVENTS);
-    PLUGINS = CreateObject(OBJECT_TYPE_PLACEABLE, CORE_DATA_POINT, lLoc, FALSE, CORE_PLUGINS);
+    EVENTS  = CreateDatapoint(CORE_EVENTS,  GetModule(), CORE_DATA_POINT, OBJECT_TYPE_PLACEABLE);
+    PLUGINS = CreateDatapoint(CORE_PLUGINS, GetModule(), CORE_DATA_POINT, OBJECT_TYPE_PLACEABLE);
     SetName(EVENTS,  DATA_PREFIX + "Core Events");
     SetName(PLUGINS, DATA_PREFIX + "Core Plugins");
-    SetDatapoint(CORE_EVENTS,  EVENTS);
-    SetDatapoint(CORE_PLUGINS, PLUGINS);
 
     // Manage them programatically
     SetUseableFlag(EVENTS,  FALSE);
