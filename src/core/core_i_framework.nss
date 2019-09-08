@@ -640,7 +640,7 @@ object GetEvent(string sEvent)
         SortEventScripts(oEvent);
 
         // Debug
-        DumpEventScripts(oEvent);
+        DumpEventScripts(oEvent, sEvent);
     }
 
     return oEvent;
@@ -753,9 +753,6 @@ object InitializeEvent(string sEvent, object oSelf, object oInit)
         // Mark the event as initialized
         SetLocalInt(oSelf, sEvent, TRUE);
     }
-
-    // Debug
-    DumpEventScripts(oSelf, sEvent);
 
     return oEvent;
 }
