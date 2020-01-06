@@ -42,10 +42,10 @@ string LIB_CURRENT_SCRIPT  = GetLocalString(LIBRARIES, LIB_LAST_SCRIPT);
 //   your script using the sScript parameter, which is less efficient.
 void RegisterLibraryScript(string sScript, int nEntry = 0);
 
-// ---< SetLibraryReturnValue >---
+// ---< LibraryReturn >---
 // ---< util_i_library >---
 // Sets the return value of the currently executing library to nValue.
-void SetLibraryReturnValue(int nValue);
+void LibraryReturn(int nValue);
 
 // ---< OnLibraryLoad >---
 // This is a user-defined function that registers function names to a unique (to
@@ -119,7 +119,7 @@ void RegisterLibraryScript(string sScript, int nEntry = 0)
     SetLocalInt(LIBRARIES, LIB_ENTRY + sLibrary + sScript, nEntry);
 }
 
-void SetLibraryReturnValue(int nValue)
+void LibraryReturn(int nValue)
 {
     SetLocalInt(OBJECT_SELF, LIB_RETURN, nValue);
 }
@@ -127,8 +127,8 @@ void SetLibraryReturnValue(int nValue)
 // These are dummy implementations to prevent nwnsc from complaining that they
 // do not exist. If you want to compile in the toolset rather than using nwnsc,
 // comment these lines out.
-#pragma default_function(OnLibraryLoad)
-#pragma default_function(OnLibraryScript)
+//#pragma default_function(OnLibraryLoad)
+//#pragma default_function(OnLibraryScript)
 
 
 // -----------------------------------------------------------------------------
