@@ -571,6 +571,30 @@
                 "type": "byte",
                 "value": 44
               },
+              "LIST": {
+                "type": "list",
+                "value": [
+                  {
+                    "__struct_id": 0,
+                    "CR": {
+                      "type": "float",
+                      "value": 0.5
+                    },
+                    "FACTION": {
+                      "type": "cexostring",
+                      "value": "Commoner"
+                    },
+                    "NAME": {
+                      "type": "cexostring",
+                      "value": "Poet"
+                    },
+                    "RESREF": {
+                      "type": "resref",
+                      "value": "dlg_demo_poet"
+                    }
+                  }
+                ]
+              },
               "STRREF": {
                 "type": "dword",
                 "value": 35
