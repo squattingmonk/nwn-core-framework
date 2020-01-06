@@ -252,7 +252,7 @@ string GetDialogTarget(string sPage, int nNode = DLG_NODE_NONE);
 // ---< dlg_i_dialogs >---
 // Sets the target for sPage's node nNode. If nNode is DLG_NODE_NONE, will set
 // the target on sPage itself.
-string SetDialogTarget(string sTarget, string sPage, int nNode = DLG_NODE_NONE);
+void SetDialogTarget(string sTarget, string sPage, int nNode = DLG_NODE_NONE);
 
 // ---< GetDialogState >---
 // ---< dlg_i_dialogs >---
@@ -268,7 +268,7 @@ int GetDialogState();
 // - DLG_STATE_INIT: the dialog is new and uninitialized
 // - DLG_STATE_RUNNING: the dialog has been initialized or is in progress
 // - DLG_STATE_ENDED: the dialog has finished
-int SetDialogState(int nState);
+void SetDialogState(int nState);
 
 // ---< GetDialogHistory >---
 // ---< dlg_i_dialogs >---
