@@ -40,7 +40,6 @@
 #include "util_i_varlists"
 #include "util_i_libraries"
 #include "dlg_c_dialogs"
-#include "core_i_constants"
 
 
 // -----------------------------------------------------------------------------
@@ -95,7 +94,7 @@ const int    DLG_EVENT_PAGE  = 0x02; // Page choice and action
 const int    DLG_EVENT_NODE  = 0x04; // Node selected action
 const int    DLG_EVENT_END   = 0x08; // Dialog ended normally
 const int    DLG_EVENT_ABORT = 0x10; // Dialog ended abnormally
-const int    DLG_EVENT_ALL   = 0xff;
+const int    DLG_EVENT_ALL   = 0x1f;
 
 const string DIALOG_EVENT_ON_INIT  = "OnDialogInit";
 const string DIALOG_EVENT_ON_PAGE  = "OnDialogPage";
@@ -122,8 +121,8 @@ const int DLG_TOKEN = 20000;
 //                               Global Variables
 // -----------------------------------------------------------------------------
 
-object DIALOGS  = GetDatapoint(DLG_SYSTEM, OBJECT_INVALID, FALSE);
-object DLG_SELF = GetDatapoint(DLG_SYSTEM, GetPCSpeaker(), FALSE);
+object DIALOGS  = GetDatapoint(DLG_SYSTEM);
+object DLG_SELF = GetLocalObject(GetPCSpeaker(), DLG_SYSTEM);
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
@@ -851,27 +850,13 @@ int GetDialogFilter(int nPos = 0)
 
 // ----- System Functions ------------------------------------------------------
 
-void InitializeDialogSystem()
-{
-    DestroyObject(DIALOGS);
-
-    Debug("Initializing dialogs system");
-    DIALOGS = CreateDatapoint(DLG_SYSTEM, GetModule(), CORE_DATA_POINT,
-                              OBJECT_TYPE_PLACEABLE);
-    SetName(DIALOGS, DATA_PREFIX + DLG_SYSTEM);
-    SetUseableFlag(DIALOGS, FALSE);
-}
-
 object GetDialogCache(string sDialog)
 {
-    if (!GetIsObjectValid(DIALOGS))
-        InitializeDialogSystem();
+    object oCache = GetDataItem(DIALOGS, DLG_PREFIX + sDialog);
+    if (!GetIsObjectValid(oCache))
+        oCache = CreateDataItem(DIALOGS, DLG_PREFIX + sDialog);
 
-    object oData = GetDatapoint(DLG_PREFIX + sDialog, DIALOGS, FALSE);
-    if (!GetIsObjectValid(oData))
-        oData = CreateDatapoint(DLG_PREFIX + sDialog, DIALOGS, CORE_DATA_ITEM, OBJECT_TYPE_ITEM);
-
-    return oData;
+    return oCache;
 }
 
 void RegisterDialogScript(string sDialog, string sScript = "", int nEvents = DLG_EVENT_ALL, float fPriority = DLG_PRIORITY_DEFAULT)
@@ -960,6 +945,14 @@ void SendDialogEvent(int nEvent)
             return;
         }
     }
+
+    if (!nCount)
+    {
+        sScript = GetDialog();
+        SetLocalInt(DLG_SELF, DLG_EVENT, nEvent);
+        Debug("Dialog event " + sEvent + " is running " + sScript);
+        RunLibraryScript(sScript);
+    }
 }
 
 void InitializeDialog()
@@ -985,10 +978,7 @@ void InitializeDialog()
         SetDialogLabel(DLG_NODE_BACK,     DLG_LABEL_BACK);
         SetDialogLabel(DLG_NODE_END,      DLG_LABEL_END);
 
-        if (!CountStringList(DLG_SELF, DIALOG_EVENT_ON_INIT))
-            RegisterDialogScript(sDialog, sDialog, DLG_EVENT_INIT);
-
-        SetDatapoint(DLG_SYSTEM, DLG_SELF, oPC);
+        SetLocalObject(oPC, DLG_SYSTEM, DLG_SELF);
         SendDialogEvent(DLG_EVENT_INIT);
         SetLocalInt(DLG_SELF, DLG_INITIALIZED, TRUE);
     }
@@ -999,7 +989,7 @@ void InitializeDialog()
     {
         Debug("Instantiating dialog " + sDialog + " for " + GetName(oPC));
         DLG_SELF = CopyItem(DLG_SELF, DIALOGS, TRUE);
-        SetDatapoint(DLG_SYSTEM, DLG_SELF, oPC);
+        SetLocalObject(oPC, DLG_SYSTEM, DLG_SELF);
         SetDialogState(DLG_STATE_RUNNING);
         SetDialogNode(DLG_NODE_NONE);
     }

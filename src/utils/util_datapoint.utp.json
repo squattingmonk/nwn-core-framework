@@ -22,7 +22,7 @@
   },
   "Comment": {
     "type": "cexostring",
-    "value": "This is a template datapoint used by the Core Framework."
+    "value": "This is a template datapoint."
   },
   "Conversation": {
     "type": "resref",
@@ -83,7 +83,7 @@
   "LocName": {
     "type": "cexolocstring",
     "value": {
-      "0": "Template: Core Datapoint"
+      "0": "Template: Datapoint"
     }
   },
   "OnClick": {
@@ -172,11 +172,11 @@
   },
   "Tag": {
     "type": "cexostring",
-    "value": "core_datapoint"
+    "value": "util_datapoint"
   },
   "TemplateResRef": {
     "type": "resref",
-    "value": "core_datapoint"
+    "value": "util_datapoint"
   },
   "TrapDetectable": {
     "type": "byte",

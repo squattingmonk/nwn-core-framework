@@ -131,11 +131,11 @@
                     "__struct_id": 0,
                     "NAME": {
                       "type": "cexostring",
-                      "value": "Template: Core Datapoint"
+                      "value": "Template: Datapoint"
                     },
                     "RESREF": {
                       "type": "resref",
-                      "value": "core_datapoint"
+                      "value": "util_datapoint"
                     }
                   }
                 ]

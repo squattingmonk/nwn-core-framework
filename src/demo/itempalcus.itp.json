@@ -434,11 +434,11 @@
                     "__struct_id": 0,
                     "NAME": {
                       "type": "cexostring",
-                      "value": "Template: Core Data Item"
+                      "value": "Template: Data Item"
                     },
                     "RESREF": {
                       "type": "resref",
-                      "value": "core_dataitem"
+                      "value": "util_dataitem"
                     }
                   }
                 ]

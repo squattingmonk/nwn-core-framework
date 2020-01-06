@@ -14,7 +14,7 @@
   },
   "Comment": {
     "type": "cexostring",
-    "value": "This is a template for a data item used by the Core Framework."
+    "value": "This is a template for a data storage item."
   },
   "Cost": {
     "type": "dword",
@@ -41,7 +41,7 @@
   "LocalizedName": {
     "type": "cexolocstring",
     "value": {
-      "0": "Template: Core Data Item"
+      "0": "Template: Data Item"
     }
   },
   "ModelPart1": {
@@ -70,10 +70,10 @@
   },
   "Tag": {
     "type": "cexostring",
-    "value": "core_dataitem"
+    "value": "util_dataitem"
   },
   "TemplateResRef": {
     "type": "resref",
-    "value": "core_dataitem"
+    "value": "util_dataitem"
   }
 }

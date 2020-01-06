@@ -13,7 +13,8 @@
 // -----------------------------------------------------------------------------
 
 const string DATA_PREFIX = "Datapoint: ";
-const string DATA_RESREF = "nw_waypoint001";
+const string DATA_POINT  = "util_datapoint";
+const string DATA_ITEM   = "util_dataitem";
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
@@ -25,15 +26,15 @@ const string DATA_RESREF = "nw_waypoint001";
 // If oOwner is invalid, it will be the module. The waypoint is created at
 // oOwner's location (or the module starting location if oOwner is an area or
 // the module).
-object CreateDatapoint(string sSystem, object oOwner = OBJECT_INVALID, string sResRef = DATA_RESREF, int nType = OBJECT_TYPE_WAYPOINT);
+object CreateDatapoint(string sSystem, object oOwner = OBJECT_INVALID);
 
 // ---< GetDatapoint >---
 // ---< util_i_datapoint >---
 // Returns the object that oOwner uses to store sSystem-related variables. If
 // oOwner is invalid, it will be the module. If the datapoint has not been
 // created and bCreate is TRUE, the system will create one. The system-generated
-// datapoint is a waypoint created at oOwner's location (or the module starting
-// location if oOwner is an area or the module).
+// datapoint is an invisible placeable created at oOwner's location (or the
+// module starting location if oOwner is an area or the module).
 object GetDatapoint(string sSystem, object oOwner = OBJECT_INVALID, int bCreate = TRUE);
 
 // ---< SetDatapoint >---
@@ -43,11 +44,23 @@ object GetDatapoint(string sSystem, object oOwner = OBJECT_INVALID, int bCreate 
 // more control over the resref, object type, or location of your datapoint.
 void SetDatapoint(string sSystem, object oTarget, object oOwner = OBJECT_INVALID);
 
+// ---< CreateDataItem >---
+// ---< util_i_datapoint >---
+// Creates a data item on oDatapoint that it can use to store sSubSystem-related
+// variables.
+object CreateDataItem(object oDatapoint, string sSubSystem);
+
+// ---< GetDataItem >---
+// ---< util_i_datapoint >---
+// Returns the item that oDatapoint uses to store sSubSystem-related variables.
+object GetDataItem(object oDatapoint, string sSubSystem);
+
+
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
 
-object CreateDatapoint(string sSystem, object oOwner = OBJECT_INVALID, string sResRef = DATA_RESREF, int nType = OBJECT_TYPE_WAYPOINT)
+object CreateDatapoint(string sSystem, object oOwner = OBJECT_INVALID)
 {
     if (oOwner == OBJECT_INVALID)
         oOwner = GetModule();
@@ -56,11 +69,9 @@ object CreateDatapoint(string sSystem, object oOwner = OBJECT_INVALID, string sR
     if (!GetObjectType(oOwner))
         lLoc = GetStartingLocation();
 
-    object oData;
-    if (nType == OBJECT_TYPE_ITEM)
-        oData = CreateItemOnObject(sResRef, oOwner);
-    else
-        oData = CreateObject(nType, sResRef, lLoc);
+    object oData = CreateObject(OBJECT_TYPE_PLACEABLE, DATA_POINT, lLoc);
+    SetName(oData, DATA_PREFIX + sSystem);
+    SetUseableFlag(oData, FALSE);
     SetDatapoint(sSystem, oData, oOwner);
     return oData;
 }
@@ -84,4 +95,17 @@ void SetDatapoint(string sSystem, object oTarget, object oOwner = OBJECT_INVALID
         oOwner = GetModule();
 
     SetLocalObject(oOwner, DATA_PREFIX + sSystem, oTarget);
+}
+
+object CreateDataItem(object oDatapoint, string sSubSystem)
+{
+    object oItem = CreateItemOnObject(DATA_ITEM, oDatapoint);
+    SetLocalObject(oDatapoint, sSubSystem, oItem);
+    SetName(oItem, sSubSystem);
+    return oItem;
+}
+
+object GetDataItem(object oDatapoint, string sSubSystem)
+{
+    return GetLocalObject(oDatapoint, sSubSystem);
 }

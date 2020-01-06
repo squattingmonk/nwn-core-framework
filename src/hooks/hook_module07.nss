@@ -27,16 +27,6 @@ void main()
 
     Debug("Initializing Core Framework...");
 
-    // Set up our datapoints
-    EVENTS  = CreateDatapoint(CORE_EVENTS,  GetModule(), CORE_DATA_POINT, OBJECT_TYPE_PLACEABLE);
-    PLUGINS = CreateDatapoint(CORE_PLUGINS, GetModule(), CORE_DATA_POINT, OBJECT_TYPE_PLACEABLE);
-    SetName(EVENTS,  DATA_PREFIX + "Core Events");
-    SetName(PLUGINS, DATA_PREFIX + "Core Plugins");
-
-    // Manage them programatically
-    SetUseableFlag(EVENTS,  FALSE);
-    SetUseableFlag(PLUGINS, FALSE);
-
     // Register all plugins specified in the core config file
     LoadPlugins(INSTALLED_PLUGINS);
 

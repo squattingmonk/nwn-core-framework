@@ -15,11 +15,9 @@
 // -----------------------------------------------------------------------------
 
 // Data structures
-const string CORE_EVENTS     = "CORE_EVENTS";
-const string CORE_PLUGINS    = "CORE_PLUGINS";
-const string CORE_TIMERS     = "CORE_TIMERS";
-const string CORE_DATA_ITEM  = "core_dataitem";
-const string CORE_DATA_POINT = "core_datapoint";
+const string CORE_EVENTS  = "Core Events";
+const string CORE_PLUGINS = "Core Plugins";
+const string CORE_TIMERS  = "Core Timers";
 
 // Script names
 const string SPELLHOOK_EVENT_SCRIPT = "hook_spellhook";
@@ -29,8 +27,8 @@ const string SPELLHOOK_EVENT_SCRIPT = "hook_spellhook";
 // -----------------------------------------------------------------------------
 
 // If these objects do not exist, they will be initialized OnModuleLoad.
-object PLUGINS = GetDatapoint(CORE_PLUGINS, OBJECT_INVALID, FALSE);
-object EVENTS  = GetDatapoint(CORE_EVENTS,  OBJECT_INVALID, FALSE);
+object PLUGINS = GetDatapoint(CORE_PLUGINS);
+object EVENTS  = GetDatapoint(CORE_EVENTS);
 object TIMERS  = GetDatapoint(CORE_TIMERS);
 
 // -----------------------------------------------------------------------------
