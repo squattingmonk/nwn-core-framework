@@ -822,6 +822,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
 
         // Execute the script and return the saved state
         SetLocalObject(PLUGINS, PLUGIN_LAST, oSource);
+        SetLocalObject(oEvent, EVENT_TRIGGERED, oInit);
         Debug("Executing " + sScript);
         RunLibraryScript(sScript, oSelf);
         nExecuted++;
