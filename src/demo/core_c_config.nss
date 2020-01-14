@@ -63,7 +63,7 @@ const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
 // This is a comma-separated list of plugins that should be loaded OnModuleLoad.
 // The order indicates priority.
-const string INSTALLED_PLUGINS = "bw_defaultevents";
+const string INSTALLED_PLUGINS = "bw_defaultevents, dlg_plugin";
 
 // -----------------------------------------------------------------------------
 //                               Event Management
