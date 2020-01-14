@@ -14,5 +14,5 @@
 void main()
 {
     SendDialogEvent(DLG_EVENT_ABORT);
-    DestroyObject(DLG_SELF);
+    DestroyObject(DIALOG);
 }

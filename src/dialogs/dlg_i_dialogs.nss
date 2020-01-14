@@ -49,6 +49,9 @@
 const string DLG_SYSTEM = "Dynamic Dialogs System";
 const string DLG_PREFIX = "Dynamic Dialog: ";
 
+const string DLG_RESREF_ZOOM   = "dlg_convzoom";
+const string DLG_RESREF_NOZOOM = "dlg_convnozoom";
+
 // ----- VarNames --------------------------------------------------------------
 
 const string DLG_DIALOG        = "*Dialog";
@@ -67,7 +70,10 @@ const string DLG_HISTORY       = "*History";
 const string DLG_OFFSET        = "*Offset";
 const string DLG_FILTER        = "*Filter";
 const string DLG_FILTER_MAX    = "*FilterMax";
-
+const string DLG_SPEAKER       = "*Speaker";
+const string DLG_PRIVATE       = "*Private";
+const string DLG_NO_ZOOM       = "*NoZoom";
+const string DLG_NO_HELLO      = "*NoHello";
 
 // ----- Automated Node IDs ----------------------------------------------------
 
@@ -122,7 +128,8 @@ const int DLG_TOKEN = 20000;
 // -----------------------------------------------------------------------------
 
 object DIALOGS  = GetDatapoint(DLG_SYSTEM);
-object DLG_SELF = GetLocalObject(GetPCSpeaker(), DLG_SYSTEM);
+object DIALOG   = GetLocalObject(GetPCSpeaker(), DLG_SYSTEM);
+object DLG_SELF = GetLocalObject(GetPCSpeaker(), DLG_SPEAKER);
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
@@ -134,6 +141,21 @@ object DLG_SELF = GetLocalObject(GetPCSpeaker(), DLG_SYSTEM);
 // ---< dlg_i_dialogs >---
 // Converts a DLG_EVENT_* constant to string representation.
 string DialogEventToString(int nEvent);
+
+// ---< StartDialog >---
+// ---< dlg_i_dialogs >---
+// Initiates a conversation between oPC and oTarget. If oTarget is not a
+// creature or placeable, the PC will talk to himself.
+// Parameters:
+// - oPC: The player character to speak with.
+// - oTarget: The object (usually a creature) that the PC will speak with.
+// - sDialog: The library script to use for the conversation. If blank,
+//   will read the oTarget's local string variable "*Dialog".
+// - bMake: prevent other players from hearing the conversation
+// - bNoHello: prevent the "hello" voicechat from playing on dialog start
+// - bNoZoom: prevent zooming in towards the PC on dialog start
+void StartDialog(object oPC, object oTarget = OBJECT_SELF, string sDialog = "", int bPrivate = FALSE, int bNoHello = FALSE, int bNoZoom = FALSE);
+
 
 // ----- Dialog Setup ----------------------------------------------------------
 
@@ -472,21 +494,43 @@ string DialogEventToString(int nEvent)
      return "";
 }
 
+void StartDialog(object oPC, object oTarget = OBJECT_SELF, string sDialog = "", int bPrivate = FALSE, int bNoHello = FALSE, int bNoZoom = FALSE)
+{
+    if (sDialog != "")
+        SetLocalString(oPC, DLG_DIALOG, sDialog);
+
+    // Since dialog zoom is not exposed to scripting, we use two dialogs: one
+    // that zooms and one that doesn't.
+    string sResRef = (bNoZoom ? DLG_RESREF_NOZOOM : DLG_RESREF_ZOOM);
+
+    // If the object is not a creature or placeable, we will have the PC talk
+    // with himself.
+    int nType = GetObjectType(oTarget);
+    if (nType != OBJECT_TYPE_PLACEABLE && nType != OBJECT_TYPE_CREATURE)
+    {
+        // Set the NPC speaker on the PC so we can get the object the PC is
+        // supposed to be speaking with.
+        SetLocalObject(oPC, DLG_SPEAKER, oTarget);
+        oTarget = oPC;
+    }
+
+    AssignCommand(oPC, ActionStartConversation(oTarget, sResRef, bPrivate, !bNoHello));
+}
 
 
 // ----- Dialog Setup ----------------------------------------------------------
 
 int HasDialogPage(string sPage)
 {
-    return GetLocalInt(DLG_SELF, sPage + DLG_HAS);
+    return GetLocalInt(DIALOG, sPage + DLG_HAS);
 }
 
 string AddDialogPage(string sPage, string sText = "", string sData = "")
 {
     if (HasDialogPage(sPage))
     {
-        int nCount = GetLocalInt(DLG_SELF, sPage + DLG_CONTINUE);
-        SetLocalInt(DLG_SELF, sPage + DLG_CONTINUE, ++nCount);
+        int nCount = GetLocalInt(DIALOG, sPage + DLG_CONTINUE);
+        SetLocalInt(DIALOG, sPage + DLG_CONTINUE, ++nCount);
 
         string sParent = sPage;
 
@@ -500,10 +544,10 @@ string AddDialogPage(string sPage, string sText = "", string sData = "")
     }
 
     Debug("Adding dialog page " + sPage);
-    SetLocalString(DLG_SELF, sPage + DLG_TEXT,  sText);
-    SetLocalString(DLG_SELF, sPage + DLG_DATA,  sData);
-    SetLocalString(DLG_SELF, sPage + DLG_NODES, sPage);
-    SetLocalInt   (DLG_SELF, sPage + DLG_HAS,   TRUE);
+    SetLocalString(DIALOG, sPage + DLG_TEXT,  sText);
+    SetLocalString(DIALOG, sPage + DLG_DATA,  sData);
+    SetLocalString(DIALOG, sPage + DLG_NODES, sPage);
+    SetLocalInt   (DIALOG, sPage + DLG_HAS,   TRUE);
     return sPage;
 }
 
@@ -518,20 +562,20 @@ int AddDialogNode(string sPage, string sText, string sTarget, string sData = "")
     if (sPage == "")
         return DLG_NODE_NONE;
 
-    int    nNode = GetLocalInt(DLG_SELF, sPage + DLG_NODES);
+    int    nNode = GetLocalInt(DIALOG, sPage + DLG_NODES);
     string sNode = NodeToString(sPage, nNode);
 
     Debug("Adding dialog node " + sNode);
-    SetLocalString(DLG_SELF, sNode + DLG_TEXT,   sText);
-    SetLocalString(DLG_SELF, sNode + DLG_TARGET, sTarget);
-    SetLocalString(DLG_SELF, sNode + DLG_DATA,   sData);
-    SetLocalInt   (DLG_SELF, sPage + DLG_NODES,  nNode + 1);
+    SetLocalString(DIALOG, sNode + DLG_TEXT,   sText);
+    SetLocalString(DIALOG, sNode + DLG_TARGET, sTarget);
+    SetLocalString(DIALOG, sNode + DLG_DATA,   sData);
+    SetLocalInt   (DIALOG, sPage + DLG_NODES,  nNode + 1);
     return nNode;
 }
 
 int CountDialogNodes(string sPage)
 {
-    return GetLocalInt(DLG_SELF, sPage + DLG_NODES);
+    return GetLocalInt(DIALOG, sPage + DLG_NODES);
 }
 
 int CopyDialogNode(string sSource, int nSource, string sTarget, int nTarget = DLG_NODE_NONE)
@@ -545,18 +589,18 @@ int CopyDialogNode(string sSource, int nSource, string sTarget, int nTarget = DL
     if (nTarget == DLG_NODE_NONE)
     {
         nTarget = nTargetCount;
-        SetLocalInt(DLG_SELF, sSource + DLG_NODES, ++nTargetCount);
+        SetLocalInt(DIALOG, sSource + DLG_NODES, ++nTargetCount);
     }
 
     string sText, sData, sDest;
     sSource = NodeToString(sSource, nSource);
     sTarget = NodeToString(sTarget, nTarget);
-    sText = GetLocalString(DLG_SELF, sSource + DLG_TEXT);
-    sData = GetLocalString(DLG_SELF, sSource + DLG_DATA);
-    sDest = GetLocalString(DLG_SELF, sSource + DLG_TARGET);
-    SetLocalString(DLG_SELF, sTarget + DLG_TEXT,   sText);
-    SetLocalString(DLG_SELF, sTarget + DLG_DATA,   sData);
-    SetLocalString(DLG_SELF, sTarget + DLG_TARGET, sDest);
+    sText = GetLocalString(DIALOG, sSource + DLG_TEXT);
+    sData = GetLocalString(DIALOG, sSource + DLG_DATA);
+    sDest = GetLocalString(DIALOG, sSource + DLG_TARGET);
+    SetLocalString(DIALOG, sTarget + DLG_TEXT,   sText);
+    SetLocalString(DIALOG, sTarget + DLG_DATA,   sData);
+    SetLocalString(DIALOG, sTarget + DLG_TARGET, sDest);
     return nTarget;
 }
 
@@ -570,18 +614,18 @@ int CopyDialogNodes(string sSource, string sTarget)
     for (i = 0; i < nSource; i++)
     {
         sNode = NodeToString(sSource, i);
-        sText = GetLocalString(DLG_SELF, sNode + DLG_TEXT);
-        sData = GetLocalString(DLG_SELF, sNode + DLG_DATA);
-        sDest = GetLocalString(DLG_SELF, sNode + DLG_TARGET);
+        sText = GetLocalString(DIALOG, sNode + DLG_TEXT);
+        sData = GetLocalString(DIALOG, sNode + DLG_DATA);
+        sDest = GetLocalString(DIALOG, sNode + DLG_TARGET);
 
         sNode = NodeToString(sTarget, nTarget + i);
-        SetLocalString(DLG_SELF, sNode + DLG_TEXT,   sText);
-        SetLocalString(DLG_SELF, sNode + DLG_DATA,   sData);
-        SetLocalString(DLG_SELF, sNode + DLG_TARGET, sDest);
+        SetLocalString(DIALOG, sNode + DLG_TEXT,   sText);
+        SetLocalString(DIALOG, sNode + DLG_DATA,   sData);
+        SetLocalString(DIALOG, sNode + DLG_TARGET, sDest);
     }
 
     nTarget += i;
-    SetLocalInt(DLG_SELF, sTarget + DLG_NODES, nTarget);
+    SetLocalInt(DIALOG, sTarget + DLG_NODES, nTarget);
     return nTarget;
 }
 
@@ -595,17 +639,17 @@ int DeleteDialogNode(string sPage, int nNode)
     for (nNode; nNode < nNodes; nNode++)
     {
         sNode = NodeToString(sPage, nNode + 1);
-        sText = GetLocalString(DLG_SELF, sNode + DLG_TEXT);
-        sData = GetLocalString(DLG_SELF, sNode + DLG_DATA);
-        sDest = GetLocalString(DLG_SELF, sNode + DLG_TARGET);
+        sText = GetLocalString(DIALOG, sNode + DLG_TEXT);
+        sData = GetLocalString(DIALOG, sNode + DLG_DATA);
+        sDest = GetLocalString(DIALOG, sNode + DLG_TARGET);
 
         sNode = NodeToString(sPage, nNode);
-        SetLocalString(DLG_SELF, sNode + DLG_TEXT,   sText);
-        SetLocalString(DLG_SELF, sNode + DLG_DATA,   sData);
-        SetLocalString(DLG_SELF, sNode + DLG_TARGET, sDest);
+        SetLocalString(DIALOG, sNode + DLG_TEXT,   sText);
+        SetLocalString(DIALOG, sNode + DLG_DATA,   sData);
+        SetLocalString(DIALOG, sNode + DLG_TARGET, sDest);
     }
 
-    SetLocalInt(DLG_SELF, sPage + DLG_NODES, --nNodes);
+    SetLocalInt(DIALOG, sPage + DLG_NODES, --nNodes);
     return nNodes;
 }
 
@@ -616,9 +660,9 @@ void DeleteDialogNodes(string sPage)
     for (i = 0; i < nNodes; i++)
     {
         sNode = NodeToString(sPage, i);
-        DeleteLocalString(DLG_SELF, sNode + DLG_TEXT);
-        DeleteLocalString(DLG_SELF, sNode + DLG_TARGET);
-        DeleteLocalString(DLG_SELF, sNode + DLG_DATA);
+        DeleteLocalString(DIALOG, sNode + DLG_TEXT);
+        DeleteLocalString(DIALOG, sNode + DLG_TARGET);
+        DeleteLocalString(DIALOG, sNode + DLG_DATA);
     }
 }
 
@@ -642,7 +686,7 @@ void FilterDialogNodes(int nStart, int nEnd = -1)
 
     for (i = nBlockStart; i <= nBlockEnd; i++)
     {
-        nFilter = GetLocalInt(DLG_SELF, DLG_FILTER + IntToString(i));
+        nFilter = GetLocalInt(DIALOG, DLG_FILTER + IntToString(i));
 
         if (i == nBlockStart)
             nBitStart = nStart % 30;
@@ -657,13 +701,13 @@ void FilterDialogNodes(int nStart, int nEnd = -1)
         for (j = nBitStart; j <= nBitEnd; j++)
             nFilter |= 1 << j;
 
-        SetLocalInt(DLG_SELF, DLG_FILTER + IntToString(i), nFilter);
+        SetLocalInt(DIALOG, DLG_FILTER + IntToString(i), nFilter);
     }
 
-    int nMax = GetLocalInt(DLG_SELF, DLG_FILTER_MAX);
+    int nMax = GetLocalInt(DIALOG, DLG_FILTER_MAX);
 
     if (nMax <= nBlockEnd)
-        SetLocalInt(DLG_SELF, DLG_FILTER_MAX, nBlockEnd + 1);
+        SetLocalInt(DIALOG, DLG_FILTER_MAX, nBlockEnd + 1);
 }
 
 
@@ -671,12 +715,12 @@ void FilterDialogNodes(int nStart, int nEnd = -1)
 
 string GetDialog()
 {
-    return GetLocalString(DLG_SELF, DLG_DIALOG);
+    return GetLocalString(DIALOG, DLG_DIALOG);
 }
 
 string GetDialogNodes(string sPage)
 {
-    return GetLocalString(DLG_SELF, sPage + DLG_NODES);
+    return GetLocalString(DIALOG, sPage + DLG_NODES);
 }
 
 void SetDialogNodes(string sPage, string sSource = "")
@@ -684,97 +728,97 @@ void SetDialogNodes(string sPage, string sSource = "")
     if (sSource == "")
         sSource = sPage;
 
-    SetLocalString(DLG_SELF, sPage + DLG_NODES, sSource);
+    SetLocalString(DIALOG, sPage + DLG_NODES, sSource);
 }
 
 string GetDialogText(string sPage, int nNode = DLG_NODE_NONE)
 {
-    return GetLocalString(DLG_SELF, NodeToString(sPage, nNode) + DLG_TEXT);
+    return GetLocalString(DIALOG, NodeToString(sPage, nNode) + DLG_TEXT);
 }
 
 void SetDialogText(string sText, string sPage, int nNode = DLG_NODE_NONE)
 {
-    SetLocalString(DLG_SELF, NodeToString(sPage, nNode) + DLG_TEXT, sText);
+    SetLocalString(DIALOG, NodeToString(sPage, nNode) + DLG_TEXT, sText);
 }
 
 string GetDialogData(string sPage, int nNode = DLG_NODE_NONE)
 {
-    return GetLocalString(DLG_SELF, NodeToString(sPage, nNode) + DLG_DATA);
+    return GetLocalString(DIALOG, NodeToString(sPage, nNode) + DLG_DATA);
 }
 
 void SetDialogData(string sData, string sPage, int nNode = DLG_NODE_NONE)
 {
-    SetLocalString(DLG_SELF, NodeToString(sPage, nNode) + DLG_DATA, sData);
+    SetLocalString(DIALOG, NodeToString(sPage, nNode) + DLG_DATA, sData);
 }
 
 string GetDialogTarget(string sPage, int nNode = DLG_NODE_NONE)
 {
-    return GetLocalString(DLG_SELF, NodeToString(sPage, nNode) + DLG_TARGET);
+    return GetLocalString(DIALOG, NodeToString(sPage, nNode) + DLG_TARGET);
 }
 
 void SetDialogTarget(string sTarget, string sPage, int nNode = DLG_NODE_NONE)
 {
-    SetLocalString(DLG_SELF, NodeToString(sPage, nNode) + DLG_TARGET, sTarget);
+    SetLocalString(DIALOG, NodeToString(sPage, nNode) + DLG_TARGET, sTarget);
 }
 
 int GetDialogState()
 {
-    return GetLocalInt(DLG_SELF, DLG_STATE);
+    return GetLocalInt(DIALOG, DLG_STATE);
 }
 
 void SetDialogState(int nState)
 {
-    SetLocalInt(DLG_SELF, DLG_STATE, nState);
+    SetLocalInt(DIALOG, DLG_STATE, nState);
 }
 
 string GetDialogHistory()
 {
-    return GetLocalString(DLG_SELF, DLG_HISTORY);
+    return GetLocalString(DIALOG, DLG_HISTORY);
 }
 
 void SetDialogHistory(string sHistory)
 {
-    SetLocalString(DLG_SELF, DLG_HISTORY, sHistory);
+    SetLocalString(DIALOG, DLG_HISTORY, sHistory);
 }
 
 void ClearDialogHistory()
 {
-    DeleteLocalString(DLG_SELF, DLG_HISTORY);
+    DeleteLocalString(DIALOG, DLG_HISTORY);
 }
 
 string GetDialogPage()
 {
-    return GetLocalString(DLG_SELF, DLG_CURRENT_PAGE);
+    return GetLocalString(DIALOG, DLG_CURRENT_PAGE);
 }
 
 void SetDialogPage(string sPage)
 {
-    string sHistory = GetLocalString(DLG_SELF, DLG_HISTORY);
-    string sCurrent = GetLocalString(DLG_SELF, DLG_CURRENT_PAGE);
+    string sHistory = GetLocalString(DIALOG, DLG_HISTORY);
+    string sCurrent = GetLocalString(DIALOG, DLG_CURRENT_PAGE);
 
     if (sHistory == "" || sHistory == sCurrent)
-        SetLocalString(DLG_SELF, DLG_HISTORY, sCurrent);
+        SetLocalString(DIALOG, DLG_HISTORY, sCurrent);
     else if (GetListItem(sHistory, 0) != sCurrent)
-        SetLocalString(DLG_SELF, DLG_HISTORY, MergeLists(sCurrent, sHistory));
+        SetLocalString(DIALOG, DLG_HISTORY, MergeLists(sCurrent, sHistory));
 
-    SetLocalString(DLG_SELF, DLG_CURRENT_PAGE, sPage);
-    SetLocalInt(DLG_SELF, DLG_CURRENT_PAGE, TRUE);
-    SetLocalInt(DLG_SELF, DLG_OFFSET, 0);
+    SetLocalString(DIALOG, DLG_CURRENT_PAGE, sPage);
+    SetLocalInt(DIALOG, DLG_CURRENT_PAGE, TRUE);
+    SetLocalInt(DIALOG, DLG_OFFSET, 0);
 }
 
 int GetDialogNode()
 {
-    return GetLocalInt(DLG_SELF, DLG_CURRENT_NODE);
+    return GetLocalInt(DIALOG, DLG_CURRENT_NODE);
 }
 
 void SetDialogNode(int nNode)
 {
-    SetLocalInt(DLG_SELF, DLG_CURRENT_NODE, nNode);
+    SetLocalInt(DIALOG, DLG_CURRENT_NODE, nNode);
 }
 
 int GetDialogEvent()
 {
-    return GetLocalInt(DLG_SELF, DLG_EVENT);
+    return GetLocalInt(DIALOG, DLG_EVENT);
 }
 
 string GetDialogLabel(int nNode, string sPage = "")
@@ -782,10 +826,10 @@ string GetDialogLabel(int nNode, string sPage = "")
     if (nNode >= DLG_NODE_NONE)
         return "";
 
-    if (!GetLocalInt(DLG_SELF, NodeToString(sPage, nNode) + DLG_TEXT))
+    if (!GetLocalInt(DIALOG, NodeToString(sPage, nNode) + DLG_TEXT))
         sPage = "";
 
-    return GetLocalString(DLG_SELF, NodeToString(sPage, nNode) + DLG_TEXT);
+    return GetLocalString(DIALOG, NodeToString(sPage, nNode) + DLG_TEXT);
 }
 
 void SetDialogLabel(int nNode, string sLabel, string sPage = "")
@@ -794,31 +838,31 @@ void SetDialogLabel(int nNode, string sLabel, string sPage = "")
         return;
 
     string sNode = NodeToString(sPage, nNode);
-    SetLocalString(DLG_SELF, sNode + DLG_TEXT, sLabel);
-    SetLocalInt   (DLG_SELF, sNode + DLG_TEXT, TRUE);
+    SetLocalString(DIALOG, sNode + DLG_TEXT, sLabel);
+    SetLocalInt   (DIALOG, sNode + DLG_TEXT, TRUE);
 }
 
 void EnableDialogNode(int nNode, string sPage = "")
 {
     string sNode = NodeToString(sPage, nNode);
-    SetLocalInt(DLG_SELF, sNode + DLG_ENABLED, TRUE);
-    SetLocalInt(DLG_SELF, sNode + DLG_HAS,     TRUE);
+    SetLocalInt(DIALOG, sNode + DLG_ENABLED, TRUE);
+    SetLocalInt(DIALOG, sNode + DLG_HAS,     TRUE);
 }
 
 void DisableDialogNode(int nNode, string sPage = "")
 {
     string sNode = NodeToString(sPage, nNode);
-    SetLocalInt(DLG_SELF, sNode + DLG_ENABLED, FALSE);
-    SetLocalInt(DLG_SELF, sNode + DLG_HAS,     TRUE);
+    SetLocalInt(DIALOG, sNode + DLG_ENABLED, FALSE);
+    SetLocalInt(DIALOG, sNode + DLG_HAS,     TRUE);
 }
 
 int DialogNodeEnabled(int nNode, string sPage = "")
 {
     string sNode = NodeToString(sPage, nNode);
-    if (!GetLocalInt(DLG_SELF, sNode + DLG_HAS))
+    if (!GetLocalInt(DIALOG, sNode + DLG_HAS))
         sNode = NodeToString("", nNode);
 
-    return GetLocalInt(DLG_SELF, sNode + DLG_ENABLED);
+    return GetLocalInt(DIALOG, sNode + DLG_ENABLED);
 }
 
 void EnableDialogEnd(string sLabel = DLG_LABEL_END, string sPage = "")
@@ -835,17 +879,17 @@ void EnableDialogBack(string sLabel = DLG_LABEL_BACK, string sPage = "")
 
 int GetDialogOffset()
 {
-    return GetLocalInt(DLG_SELF, DLG_OFFSET);
+    return GetLocalInt(DIALOG, DLG_OFFSET);
 }
 
 void SetDialogOffset(int nOffset)
 {
-    SetLocalInt(DLG_SELF, DLG_OFFSET, nOffset);
+    SetLocalInt(DIALOG, DLG_OFFSET, nOffset);
 }
 
 int GetDialogFilter(int nPos = 0)
 {
-    return GetLocalInt(DLG_SELF, DLG_FILTER + IntToString(nPos % 30));
+    return GetLocalInt(DIALOG, DLG_FILTER + IntToString(nPos % 30));
 }
 
 // ----- System Functions ------------------------------------------------------
@@ -890,20 +934,20 @@ void RegisterDialogScript(string sDialog, string sScript = "", int nEvents = DLG
 void SortDialogScripts(int nEvent)
 {
     string sEvent = DialogEventToString(nEvent);
-    int nCount = CountFloatList(DLG_SELF, sEvent);
+    int nCount = CountFloatList(DIALOG, sEvent);
     int i, j, nLarger;
     float fCurrent, fCompare;
 
     Debug("Sorting " + IntToString(nCount) + " scripts for " + sEvent);
 
     // Initialize the ints to allow us to set them out of order
-    DeclareIntList(DLG_SELF, nCount, sEvent);
+    DeclareIntList(DIALOG, nCount, sEvent);
 
     // Outer loop: process each priority
     for (i = 0; i < nCount; i++)
     {
         nLarger = 0;
-        fCurrent = GetListFloat(DLG_SELF, i, sEvent);
+        fCurrent = GetListFloat(DIALOG, i, sEvent);
 
         // Inner loop: counts the priorities higher than the current one
         for (j = 0; j < nCount; j++)
@@ -911,33 +955,33 @@ void SortDialogScripts(int nEvent)
             if (i == j)
                 continue;
 
-            fCompare = GetListFloat(DLG_SELF, j, sEvent);
+            fCompare = GetListFloat(DIALOG, j, sEvent);
             if ((fCompare > fCurrent) || (fCompare == fCurrent && i < j))
                 nLarger++;
         }
 
-        SetListInt(DLG_SELF, nLarger, i, sEvent);
+        SetListInt(DIALOG, nLarger, i, sEvent);
     }
 
     // Mark the event as sorted
-    SetLocalInt(DLG_SELF, sEvent, TRUE);
+    SetLocalInt(DIALOG, sEvent, TRUE);
 }
 
 void SendDialogEvent(int nEvent)
 {
     string sScript, sEvent = DialogEventToString(nEvent);
 
-    if (!GetLocalInt(DLG_SELF, sEvent))
+    if (!GetLocalInt(DIALOG, sEvent))
         SortDialogScripts(nEvent);
 
-    int i, nIndex, nCount = CountIntList(DLG_SELF, sEvent);
+    int i, nIndex, nCount = CountIntList(DIALOG, sEvent);
 
     for (i = 0; i < nCount; i++)
     {
-        nIndex  = GetListInt   (DLG_SELF, i,      sEvent);
-        sScript = GetListString(DLG_SELF, nIndex, sEvent);
+        nIndex  = GetListInt   (DIALOG, i,      sEvent);
+        sScript = GetListString(DIALOG, nIndex, sEvent);
 
-        SetLocalInt(DLG_SELF, DLG_EVENT, nEvent);
+        SetLocalInt(DIALOG, DLG_EVENT, nEvent);
         Debug("Dialog event " + sEvent + " is running " + sScript);
         if (RunLibraryScript(sScript) & DLG_SCRIPT_ABORT)
         {
@@ -949,7 +993,7 @@ void SendDialogEvent(int nEvent)
     if (!nCount)
     {
         sScript = GetDialog();
-        SetLocalInt(DLG_SELF, DLG_EVENT, nEvent);
+        SetLocalInt(DIALOG, DLG_EVENT, nEvent);
         Debug("Dialog event " + sEvent + " is running " + sScript);
         RunLibraryScript(sScript);
     }
@@ -967,20 +1011,20 @@ void InitializeDialog()
             sDialog = GetTag(OBJECT_SELF);
     }
 
-    DLG_SELF = GetDialogCache(sDialog);
-    if (!GetLocalInt(DLG_SELF, DLG_INITIALIZED))
+    DIALOG = GetDialogCache(sDialog);
+    if (!GetLocalInt(DIALOG, DLG_INITIALIZED))
     {
         Debug("Initializing dialog " + sDialog);
-        SetLocalString(DLG_SELF, DLG_DIALOG, sDialog);
+        SetLocalString(DIALOG, DLG_DIALOG, sDialog);
         SetDialogLabel(DLG_NODE_CONTINUE, DLG_LABEL_CONTINUE);
         SetDialogLabel(DLG_NODE_PREV,     DLG_LABEL_PREV);
         SetDialogLabel(DLG_NODE_NEXT,     DLG_LABEL_NEXT);
         SetDialogLabel(DLG_NODE_BACK,     DLG_LABEL_BACK);
         SetDialogLabel(DLG_NODE_END,      DLG_LABEL_END);
 
-        SetLocalObject(oPC, DLG_SYSTEM, DLG_SELF);
+        SetLocalObject(oPC, DLG_SYSTEM, DIALOG);
         SendDialogEvent(DLG_EVENT_INIT);
-        SetLocalInt(DLG_SELF, DLG_INITIALIZED, TRUE);
+        SetLocalInt(DIALOG, DLG_INITIALIZED, TRUE);
     }
     else
         Debug("Dialog " + sDialog + " has already been initialized");
@@ -988,8 +1032,8 @@ void InitializeDialog()
     if (GetIsObjectValid(oPC))
     {
         Debug("Instantiating dialog " + sDialog + " for " + GetName(oPC));
-        DLG_SELF = CopyItem(DLG_SELF, DIALOGS, TRUE);
-        SetLocalObject(oPC, DLG_SYSTEM, DLG_SELF);
+        DIALOG = CopyItem(DIALOG, DIALOGS, TRUE);
+        SetLocalObject(oPC, DLG_SYSTEM, DIALOG);
         SetDialogState(DLG_STATE_RUNNING);
         SetDialogNode(DLG_NODE_NONE);
     }
@@ -997,11 +1041,11 @@ void InitializeDialog()
 
 int LoadDialogPage()
 {
-    int i, nFilters = GetLocalInt(DLG_SELF, DLG_FILTER_MAX);
+    int i, nFilters = GetLocalInt(DIALOG, DLG_FILTER_MAX);
     for (i = 0; i < nFilters; i++)
-        DeleteLocalInt(DLG_SELF, DLG_FILTER + IntToString(i));
+        DeleteLocalInt(DIALOG, DLG_FILTER + IntToString(i));
 
-    DeleteLocalInt(DLG_SELF, DLG_FILTER_MAX);
+    DeleteLocalInt(DIALOG, DLG_FILTER_MAX);
 
     Debug("Initializing dialog page: " + GetDialogPage());
     SendDialogEvent(DLG_EVENT_PAGE);
@@ -1030,7 +1074,7 @@ void MapDialogNode(int nNode, int nTarget, string sText)
     Debug("Setting response node " + IntToString(nNode) + " -> " +
           IntToString(nTarget));
     SetCustomToken(DLG_TOKEN + nNode + 1, sText);
-    SetLocalInt(DLG_SELF, DLG_NODES + IntToString(nNode), nTarget);
+    SetLocalInt(DIALOG, DLG_NODES + IntToString(nNode), nTarget);
 }
 
 void LoadDialogNodes()
@@ -1108,13 +1152,13 @@ void LoadDialogNodes()
         MapDialogNode(nNodes++, DLG_NODE_END, sText);
     }
 
-    SetLocalInt(DLG_SELF, DLG_NODES, nNodes);
-    SetLocalInt(DLG_SELF, DLG_NODE, 0);
+    SetLocalInt(DIALOG, DLG_NODES, nNodes);
+    SetLocalInt(DIALOG, DLG_NODE, 0);
 }
 
 void DoDialogNode(int nClicked)
 {
-    int nNode = GetLocalInt(DLG_SELF, DLG_NODES + IntToString(nClicked));
+    int nNode = GetLocalInt(DIALOG, DLG_NODES + IntToString(nClicked));
     string sPage = GetDialogPage();
     string sNodes = GetDialogNodes(sPage);
     string sTarget = GetDialogTarget(sNodes, nNode);
@@ -1146,13 +1190,15 @@ void DoDialogNode(int nClicked)
         }
     }
 
-    SetLocalInt(DLG_SELF, DLG_CURRENT_PAGE, FALSE);
+    SetLocalInt(DIALOG, DLG_CURRENT_PAGE, FALSE);
     SetDialogNode(nNode);
     SendDialogEvent(DLG_EVENT_NODE);
 
     // Check if the page change was already handled by the user.
-    if (!GetLocalInt(DLG_SELF, DLG_CURRENT_PAGE))
+    if (!GetLocalInt(DIALOG, DLG_CURRENT_PAGE))
         SetDialogPage(sTarget);
 }
+
+
 
 //void main(){}

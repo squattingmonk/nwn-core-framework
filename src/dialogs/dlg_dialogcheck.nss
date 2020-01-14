@@ -13,9 +13,9 @@
 
 int StartingConditional()
 {
-    int nNodes = GetLocalInt(DLG_SELF, DLG_NODES);
-    int nNode  = GetLocalInt(DLG_SELF, DLG_NODE);
+    int nNodes = GetLocalInt(DIALOG, DLG_NODES);
+    int nNode  = GetLocalInt(DIALOG, DLG_NODE);
 
-    SetLocalInt(DLG_SELF, DLG_NODE, nNode + 1);
+    SetLocalInt(DIALOG, DLG_NODE, nNode + 1);
     return (nNode < nNodes);
 }
