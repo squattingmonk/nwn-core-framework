@@ -1127,7 +1127,7 @@ void LoadDialogNodes()
         if (bFilter && i >= nOffset)
         {
             // We check this here so we know if we need a "next" node.
-            if (nNodes > nMax)
+            if (nNodes >= nMax)
                 break;
 
             MapDialogNode(nNodes++, i, sText);
