@@ -465,6 +465,11 @@ void LoadDialogNodes();
 // nClicked.
 void DoDialogNode(int nClicked);
 
+// ---< DialogCleanup >---
+// ---< dlg_i_dialogs >---
+// Cleans up leftover dialog data when a conversation ends.
+void DialogCleanup();
+
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
@@ -1038,6 +1043,9 @@ void InitializeDialog()
         SetLocalObject(oPC, DLG_SYSTEM, DIALOG);
         SetDialogState(DLG_STATE_RUNNING);
         SetDialogNode(DLG_NODE_NONE);
+
+        if (!GetIsObjectValid(DLG_SELF))
+            SetLocalObject(oPC, DLG_SPEAKER, OBJECT_SELF);
     }
 }
 
@@ -1201,6 +1209,11 @@ void DoDialogNode(int nClicked)
         SetDialogPage(sTarget);
 }
 
-
+void DialogCleanup()
+{
+    object oPC = GetPCSpeaker();
+    DeleteLocalObject(oPC, DLG_SPEAKER);
+    DestroyObject(DIALOG);
+}
 
 //void main(){}

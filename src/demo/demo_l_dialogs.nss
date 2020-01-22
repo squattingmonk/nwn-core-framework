@@ -247,26 +247,26 @@ void AnvilDialog()
             if (sPage == ANVIL_PAGE_MAIN)
             {
                 DeleteDialogNodes(sPage);
-                DeleteObjectList(OBJECT_SELF, ANVIL_ITEM);
+                DeleteObjectList(DLG_SELF, ANVIL_ITEM);
                 object oItem = GetFirstItemInInventory(oPC);
 
                 while (GetIsObjectValid(oItem))
                 {
                     AddDialogNode(sPage, GetName(oItem), ANVIL_PAGE_ITEM);
-                    AddListObject(OBJECT_SELF, oItem, ANVIL_ITEM);
+                    AddListObject(DLG_SELF, oItem, ANVIL_ITEM);
                     oItem = GetNextItemInInventory(oPC);
                 }
             }
             else if (sPage == ANVIL_PAGE_ITEM)
             {
-                object oItem = GetListObject(OBJECT_SELF, nNode, ANVIL_ITEM);
-                SetLocalObject(OBJECT_SELF, ANVIL_ITEM, oItem);
+                object oItem = GetListObject(DLG_SELF, nNode, ANVIL_ITEM);
+                SetLocalObject(DLG_SELF, ANVIL_ITEM, oItem);
                 SetDialogText("What would you like to do with the " +
                     GetName(oItem) + "?", ANVIL_PAGE_ITEM);
             }
             else if (sPage == ANVIL_PAGE_DONE)
             {
-                object oItem = GetLocalObject(OBJECT_SELF, ANVIL_ITEM);
+                object oItem = GetLocalObject(DLG_SELF, ANVIL_ITEM);
                 string sData = GetDialogData(ANVIL_PAGE_ITEM, nNode);
                 SetDialogText(sData + "ing " + GetName(oItem), sPage);
 
