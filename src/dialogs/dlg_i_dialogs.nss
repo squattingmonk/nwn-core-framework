@@ -664,6 +664,8 @@ void DeleteDialogNodes(string sPage)
         DeleteLocalString(DIALOG, sNode + DLG_TARGET);
         DeleteLocalString(DIALOG, sNode + DLG_DATA);
     }
+
+    DeleteLocalInt(DIALOG, sPage + DLG_NODES);
 }
 
 // Credits: this function was ripped straight from the HG dialog system.
