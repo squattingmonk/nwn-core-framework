@@ -810,7 +810,6 @@ void SetDialogPage(string sPage)
 
     SetLocalString(DIALOG, DLG_CURRENT_PAGE, sPage);
     SetLocalInt(DIALOG, DLG_CURRENT_PAGE, TRUE);
-    SetLocalInt(DIALOG, DLG_OFFSET, 0);
 }
 
 int GetDialogNode()
@@ -1051,6 +1050,10 @@ void InitializeDialog()
 
 int LoadDialogPage()
 {
+    // Do not reset if we got here from an automatic node
+    if (GetDialogNode() > DLG_NODE_NONE)
+        SetDialogOffset(0);
+
     int i, nFilters = GetLocalInt(DIALOG, DLG_FILTER_MAX);
     for (i = 0; i < nFilters; i++)
         DeleteLocalInt(DIALOG, DLG_FILTER + IntToString(i));
@@ -1183,11 +1186,13 @@ void DoDialogNode(int nClicked)
     {
         int nOffset = GetDialogOffset();
         SetDialogOffset(nOffset + DLG_MAX_RESPONSES);
+        sTarget = sPage;
     }
     else if (nNode == DLG_NODE_PREV)
     {
         int nOffset = GetDialogOffset() - DLG_MAX_RESPONSES;
         SetDialogOffset((nOffset < 0 ? 0 : nOffset));
+        sTarget = sPage;
     }
     else if (nNode == DLG_NODE_BACK && sTarget == "")
     {
