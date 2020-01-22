@@ -916,7 +916,7 @@ void DeleteObjectList(object oTarget, string sListName = "")
     for (i = 0; i < nCount; i++)
         DeleteLocalObject(oTarget, LIST_REF + sListName + IntToString(i));
 
-    DeleteLocalInt(oTarget, LIST_COUNT_STRING + sListName);
+    DeleteLocalInt(oTarget, LIST_COUNT_OBJECT + sListName);
 }
 
 void DeleteStringList(object oTarget, string sListName = "")
