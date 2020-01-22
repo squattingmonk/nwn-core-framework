@@ -204,9 +204,84 @@ void PoetDialog_Quit()
     }
 }
 
+// -----------------------------------------------------------------------------
+//                                 Anvil Dialog
+// -----------------------------------------------------------------------------
+// This dialog demonstrates dynamic node generation and automatic pagination.
+// -----------------------------------------------------------------------------
+
+const string ANVIL_DIALOG    = "AnvilDialog";
+const string ANVIL_PAGE_MAIN = "Main Page";
+const string ANVIL_PAGE_ITEM = "Item Chosen";
+const string ANVIL_PAGE_DONE = "Item Action";
+const string ANVIL_COPY      = "Copy";
+const string ANVIL_DESTROY   = "Destroy";
+const string ANVIL_ITEM      = "AnvilItem";
+
+void AnvilDialog()
+{
+    switch (GetDialogEvent())
+    {
+        case DLG_EVENT_INIT:
+        {
+            EnableDialogEnd();
+            SetDialogPage(ANVIL_PAGE_MAIN);
+            AddDialogPage(ANVIL_PAGE_MAIN, "Select an item:");
+
+            AddDialogPage(ANVIL_PAGE_ITEM, "What would you like to do?");
+            AddDialogNode(ANVIL_PAGE_ITEM, "Clone it", ANVIL_PAGE_DONE, ANVIL_COPY);
+            AddDialogNode(ANVIL_PAGE_ITEM, "Destroy it", ANVIL_PAGE_DONE, ANVIL_DESTROY);
+            EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_ITEM);
+
+            AddDialogPage(ANVIL_PAGE_DONE, "Placeholder text");
+            EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_DONE);
+            SetDialogTarget(ANVIL_PAGE_MAIN, ANVIL_PAGE_DONE, DLG_NODE_BACK);
+        } break;
+
+        case DLG_EVENT_PAGE:
+        {
+            object oPC = GetPCSpeaker();
+            string sPage = GetDialogPage();
+            int nNode = GetDialogNode();
+
+            if (sPage == ANVIL_PAGE_MAIN)
+            {
+                DeleteDialogNodes(sPage);
+                DeleteObjectList(OBJECT_SELF, ANVIL_ITEM);
+                object oItem = GetFirstItemInInventory(oPC);
+
+                while (GetIsObjectValid(oItem))
+                {
+                    AddDialogNode(sPage, GetName(oItem), ANVIL_PAGE_ITEM);
+                    AddListObject(OBJECT_SELF, oItem, ANVIL_ITEM);
+                    oItem = GetNextItemInInventory(oPC);
+                }
+            }
+            else if (sPage == ANVIL_PAGE_ITEM)
+            {
+                object oItem = GetListObject(OBJECT_SELF, nNode, ANVIL_ITEM);
+                SetLocalObject(OBJECT_SELF, ANVIL_ITEM, oItem);
+                SetDialogText("What would you like to do with the " +
+                    GetName(oItem) + "?", ANVIL_PAGE_ITEM);
+            }
+            else if (sPage == ANVIL_PAGE_DONE)
+            {
+                object oItem = GetLocalObject(OBJECT_SELF, ANVIL_ITEM);
+                string sData = GetDialogData(ANVIL_PAGE_ITEM, nNode);
+                SetDialogText(sData + "ing " + GetName(oItem), sPage);
+
+                if (sData == ANVIL_COPY)
+                    CopyItem(oItem, oPC);
+                else
+                    DestroyObject(oItem);
+            }
+        } break;
+    }
+}
+
+
 void OnLibraryLoad()
 {
-    Debug("Loading library dlg_l_demo");
     RegisterLibraryScript(POET_DIALOG_INIT);
     RegisterLibraryScript(POET_DIALOG_PAGE);
     RegisterLibraryScript(POET_DIALOG_QUIT);
@@ -214,6 +289,9 @@ void OnLibraryLoad()
     RegisterDialogScript(POET_DIALOG, POET_DIALOG_INIT, DLG_EVENT_INIT);
     RegisterDialogScript(POET_DIALOG, POET_DIALOG_PAGE, DLG_EVENT_PAGE);
     RegisterDialogScript(POET_DIALOG, POET_DIALOG_QUIT, DLG_EVENT_END | DLG_EVENT_ABORT);
+
+    RegisterLibraryScript(ANVIL_DIALOG);
+    RegisterDialogScript (ANVIL_DIALOG);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
@@ -221,4 +299,5 @@ void OnLibraryScript(string sScript, int nEntry)
     if      (sScript == POET_DIALOG_PAGE) PoetDialog_Page();
     else if (sScript == POET_DIALOG_QUIT) PoetDialog_Quit();
     else if (sScript == POET_DIALOG_INIT) PoetDialog_Init();
+    else if (sScript == ANVIL_DIALOG)     AnvilDialog();
 }

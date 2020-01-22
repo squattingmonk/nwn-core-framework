@@ -40,6 +40,20 @@
           "type": "cexostring",
           "value": "Floor Lever - 1"
         }
+      },
+      {
+        "__struct_id": 9,
+        "Comment": {
+          "type": "cexostring",
+          "value": "Merchants Shingle - 3"
+        }
+      },
+      {
+        "__struct_id": 9,
+        "Comment": {
+          "type": "cexostring",
+          "value": "Anvil"
+        }
       }
     ]
   },
