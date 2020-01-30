@@ -65,6 +65,7 @@ const string DLG_TEXT          = "*Text";
 const string DLG_DATA          = "*Data";
 const string DLG_TARGET        = "*Target";
 const string DLG_ENABLED       = "*Enabled";
+const string DLG_COLOR         = "*Color";
 const string DLG_CONTINUE      = "*Continue";
 const string DLG_HISTORY       = "*History";
 const string DLG_OFFSET        = "*Offset";
@@ -403,6 +404,19 @@ void SetDialogOffset(int nOffset);
 // ---< dlg_i_dialogs >---
 // Returns the filter that controls the display of the node at index nPos.
 int GetDialogFilter(int nPos = 0);
+
+// ---< GetDialogColor >---
+// ---< dlg_i_dialogs >---
+// Returns the color constant used to color the automated node nNode. If sPage
+// is blank, will return the color used for this node dialog-wide. Note that
+// this function returns a color code, not a hex color.
+string GetDialogColor(int nNode, string sPage = "");
+
+// ---< SetDialogColor >---
+// ---< dlg_i_dialogs >---
+// Sets the hex color used to color the automated node nNode. If sPage is blank,
+// will set the color for this node dialog-wide.
+void SetDialogColor(int nNode, int nColor, string sPage = "");
 
 // ----- System Functions ------------------------------------------------------
 
@@ -898,6 +912,28 @@ int GetDialogFilter(int nPos = 0)
     return GetLocalInt(DIALOG, DLG_FILTER + IntToString(nPos % 30));
 }
 
+string GetDialogColor(int nNode, string sPage = "")
+{
+    if (nNode >= DLG_NODE_NONE)
+        return "";
+
+    if (!GetLocalInt(DIALOG, NodeToString(sPage, nNode) + DLG_COLOR))
+        sPage = "";
+
+    return GetLocalString(DIALOG, NodeToString(sPage, nNode) + DLG_COLOR);
+}
+
+void SetDialogColor(int nNode, int nColor, string sPage = "")
+{
+    if (nNode >= DLG_NODE_NONE)
+        return;
+
+    string sNode = NodeToString(sPage, nNode);
+    string sColor = HexToColor(nColor);
+    SetLocalString(DIALOG, sNode + DLG_COLOR, sColor);
+    SetLocalInt   (DIALOG, sNode + DLG_COLOR, TRUE);
+}
+
 // ----- System Functions ------------------------------------------------------
 
 object GetDialogCache(string sDialog)
@@ -1027,7 +1063,11 @@ void InitializeDialog()
         SetDialogLabel(DLG_NODE_NEXT,     DLG_LABEL_NEXT);
         SetDialogLabel(DLG_NODE_BACK,     DLG_LABEL_BACK);
         SetDialogLabel(DLG_NODE_END,      DLG_LABEL_END);
-
+        SetDialogColor(DLG_NODE_CONTINUE, DLG_COLOR_CONTINUE);
+        SetDialogColor(DLG_NODE_PREV,     DLG_COLOR_PREV);
+        SetDialogColor(DLG_NODE_NEXT,     DLG_COLOR_NEXT);
+        SetDialogColor(DLG_NODE_BACK,     DLG_COLOR_BACK);
+        SetDialogColor(DLG_NODE_END,      DLG_COLOR_END);
         SetLocalObject(oPC, DLG_SYSTEM, DIALOG);
         SendDialogEvent(DLG_EVENT_INIT);
         SetLocalInt(DIALOG, DLG_INITIALIZED, TRUE);
@@ -1074,7 +1114,7 @@ int LoadDialogPage()
 // Private function for LoadDialogNodes(). Maps a response node to a target node
 // and sets its text. When the response node is clicked, we will send the node
 // event for the target node.
-void MapDialogNode(int nNode, int nTarget, string sText)
+void MapDialogNode(int nNode, int nTarget, string sText, string sPage = "")
 {
     int nMax = DLG_MAX_RESPONSES + 5;
     if (nNode < 0 || nNode > nMax)
@@ -1082,6 +1122,12 @@ void MapDialogNode(int nNode, int nTarget, string sText)
         Debug("Attempted to set dialog response node " + IntToString(nNode) +
               " but max is " + IntToString(nMax), DEBUG_LEVEL_ERROR);
         return;
+    }
+
+    if (nTarget < DLG_NODE_NONE)
+    {
+        string sColor = GetDialogColor(nTarget, sPage);
+        sText = ColorString(sText, sColor);
     }
 
     Debug("Setting response node " + IntToString(nNode) + " -> " +
@@ -1101,7 +1147,7 @@ void LoadDialogNodes()
     if (DialogNodeEnabled(DLG_NODE_CONTINUE, sPage))
     {
         sText = GetDialogLabel(DLG_NODE_CONTINUE, sPage);
-        MapDialogNode(nNodes++, DLG_NODE_CONTINUE, sText);
+        MapDialogNode(nNodes++, DLG_NODE_CONTINUE, sText, sPage);
     }
 
     // The max number of responses does not include automatic nodes.
@@ -1144,25 +1190,25 @@ void LoadDialogNodes()
     if (i < nCount)
     {
         sText = GetDialogLabel(DLG_NODE_NEXT, sPage);
-        MapDialogNode(nNodes++, DLG_NODE_NEXT, sText);
+        MapDialogNode(nNodes++, DLG_NODE_NEXT, sText, sPage);
     }
 
     if (nOffset)
     {
         sText = GetDialogLabel(DLG_NODE_PREV, sPage);
-        MapDialogNode(nNodes++, DLG_NODE_PREV, sText);
+        MapDialogNode(nNodes++, DLG_NODE_PREV, sText, sPage);
     }
 
     if (DialogNodeEnabled(DLG_NODE_BACK, sPage))
     {
         sText = GetDialogLabel(DLG_NODE_BACK, sPage);
-        MapDialogNode(nNodes++, DLG_NODE_BACK, sText);
+        MapDialogNode(nNodes++, DLG_NODE_BACK, sText, sPage);
     }
 
     if (DialogNodeEnabled(DLG_NODE_END, sPage))
     {
         sText = GetDialogLabel(DLG_NODE_END, sPage);
-        MapDialogNode(nNodes++, DLG_NODE_END, sText);
+        MapDialogNode(nNodes++, DLG_NODE_END, sText, sPage);
     }
 
     SetLocalInt(DIALOG, DLG_NODES, nNodes);

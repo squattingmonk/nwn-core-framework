@@ -78,18 +78,17 @@ string AddPluginPage(string sPlugin)
 
 string PluginStatusText(int nStatus)
 {
-    string sStatus, sColor;
     switch (nStatus)
     {
         case PLUGIN_STATUS_OFF:
-            sStatus = "[Inactive]"; sColor = COLOR_GRAY; break;
+            return HexColorString("[Inactive]", COLOR_GRAY);
         case PLUGIN_STATUS_ON:
-            sStatus = "[Active]"; sColor = COLOR_GREEN; break;
+            return HexColorString("[Active]", COLOR_GREEN);
         //case PLUGIN_STATUS_MISSING:
-        //    sStatus = "[Missing]"; sColor = COLOR_RED; break;
+        //    return HexColorString("[Missing]", COLOR_RED);
     }
 
-    return ColorString(sStatus, sColor);
+    return "";
 }
 
 void PluginControl_Init()
