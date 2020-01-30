@@ -1743,7 +1743,7 @@
               },
               "Value": {
                 "type": "cexostring",
-                "value": "_loadlibs"
+                "value": "_test"
               }
             }
           ]
