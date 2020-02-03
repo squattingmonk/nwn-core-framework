@@ -86,7 +86,7 @@
         },
         "Conversation": {
           "type": "resref",
-          "value": ""
+          "value": "dlg_convzoom"
         },
         "CRAdjust": {
           "type": "int",
@@ -524,7 +524,7 @@
               "__struct_id": 0,
               "Name": {
                 "type": "cexostring",
-                "value": "OnCreatureConversation"
+                "value": "*Dialog"
               },
               "Type": {
                 "type": "dword",
@@ -532,7 +532,7 @@
               },
               "Value": {
                 "type": "cexostring",
-                "value": "_test"
+                "value": "TokenDialog"
               }
             }
           ]
