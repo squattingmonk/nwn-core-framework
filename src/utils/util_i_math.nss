@@ -6,7 +6,7 @@
 // -----------------------------------------------------------------------------
 // This file contains useful math utility functions. Note than some of the float
 // functions (notably fmod) may be slightly off (+/- a millionth) due to the
-// nature of floating point arightmatic.
+// nature of floating point arithmetic.
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
