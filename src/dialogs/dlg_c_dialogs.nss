@@ -51,6 +51,15 @@ const int DLG_COLOR_PREV     = COLOR_GREEN;
 const int DLG_COLOR_NEXT     = COLOR_GREEN;
 const int DLG_COLOR_BACK     = COLOR_YELLOW;
 
+// This is the hex code used to color text enclosed in the <StartAction> tag.
+const int DLG_COLOR_ACTION = COLOR_GREEN;
+
+// This is the hex code used to color text enclosed in the <StartCheck> tag.
+const int DLG_COLOR_CHECK = COLOR_RED;
+
+// This is the hex code used to color text enclosed in the <StartHighlight> tag.
+const int DLG_COLOR_HIGHLIGHT = COLOR_BLUE;
+
 // ----- Miscellaneous ---------------------------------------------------------
 
 // The maximum number of non-automated responses that can be shown on a single

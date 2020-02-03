@@ -75,6 +75,8 @@ const string DLG_SPEAKER       = "*Speaker";
 const string DLG_PRIVATE       = "*Private";
 const string DLG_NO_ZOOM       = "*NoZoom";
 const string DLG_NO_HELLO      = "*NoHello";
+const string DLG_TOKEN         = "*Token";
+const string DLG_VALUES        = "*TokenValues";
 
 // ----- Automated Node IDs ----------------------------------------------------
 
@@ -121,7 +123,7 @@ const int DLG_SCRIPT_ABORT = 1;
 
 // ----- Custom Token Reservation ----------------------------------------------
 
-const int DLG_TOKEN = 20000;
+const int DLG_CUSTOM_TOKEN = 20000;
 
 
 // -----------------------------------------------------------------------------
@@ -417,6 +419,50 @@ string GetDialogColor(int nNode, string sPage = "");
 // Sets the hex color used to color the automated node nNode. If sPage is blank,
 // will set the color for this node dialog-wide.
 void SetDialogColor(int nNode, int nColor, string sPage = "");
+
+// ----- Dialog Tokens ---------------------------------------------------------
+
+// ---< NormalizeDialogToken >---
+// ---< dlg_i_dialogs >---
+// Returns the form of a token used with AddDialogToken(). If all lowercase, the
+// token can resolve to uppercase or lowercase, depending on the value of
+// sToken. Otherwise, the value will not have its case changed.
+string NormalizeDialogToken(string sToken);
+
+// ---< SetDialogTokenValue >---
+// ---< dlg_i_dialogs >---
+// Used in token evaluation scripts to set the value the token should resolve
+// to. If the value can be either lowercase or uppercase, always set the
+// uppercase version.
+void SetDialogTokenValue(string sValue);
+
+// ---< AddDialogToken >---
+// ---< dlg_i_dialogs >---
+// Adds a token, which will be evaluated at displaytime by the library script
+// sEvalScript. If sToken is all lowercase, the token can be used in either
+// upper- or lowercase forms. Otherwise, the token is case-sensitive and must
+// match sToken. sValues is a CSV list of possible values that can be handed to
+// sEvalScript.
+void AddDialogToken(string sToken, string sEvalScript, string sValues = "");
+
+// ---< AddDialogTokens >---
+// ---< dlg_i_dialogs >---
+// Adds all the default dialog tokens. This is called by the system during the
+// dialog init stage and need not be used by the builder.
+void AddDialogTokens();
+
+// ---< EvalDialogToken >---
+// ---< dlg_i_dialogs >---
+// Runs the appropriate evaluation script for sToken using oPC as OBJECT_SELF.
+// Returns the token value. This is called by the system and need not be used by
+// the builder.
+string EvalDialogToken(string sToken, object oPC);
+
+// ---< FunctionName >---
+// ---< dlg_i_dialogs >---
+// Evaluates all tokens in sString and interpolates them. This is called by the
+// system and need not be used by the builder.
+string EvalDialogTokens(string sString);
 
 // ----- System Functions ------------------------------------------------------
 
@@ -934,6 +980,155 @@ void SetDialogColor(int nNode, int nColor, string sPage = "")
     SetLocalInt   (DIALOG, sNode + DLG_COLOR, TRUE);
 }
 
+// ----- Dialog Tokens ---------------------------------------------------------
+
+string NormalizeDialogToken(string sToken)
+{
+    if (GetLocalInt(DIALOG, DLG_TOKEN + "*" + sToken))
+        return sToken;
+
+    string sLower = GetStringLowerCase(sToken);
+    if (sToken == sLower || !GetLocalInt(DIALOG, DLG_TOKEN + "*" + sLower))
+        return "";
+
+    return sLower;
+}
+
+void SetDialogTokenValue(string sValue)
+{
+    SetLocalString(GetPCSpeaker(), DLG_TOKEN, sValue);
+}
+
+void AddDialogToken(string sToken, string sEvalScript, string sValues = "")
+{
+    SetLocalInt   (DIALOG, DLG_TOKEN  + "*" + sToken, TRUE);
+    SetLocalString(DIALOG, DLG_TOKEN  + "*" + sToken, sEvalScript);
+    SetLocalString(DIALOG, DLG_VALUES + "*" + sToken, sValues);
+}
+
+void AddDialogTokens()
+{
+    if (!GetIsLibraryLoaded("dlg_l_tokens"))
+        LoadLibrary("dlg_l_tokens");
+
+    string sPrefix = "DialogToken_";
+    AddDialogToken("alignment",       sPrefix + "Alignment");
+    AddDialogToken("bitch/bastard",   sPrefix + "Gender", "Bastard, Bitch");
+    AddDialogToken("boy/girl",        sPrefix + "Gender", "Boy, Girl");
+    AddDialogToken("brother/sister",  sPrefix + "Gender", "Brother, Sister");
+    AddDialogToken("class",           sPrefix + "Class");
+    AddDialogToken("classes",         sPrefix + "Class");
+    AddDialogToken("day/night",       sPrefix + "DayNight");
+    AddDialogToken("Deity",           sPrefix + "Deity");
+    AddDialogToken("FirstName",       sPrefix + "Name");
+    AddDialogToken("FullName",        sPrefix + "Name");
+    AddDialogToken("gameday",         sPrefix + "GameDate");
+    AddDialogToken("gamedate",        sPrefix + "GameDate");
+    AddDialogToken("gamehour",        sPrefix + "GameTime");
+    AddDialogToken("gameminute",      sPrefix + "GameTime");
+    AddDialogToken("gamemonth",       sPrefix + "GameDate");
+    AddDialogToken("gamesecond",      sPrefix + "GameTime");
+    AddDialogToken("gametime12",      sPrefix + "GameTime");
+    AddDialogToken("gametime24",      sPrefix + "GameTime");
+    AddDialogToken("gameyear",        sPrefix + "GameDate");
+    AddDialogToken("good/evil",       sPrefix + "Alignment");
+    AddDialogToken("he/she",          sPrefix + "Gender", "He, She");
+    AddDialogToken("him/her",         sPrefix + "Gender", "Him, Her");
+    AddDialogToken("his/her",         sPrefix + "Gender", "His, Her");
+    AddDialogToken("his/hers",        sPrefix + "Gender", "His, Hers");
+    AddDialogToken("lad/lass",        sPrefix + "Gender", "Lad, Lass");
+    AddDialogToken("LastName",        sPrefix + "Name");
+    AddDialogToken("lawful/chaotic",  sPrefix + "Alignment");
+    AddDialogToken("law/chaos",       sPrefix + "Alignment");
+    AddDialogToken("level",           sPrefix + "Level");
+    AddDialogToken("lord/lady",       sPrefix + "Gender", "Lord, Lady");
+    AddDialogToken("male/female",     sPrefix + "Gender", "Male, Female");
+    AddDialogToken("man/woman",       sPrefix + "Gender", "Man, Woman");
+    AddDialogToken("master/mistress", sPrefix + "Gender", "Master, Mistress");
+    AddDialogToken("mister/missus",   sPrefix + "Gender", "Mister, Missus");
+    AddDialogToken("PlayerName",      sPrefix + "PlayerName");
+    AddDialogToken("quarterday",      sPrefix + "QuarterDay");
+    AddDialogToken("race",            sPrefix + "Race");
+    AddDialogToken("races",           sPrefix + "Race");
+    AddDialogToken("racial",          sPrefix + "Race");
+    AddDialogToken("sir/madam",       sPrefix + "Gender", "Sir, Madam");
+    AddDialogToken("subrace",         sPrefix + "SubRace");
+    AddDialogToken("StartAction",     sPrefix + "Token", HexToColor(DLG_COLOR_ACTION));
+    AddDialogToken("StartCheck",      sPrefix + "Token", HexToColor(DLG_COLOR_CHECK));
+    AddDialogToken("StartHighlight",  sPrefix + "Token", HexToColor(DLG_COLOR_HIGHLIGHT));
+    AddDialogToken("/Start",          sPrefix + "Token", "</c>");
+    AddDialogToken("token",           sPrefix + "Token", "<");
+    AddDialogToken("/token",          sPrefix + "Token", ">");
+}
+
+string EvalDialogToken(string sToken, object oPC)
+{
+    string sNormal = NormalizeDialogToken(sToken);
+
+    // Ensure this is a valid token
+    if (sNormal == "")
+        return "<" + sToken + ">";
+
+    string sScript = GetLocalString(DIALOG, DLG_TOKEN  + "*" + sNormal);
+    string sValues = GetLocalString(DIALOG, DLG_VALUES + "*" + sNormal);
+
+    SetLocalString(oPC, DLG_TOKEN,  sNormal);
+    SetLocalString(oPC, DLG_VALUES, sValues);
+    RunLibraryScript(sScript, oPC);
+
+    string sEval = GetLocalString(oPC, DLG_TOKEN);
+
+    // Token eval scripts should always yield the uppercase version of the
+    // token. If the desired value is lowercase, we change it here.
+    if (sToken == GetStringLowerCase(sToken))
+        sEval = GetStringLowerCase(sEval);
+
+    return sEval;;
+}
+
+string EvalDialogTokens(string sString)
+{
+    string sRet, sToken;
+    int nPos, nClose;
+    int nOpen = FindSubString(sString, "<");
+    object oPC = GetPCSpeaker();
+
+    while (nOpen >= 0)
+    {
+        nClose = FindSubString(sString, ">", nOpen);
+
+        // If no matching bracket, this isn't a token
+        // TODO: handle tokens and unmatched brackets in the same string
+        if (nClose < 0)
+            break;
+
+        // Add everything before the bracket to the return value
+        sRet += GetSubString(sString, nPos, nOpen - nPos);
+
+        // Everything between the brackets is our token
+        sToken = GetSubString(sString, nOpen + 1, nClose - nOpen - 1);
+
+        if (NormalizeDialogToken(sToken) != "")
+        {
+            sRet += EvalDialogToken(sToken, oPC);
+            nPos = nClose + 1;
+        }
+        else
+        {
+            // In case this is an angle bracket before an actual token
+            sRet += "<";
+            nPos = nOpen + 1;
+        }
+
+        // Update position and find the next token
+        nOpen = FindSubString(sString, "<", nPos);
+    }
+
+    // Add any remaining text to the return value
+    sRet += GetStringRight(sString, GetStringLength(sString) - nPos);
+    return sRet;
+}
+
 // ----- System Functions ------------------------------------------------------
 
 object GetDialogCache(string sDialog)
@@ -1068,6 +1263,7 @@ void InitializeDialog()
         SetDialogColor(DLG_NODE_NEXT,     DLG_COLOR_NEXT);
         SetDialogColor(DLG_NODE_BACK,     DLG_COLOR_BACK);
         SetDialogColor(DLG_NODE_END,      DLG_COLOR_END);
+        AddDialogTokens();
         SetLocalObject(oPC, DLG_SYSTEM, DIALOG);
         SendDialogEvent(DLG_EVENT_INIT);
         SetLocalInt(DIALOG, DLG_INITIALIZED, TRUE);
@@ -1107,7 +1303,8 @@ int LoadDialogPage()
     if (sPage == "" || GetDialogState() == DLG_STATE_ENDED)
         return FALSE;
 
-    SetCustomToken(DLG_TOKEN, GetDialogText(sPage));
+    string sText = GetDialogText(sPage);
+    SetCustomToken(DLG_CUSTOM_TOKEN, EvalDialogTokens(sText));
     return TRUE;
 }
 
@@ -1124,6 +1321,8 @@ void MapDialogNode(int nNode, int nTarget, string sText, string sPage = "")
         return;
     }
 
+    sText = EvalDialogTokens(sText);
+
     if (nTarget < DLG_NODE_NONE)
     {
         string sColor = GetDialogColor(nTarget, sPage);
@@ -1132,7 +1331,7 @@ void MapDialogNode(int nNode, int nTarget, string sText, string sPage = "")
 
     Debug("Setting response node " + IntToString(nNode) + " -> " +
           IntToString(nTarget));
-    SetCustomToken(DLG_TOKEN + nNode + 1, sText);
+    SetCustomToken(DLG_CUSTOM_TOKEN + nNode + 1, sText);
     SetLocalInt(DIALOG, DLG_NODES + IntToString(nNode), nTarget);
 }
 
