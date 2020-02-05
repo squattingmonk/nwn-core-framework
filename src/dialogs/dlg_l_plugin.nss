@@ -65,12 +65,10 @@ string AddPluginPage(string sPlugin)
     string sPage = PLUGIN_PAGE + sPlugin;
     if (!HasDialogPage(sPage))
     {
-        object oPlugin = GetPlugin(sPlugin);
-        string sDescription = GetLocalString(oPlugin, PLUGIN_DESCRIPTION);
-        AddDialogPage(sPage, "Placeholder text",  sPlugin);
+        AddDialogPage(sPage, "Plugin: <Plugin>\nStatus: <Status>\n\n<Description>", sPlugin);
         AddDialogNode(sPage, sPage, "Activate plugin",   PLUGIN_ACTIVATE);
         AddDialogNode(sPage, sPage, "Deactivate plugin", PLUGIN_DEACTIVATE);
-        SetDialogText(sPage, sPage + "\n\n" + sDescription);
+        SetDialogTarget(PLUGIN_PAGE_MAIN, sPage, DLG_NODE_BACK);
     }
 
     return sPage;
@@ -96,6 +94,9 @@ void PluginControl_Init()
     EnableDialogNode(DLG_NODE_BACK);
     EnableDialogNode(DLG_NODE_END);
 
+    AddDialogToken("Plugin");
+    AddDialogToken("Status");
+    AddDialogToken("Description");
     SetDialogPage(PLUGIN_PAGE_MAIN);
     AddDialogPage(PLUGIN_PAGE_MAIN,
         "This dialog allows you to manage the plugins in the Core Framework. " +
@@ -118,7 +119,9 @@ void PluginControl_Init()
 void PluginControl_Page()
 {
     object oPC = GetPCSpeaker();
-    if (!GetIsDM(oPC))
+
+    // No player name means this is a single-player module
+    if (!GetIsDM(oPC) && GetPCPlayerName(oPC) != "")
     {
         SetDialogPage(PLUGIN_PAGE_FAIL);
         return;
@@ -159,10 +162,11 @@ void PluginControl_Page()
             FilterDialogNodes(0, CountDialogNodes(sPage) - 1);
     }
 
-    string sText = PLUGIN_PAGE + sPlugin + "\nStatus: " +
-        PluginStatusText(nStatus) + "\n\n" +
-        GetLocalString(GetPlugin(sPlugin), PLUGIN_DESCRIPTION);
-    SetDialogText(sPage, sText);
+    object oPlugin = GetPlugin(sPlugin);
+    string sDescription = GetLocalString(oPlugin, PLUGIN_DESCRIPTION);
+    CacheDialogToken("Plugin", sPlugin);
+    CacheDialogToken("Status", PluginStatusText(nStatus));
+    CacheDialogToken("Description", sDescription);
 }
 
 void PluginControl_Node()
