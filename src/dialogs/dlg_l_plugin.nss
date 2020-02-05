@@ -68,8 +68,8 @@ string AddPluginPage(string sPlugin)
         object oPlugin = GetPlugin(sPlugin);
         string sDescription = GetLocalString(oPlugin, PLUGIN_DESCRIPTION);
         AddDialogPage(sPage, "Placeholder text",  sPlugin);
-        AddDialogNode(sPage, "Activate plugin",   sPage, PLUGIN_ACTIVATE);
-        AddDialogNode(sPage, "Deactivate plugin", sPage, PLUGIN_DEACTIVATE);
+        AddDialogNode(sPage, sPage, "Activate plugin",   PLUGIN_ACTIVATE);
+        AddDialogNode(sPage, sPage, "Deactivate plugin", PLUGIN_DEACTIVATE);
         SetDialogText(sPage, sPage + "\n\n" + sDescription);
     }
 
@@ -141,7 +141,7 @@ void PluginControl_Page()
             sTarget = AddPluginPage(sPlugin);
             nStatus = GetIsPluginActivated(sPlugin);
             sText = sPlugin + " " + PluginStatusText(nStatus);
-            AddDialogNode(PLUGIN_PAGE_MAIN, sText, sTarget);
+            AddDialogNode(PLUGIN_PAGE_MAIN, sTarget, sText);
         }
 
         return;

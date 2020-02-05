@@ -188,7 +188,7 @@ void ContinueDialogPage(string sPage, string sTarget);
 // Adds a PC response node containing sText to sPage. When clicked, the node
 // will link to page sTarget. sData is an arbitrary string you can set on the
 // page to store additional information. Returns the index of the node added.
-int AddDialogNode(string sPage, string sText, string sTarget, string sData = "");
+int AddDialogNode(string sPage, string sTarget, string sText, string sData = "");
 
 // ---< CountDialogNodes >---
 // ---< dlg_i_dialogs >---
@@ -644,7 +644,7 @@ void ContinueDialogPage(string sPage, string sTarget)
     SetDialogTarget(sTarget, sPage, DLG_NODE_CONTINUE);
 }
 
-int AddDialogNode(string sPage, string sText, string sTarget, string sData = "")
+int AddDialogNode(string sPage, string sTarget, string sText, string sData = "")
 {
     if (sPage == "")
         return DLG_NODE_NONE;

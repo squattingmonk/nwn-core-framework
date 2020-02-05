@@ -36,10 +36,10 @@ void PoetDialog_Init()
     // Main landing page
     SetDialogPage(POET_PAGE_MAIN);
     AddDialogPage(POET_PAGE_MAIN, "Would you like to hear a poem? 1GP per recital!");
-    AddDialogNode(POET_PAGE_MAIN, "Who are you?", POET_PAGE_INFO);
-    AddDialogNode(POET_PAGE_MAIN, "Mary Had A Little Lamb", POET_PAGE_MARY);
-    AddDialogNode(POET_PAGE_MAIN, "Sick, by Shel Silverstein", POET_PAGE_SICK);
-    AddDialogNode(POET_PAGE_MAIN, "I can't afford that.", POET_PAGE_POOR);
+    AddDialogNode(POET_PAGE_MAIN, POET_PAGE_INFO, "Who are you?");
+    AddDialogNode(POET_PAGE_MAIN, POET_PAGE_MARY, "Mary Had A Little Lamb");
+    AddDialogNode(POET_PAGE_MAIN, POET_PAGE_SICK, "Sick, by Shel Silverstein");
+    AddDialogNode(POET_PAGE_MAIN, POET_PAGE_POOR, "I can't afford that.");
     EnableDialogEnd("Goodbye", POET_PAGE_MAIN);
 
     // PC asked "Who are you?"
@@ -72,8 +72,8 @@ void PoetDialog_Init()
     AddDialogPage(POET_PAGE_POOR,
         "Oh, I'm sorry. It seems you don't have enough coin on you. I don't " +
         "recite poetry for free, you know.");
-    AddDialogNode(POET_PAGE_POOR,
-        "Can you tell me who you are instead?", POET_PAGE_INFO);
+    AddDialogNode(POET_PAGE_POOR, POET_PAGE_INFO,
+        "Can you tell me who you are instead?");
     EnableDialogEnd("Goodbye", POET_PAGE_POOR);
 
     // PC chose poem "Mary Had A Little Lamb"
@@ -210,12 +210,11 @@ void PoetDialog_Quit()
 // This dialog demonstrates dynamic node generation and automatic pagination.
 // -----------------------------------------------------------------------------
 
-const string ANVIL_DIALOG       = "AnvilDialog";
-const string ANVIL_PAGE_MAIN    = "Main Page";
-const string ANVIL_PAGE_ITEM    = "Item Chosen";
-const string ANVIL_PAGE_COPY    = "Copy";
-const string ANVIL_PAGE_DESTROY = "Destroy";
-const string ANVIL_ITEM         = "AnvilItem";
+const string ANVIL_DIALOG      = "AnvilDialog";
+const string ANVIL_PAGE_MAIN   = "Main Page";
+const string ANVIL_PAGE_ITEM   = "Item Chosen";
+const string ANVIL_PAGE_ACTION = "Item Action";
+const string ANVIL_ITEM        = "AnvilItem";
 
 void AnvilDialog()
 {
@@ -223,24 +222,21 @@ void AnvilDialog()
     {
         case DLG_EVENT_INIT:
         {
+            AddDialogToken("Action");
+            AddDialogToken("Item");
+
             EnableDialogEnd();
             SetDialogPage(ANVIL_PAGE_MAIN);
             AddDialogPage(ANVIL_PAGE_MAIN, "Select an item:");
 
-            AddDialogToken("Item");
-
             AddDialogPage(ANVIL_PAGE_ITEM, "What would you like to do with the <Item>?");
-            AddDialogNode(ANVIL_PAGE_ITEM, "Clone it", ANVIL_PAGE_COPY);
-            AddDialogNode(ANVIL_PAGE_ITEM, "Destroy it", ANVIL_PAGE_DESTROY);
+            AddDialogNode(ANVIL_PAGE_ITEM, ANVIL_PAGE_ACTION, "Clone it", "Copy");
+            AddDialogNode(ANVIL_PAGE_ITEM, ANVIL_PAGE_ACTION, "Destroy it", "Destroy");
             EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_ITEM);
 
-            AddDialogPage(ANVIL_PAGE_COPY, "Copying <Item>.");
-            EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_COPY);
-            SetDialogTarget(ANVIL_PAGE_MAIN, ANVIL_PAGE_COPY, DLG_NODE_BACK);
-
-            AddDialogPage(ANVIL_PAGE_DESTROY, "Destroying <Item>.");
-            EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_DESTROY);
-            SetDialogTarget(ANVIL_PAGE_MAIN, ANVIL_PAGE_DESTROY, DLG_NODE_BACK);
+            AddDialogPage(ANVIL_PAGE_ACTION, "<Action>ing <Item>");
+            EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_ACTION);
+            SetDialogTarget(ANVIL_PAGE_MAIN, ANVIL_PAGE_ACTION, DLG_NODE_BACK);
         } break;
 
         case DLG_EVENT_PAGE:
@@ -257,7 +253,7 @@ void AnvilDialog()
 
                 while (GetIsObjectValid(oItem))
                 {
-                    AddDialogNode(sPage, GetName(oItem), ANVIL_PAGE_ITEM);
+                    AddDialogNode(sPage, ANVIL_PAGE_ITEM, GetName(oItem));
                     AddListObject(DLG_SELF, oItem, ANVIL_ITEM);
                     oItem = GetNextItemInInventory(oPC);
                 }
@@ -268,15 +264,17 @@ void AnvilDialog()
                 SetLocalObject(DLG_SELF, ANVIL_ITEM, oItem);
                 CacheDialogToken("Item", GetName(oItem));
             }
-            else if (sPage == ANVIL_PAGE_COPY)
+            else if (sPage == ANVIL_PAGE_ACTION)
             {
+                int nNode = GetDialogNode();
+                string sData = GetDialogData(ANVIL_PAGE_ITEM, nNode);
                 object oItem = GetLocalObject(DLG_SELF, ANVIL_ITEM);
-                CopyItem(oItem, oPC);
-            }
-            else if (sPage == ANVIL_PAGE_DESTROY)
-            {
-                object oItem = GetLocalObject(DLG_SELF, ANVIL_ITEM);
-                DestroyObject(oItem);
+                CacheDialogToken("Action", sData);
+
+                if (sData == "Copy")
+                    CopyItem(oItem, oPC);
+                else if (sData == "Destroy")
+                    DestroyObject(oItem);
             }
         } break;
     }
@@ -305,8 +303,8 @@ void TokenDialog()
 
     AddDialogPage(TOKEN_PAGE_MAIN,
         "Hello, <FirstName>. Isn't this a fine <quarterday>?");
-    AddDialogNode(TOKEN_PAGE_MAIN, "Who are you?", TOKEN_PAGE_INFO);
-    AddDialogNode(TOKEN_PAGE_MAIN, "What tokens are available?", TOKEN_PAGE_LIST);
+    AddDialogNode(TOKEN_PAGE_MAIN, TOKEN_PAGE_INFO, "Who are you?");
+    AddDialogNode(TOKEN_PAGE_MAIN, TOKEN_PAGE_LIST, "What tokens are available?");
 
     AddDialogPage(TOKEN_PAGE_INFO,
         "I'm demonstrating the use of dialog tokens. A token is a word or " +
