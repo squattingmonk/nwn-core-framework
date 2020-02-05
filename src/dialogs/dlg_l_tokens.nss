@@ -31,6 +31,9 @@
 // - GetLocalString(OBJECT_SELF, "*Token") yields the token to be evaluated
 // - GetLocalString(OBJECT_SELF, "*TokenValues") yields the possible values
 // - SetLocalString(OBJECT_SELF, "*Token", ...) sets the token value
+// - SetLocalInt(OBJECT_SELF, "*TokenCache", TRUE) caches the token value so the
+//   library script does not have to be run again. This cache will last the
+//   lifetime of the dialog.
 // - If a token can be lowercase or uppercase, the uppercase values should be
 //   returned. The system takes care of changing to lowercase as needed.
 
@@ -184,6 +187,8 @@ string DialogToken_GameTime(string sToken, string sValues)
 // we use the gender as an index into the values field.
 string DialogToken_Gender(string sToken, string sValues)
 {
+    SetLocalInt(OBJECT_SELF, "*TokenCache", TRUE);
+
     int nGender = GetGender(OBJECT_SELF);
 
     if (CountList(sValues) == 2)
@@ -212,6 +217,7 @@ string DialogToken_Name(string sToken, string sValues)
 
 string DialogToken_PlayerName(string sToken, string sValues)
 {
+    SetLocalInt(OBJECT_SELF, "*TokenCache", TRUE);
     return GetPCPlayerName(OBJECT_SELF);
 }
 
@@ -224,6 +230,7 @@ string DialogToken_QuarterDay(string sToken, string sValues)
 
 string DialogToken_Race(string sToken, string sValues)
 {
+    SetLocalInt(OBJECT_SELF, "*TokenCache", TRUE);
     int nRace = GetRacialType(OBJECT_SELF);
     int nGender = GetGender(OBJECT_SELF);
     string sField = (sToken == "races"  ? "NamePlural" :
@@ -240,6 +247,7 @@ string DialogToken_SubRace(string sToken, string sValues)
 // General-purpose token that yields the supplied value
 string DialogToken_Token(string sToken, string sValues)
 {
+    SetLocalInt(OBJECT_SELF, "*TokenCache", TRUE);
     return sValues;
 }
 

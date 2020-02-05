@@ -76,7 +76,8 @@ const string DLG_PRIVATE       = "*Private";
 const string DLG_NO_ZOOM       = "*NoZoom";
 const string DLG_NO_HELLO      = "*NoHello";
 const string DLG_TOKEN         = "*Token";
-const string DLG_VALUES        = "*TokenValues";
+const string DLG_TOKEN_CACHE   = "*TokenCache";
+const string DLG_TOKEN_VALUES  = "*TokenValues";
 
 // ----- Automated Node IDs ----------------------------------------------------
 
@@ -450,6 +451,24 @@ void AddDialogToken(string sToken, string sEvalScript, string sValues = "");
 // Adds all the default dialog tokens. This is called by the system during the
 // dialog init stage and need not be used by the builder.
 void AddDialogTokens();
+
+// ---< GetCachedDialogToken >---
+// ---< dlg_i_dialogs >---
+// Returns the cached value for sToken, if any.
+string GetCachedDialogToken(string sToken);
+
+// ---< CacheDialogToken >---
+// ---< dlg_i_dialogs >---
+// Caches the value of a token so that the eval script does not have to run
+// every time the token is encountered. This cache lasts for the lifetime of the
+// dialog.
+void CacheDialogToken(string sToken, string sValue);
+
+// ---< UnCacheDialogToken >---
+// ---< dlg_i_dialogs >---
+// Clears the cache for sToken, ensuring that the next time the token is
+// encountered, its eval script will run again.
+void UnCacheDialogToken(string sToken);
 
 // ---< EvalDialogToken >---
 // ---< dlg_i_dialogs >---
@@ -1004,9 +1023,9 @@ void SetDialogTokenValue(string sValue)
 
 void AddDialogToken(string sToken, string sEvalScript, string sValues = "")
 {
-    SetLocalInt   (DIALOG, DLG_TOKEN  + "*" + sToken, TRUE);
-    SetLocalString(DIALOG, DLG_TOKEN  + "*" + sToken, sEvalScript);
-    SetLocalString(DIALOG, DLG_VALUES + "*" + sToken, sValues);
+    SetLocalInt   (DIALOG, DLG_TOKEN + "*" + sToken, TRUE);
+    SetLocalString(DIALOG, DLG_TOKEN + "*" + sToken, sEvalScript);
+    SetLocalString(DIALOG, DLG_TOKEN_VALUES + "*" + sToken, sValues);
 }
 
 void AddDialogTokens()
@@ -1064,6 +1083,28 @@ void AddDialogTokens()
     AddDialogToken("/token",          sPrefix + "Token", ">");
 }
 
+string GetCachedDialogToken(string sToken)
+{
+    if (GetLocalInt(DIALOG, DLG_TOKEN_CACHE + "*" + sToken))
+        return GetLocalString(DIALOG, DLG_TOKEN_CACHE + "*" + sToken);
+
+    return "";
+}
+
+void CacheDialogToken(string sToken, string sValue)
+{
+    Debug("Caching value for token <" + sToken + ">: " + sValue);
+    SetLocalInt   (DIALOG, DLG_TOKEN_CACHE + "*" + sToken, TRUE);
+    SetLocalString(DIALOG, DLG_TOKEN_CACHE + "*" + sToken, sValue);
+}
+
+void UnCacheDialogToken(string sToken)
+{
+    Debug("Clearing cache for token <" + sToken + ">");
+    DeleteLocalInt   (DIALOG, DLG_TOKEN_CACHE + "*" + sToken);
+    DeleteLocalString(DIALOG, DLG_TOKEN_CACHE + "*" + sToken);
+}
+
 string EvalDialogToken(string sToken, object oPC)
 {
     string sNormal = NormalizeDialogToken(sToken);
@@ -1072,11 +1113,20 @@ string EvalDialogToken(string sToken, object oPC)
     if (sNormal == "")
         return "<" + sToken + ">";
 
-    string sScript = GetLocalString(DIALOG, DLG_TOKEN  + "*" + sNormal);
-    string sValues = GetLocalString(DIALOG, DLG_VALUES + "*" + sNormal);
+    // Check the cached token value. This saves us having to run a library
+    // script to get a known result.
+    string sCached = GetCachedDialogToken(sToken);
+    if (sCached != "")
+    {
+        Debug("Using cached value for token <" + sToken + ">: " + sCached);
+        return sCached;
+    }
 
-    SetLocalString(oPC, DLG_TOKEN,  sNormal);
-    SetLocalString(oPC, DLG_VALUES, sValues);
+    string sScript = GetLocalString(DIALOG, DLG_TOKEN + "*" + sNormal);
+    string sValues = GetLocalString(DIALOG, DLG_TOKEN_VALUES + "*" + sNormal);
+
+    SetLocalString(oPC, DLG_TOKEN, sNormal);
+    SetLocalString(oPC, DLG_TOKEN_VALUES, sValues);
     RunLibraryScript(sScript, oPC);
 
     string sEval = GetLocalString(oPC, DLG_TOKEN);
@@ -1086,7 +1136,15 @@ string EvalDialogToken(string sToken, object oPC)
     if (sToken == GetStringLowerCase(sToken))
         sEval = GetStringLowerCase(sEval);
 
-    return sEval;;
+    // If we are supposed to cache the results, do so. We have to check the PC
+    // since the token script will not have access to the DIALOG object.
+    if (GetLocalInt(oPC, DLG_TOKEN_CACHE))
+    {
+        CacheDialogToken(sToken, sEval);
+        DeleteLocalInt(oPC, DLG_TOKEN_CACHE);
+    }
+
+    return sEval;
 }
 
 string EvalDialogTokens(string sString)
