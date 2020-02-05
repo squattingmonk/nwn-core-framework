@@ -55,6 +55,11 @@ object CreateDataItem(object oDatapoint, string sSubSystem);
 // Returns the item that oDatapoint uses to store sSubSystem-related variables.
 object GetDataItem(object oDatapoint, string sSubSystem);
 
+// ---< SetDataItem >---
+// ---< util_i_datapoint >---
+// Sets oItem as the object that oDatapoint uses to stor sSubSystem-related
+// variables.
+void SetDataItem(object oDatapoint, string sSubSystem, object oItem);
 
 // -----------------------------------------------------------------------------
 //                             Function Definitions
@@ -108,4 +113,9 @@ object CreateDataItem(object oDatapoint, string sSubSystem)
 object GetDataItem(object oDatapoint, string sSubSystem)
 {
     return GetLocalObject(oDatapoint, sSubSystem);
+}
+
+void SetDataItem(object oDatapoint, string sSubSystem, object oItem)
+{
+    SetLocalObject(oDatapoint, sSubSystem, oItem);
 }

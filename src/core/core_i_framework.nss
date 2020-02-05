@@ -339,7 +339,9 @@ object LoadPlugin(string sPlugin)
         // the necessary variables on it. Try to create it. If it's not valid,
         // we can generate one from scratch.
         oPlugin = CreateItemOnObject(sPlugin, PLUGINS);
-        if (!GetIsObjectValid(oPlugin))
+        if (GetIsObjectValid(oPlugin))
+            SetDataItem(PLUGINS, sPlugin, oPlugin);
+        else
             oPlugin = CreateDataItem(PLUGINS, sPlugin);
 
         // Make the Core aware of this plugin
