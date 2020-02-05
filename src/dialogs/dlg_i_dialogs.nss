@@ -587,6 +587,9 @@ void StartDialog(object oPC, object oTarget = OBJECT_SELF, string sDialog = "", 
 
 int HasDialogPage(string sPage)
 {
+    if (sPage == "")
+        return FALSE;
+
     return GetLocalInt(DIALOG, sPage + DLG_HAS);
 }
 
@@ -1299,8 +1302,14 @@ int LoadDialogPage()
     Debug("Initializing dialog page: " + GetDialogPage());
     SendDialogEvent(DLG_EVENT_PAGE);
 
+    string sMessage;
     string sPage = GetDialogPage();
-    if (sPage == "" || GetDialogState() == DLG_STATE_ENDED)
+    if (!HasDialogPage(sPage))
+        Debug(sMessage = "No dialog page found. Aborting...", DEBUG_LEVEL_WARNING);
+    else if (GetDialogState() == DLG_STATE_ENDED)
+        Debug(sMessage = "Dialog ended by the event script. Aborting...");
+
+    if (sMessage != "")
         return FALSE;
 
     string sText = GetDialogText(sPage);
