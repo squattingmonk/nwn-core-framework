@@ -444,7 +444,7 @@ void SetDialogTokenValue(string sValue);
 // upper- or lowercase forms. Otherwise, the token is case-sensitive and must
 // match sToken. sValues is a CSV list of possible values that can be handed to
 // sEvalScript.
-void AddDialogToken(string sToken, string sEvalScript, string sValues = "");
+void AddDialogToken(string sToken, string sEvalScript = "", string sValues = "");
 
 // ---< AddDialogTokens >---
 // ---< dlg_i_dialogs >---
