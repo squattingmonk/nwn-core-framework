@@ -7,8 +7,7 @@
 // This file holds utility functions for generating debug messages.
 // -----------------------------------------------------------------------------
 
-// 1.69 string manipulation library
-#include "x3_inc_string"
+#include "util_i_color"
 
 // -----------------------------------------------------------------------------
 //                                   Constants
@@ -50,16 +49,12 @@ void SetDebugLevel(int nLevel, object oTarget = OBJECT_SELF);
 
 // ---< GetDebugColor >---
 // ---< util_i_debug >---
-// Returns the string color code for debug messages of nLevel. This code takes
-// the form "nnn", where n is a number between 0 and 7 inclusive. This color
-// code is used with StringToRGBString() to color the output of debug functions.
+// Returns the string color code (in <cRGB> form) for debug messages of nLevel.
 string GetDebugColor(int nLevel);
 
 // ---< SetDebugColor >---
 // ---< util_i_debug >---
-// Sets the string color code for debug messages of nLevel. This code takes the
-// form "nnn", where n is a number between 0 and 7 inclusive. This color code is
-// used with StringToRGBString() to color the output of debug functions. If
+// Sets the string color code (in <cRGB> form) for debug messages of nLevel. If
 // sColor is blank, will use the default color codes.
 void SetDebugColor(int nLevel, string sColor = "");
 
@@ -138,13 +133,17 @@ string GetDebugColor(int nLevel)
 
     if (sColor == "")
     {
+        int nColor;
         switch (nLevel)
         {
-            case DEBUG_LEVEL_CRITICAL: sColor = "700"; break;
-            case DEBUG_LEVEL_ERROR:    sColor = "720"; break;
-            case DEBUG_LEVEL_WARNING:  sColor = "740"; break;
-            default:                   sColor = "770"; break;
+            case DEBUG_LEVEL_CRITICAL: nColor = COLOR_RED;          break;
+            case DEBUG_LEVEL_ERROR:    nColor = COLOR_ORANGE_DARK;  break;
+            case DEBUG_LEVEL_WARNING:  nColor = COLOR_ORANGE_LIGHT; break;
+            default:                   nColor = COLOR_GRAY_LIGHT;   break;
         }
+
+        sColor = HexToColor(nColor);
+        SetDebugColor(nLevel, sColor);
     }
 
     return sColor;
@@ -191,7 +190,7 @@ void Debug(string sMessage, int nLevel = DEBUG_LEVEL_NOTICE, object oTarget = OB
         if (nLogging & DEBUG_LOG_FILE)
             WriteTimestampedLogEntry(sMessage);
 
-        sMessage = StringToRGBString(sMessage, sColor);
+        sMessage = ColorString(sMessage, sColor);
 
         if (nLogging & DEBUG_LOG_DM)
             SendMessageToAllDMs(sMessage);
