@@ -214,8 +214,6 @@ const string ANVIL_DIALOG    = "AnvilDialog";
 const string ANVIL_PAGE_MAIN = "Main Page";
 const string ANVIL_PAGE_ITEM = "Item Chosen";
 const string ANVIL_PAGE_DONE = "Item Action";
-const string ANVIL_COPY      = "Copy";
-const string ANVIL_DESTROY   = "Destroy";
 const string ANVIL_ITEM      = "AnvilItem";
 
 void AnvilDialog()
@@ -228,12 +226,15 @@ void AnvilDialog()
             SetDialogPage(ANVIL_PAGE_MAIN);
             AddDialogPage(ANVIL_PAGE_MAIN, "Select an item:");
 
-            AddDialogPage(ANVIL_PAGE_ITEM, "What would you like to do?");
-            AddDialogNode(ANVIL_PAGE_ITEM, "Clone it", ANVIL_PAGE_DONE, ANVIL_COPY);
-            AddDialogNode(ANVIL_PAGE_ITEM, "Destroy it", ANVIL_PAGE_DONE, ANVIL_DESTROY);
+            AddDialogToken("Action");
+            AddDialogToken("Item");
+
+            AddDialogPage(ANVIL_PAGE_ITEM, "What would you like to do with the <Item>?");
+            AddDialogNode(ANVIL_PAGE_ITEM, "Clone it", ANVIL_PAGE_DONE);
+            AddDialogNode(ANVIL_PAGE_ITEM, "Destroy it", ANVIL_PAGE_DONE);
             EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_ITEM);
 
-            AddDialogPage(ANVIL_PAGE_DONE, "Placeholder text");
+            AddDialogPage(ANVIL_PAGE_DONE, "<Action>ing <Item>.");
             EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_DONE);
             SetDialogTarget(ANVIL_PAGE_MAIN, ANVIL_PAGE_DONE, DLG_NODE_BACK);
         } break;
@@ -261,21 +262,30 @@ void AnvilDialog()
             {
                 object oItem = GetListObject(DLG_SELF, nNode, ANVIL_ITEM);
                 SetLocalObject(DLG_SELF, ANVIL_ITEM, oItem);
-                SetDialogText("What would you like to do with the " +
-                    GetName(oItem) + "?", ANVIL_PAGE_ITEM);
+                CacheDialogToken("Item", GetName(oItem));
             }
             else if (sPage == ANVIL_PAGE_DONE)
             {
+                string sAction = GetCachedDialogToken("Action");
                 object oItem = GetLocalObject(DLG_SELF, ANVIL_ITEM);
-                string sData = GetDialogData(ANVIL_PAGE_ITEM, nNode);
-                SetDialogText(sData + "ing " + GetName(oItem), sPage);
 
-                if (sData == ANVIL_COPY)
+                if (sAction == "Copy")
                     CopyItem(oItem, oPC);
                 else
                     DestroyObject(oItem);
             }
         } break;
+
+        case DLG_EVENT_NODE:
+        {
+            int nNode = GetDialogNode();
+            string sPage = GetDialogPage();
+            if (sPage == ANVIL_PAGE_ITEM && nNode > DLG_NODE_NONE)
+            {
+                string sAction = (nNode ? "Destroy" : "Copy");
+                CacheDialogToken("Action", sAction);
+            }
+        }
     }
 }
 
