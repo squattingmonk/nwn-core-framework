@@ -210,11 +210,12 @@ void PoetDialog_Quit()
 // This dialog demonstrates dynamic node generation and automatic pagination.
 // -----------------------------------------------------------------------------
 
-const string ANVIL_DIALOG    = "AnvilDialog";
-const string ANVIL_PAGE_MAIN = "Main Page";
-const string ANVIL_PAGE_ITEM = "Item Chosen";
-const string ANVIL_PAGE_DONE = "Item Action";
-const string ANVIL_ITEM      = "AnvilItem";
+const string ANVIL_DIALOG       = "AnvilDialog";
+const string ANVIL_PAGE_MAIN    = "Main Page";
+const string ANVIL_PAGE_ITEM    = "Item Chosen";
+const string ANVIL_PAGE_COPY    = "Copy";
+const string ANVIL_PAGE_DESTROY = "Destroy";
+const string ANVIL_ITEM         = "AnvilItem";
 
 void AnvilDialog()
 {
@@ -226,17 +227,20 @@ void AnvilDialog()
             SetDialogPage(ANVIL_PAGE_MAIN);
             AddDialogPage(ANVIL_PAGE_MAIN, "Select an item:");
 
-            AddDialogToken("Action");
             AddDialogToken("Item");
 
             AddDialogPage(ANVIL_PAGE_ITEM, "What would you like to do with the <Item>?");
-            AddDialogNode(ANVIL_PAGE_ITEM, "Clone it", ANVIL_PAGE_DONE);
-            AddDialogNode(ANVIL_PAGE_ITEM, "Destroy it", ANVIL_PAGE_DONE);
+            AddDialogNode(ANVIL_PAGE_ITEM, "Clone it", ANVIL_PAGE_COPY);
+            AddDialogNode(ANVIL_PAGE_ITEM, "Destroy it", ANVIL_PAGE_DESTROY);
             EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_ITEM);
 
-            AddDialogPage(ANVIL_PAGE_DONE, "<Action>ing <Item>.");
-            EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_DONE);
-            SetDialogTarget(ANVIL_PAGE_MAIN, ANVIL_PAGE_DONE, DLG_NODE_BACK);
+            AddDialogPage(ANVIL_PAGE_COPY, "Copying <Item>.");
+            EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_COPY);
+            SetDialogTarget(ANVIL_PAGE_MAIN, ANVIL_PAGE_COPY, DLG_NODE_BACK);
+
+            AddDialogPage(ANVIL_PAGE_DESTROY, "Destroying <Item>.");
+            EnableDialogNode(DLG_NODE_BACK, ANVIL_PAGE_DESTROY);
+            SetDialogTarget(ANVIL_PAGE_MAIN, ANVIL_PAGE_DESTROY, DLG_NODE_BACK);
         } break;
 
         case DLG_EVENT_PAGE:
@@ -264,28 +268,17 @@ void AnvilDialog()
                 SetLocalObject(DLG_SELF, ANVIL_ITEM, oItem);
                 CacheDialogToken("Item", GetName(oItem));
             }
-            else if (sPage == ANVIL_PAGE_DONE)
+            else if (sPage == ANVIL_PAGE_COPY)
             {
-                string sAction = GetCachedDialogToken("Action");
                 object oItem = GetLocalObject(DLG_SELF, ANVIL_ITEM);
-
-                if (sAction == "Copy")
-                    CopyItem(oItem, oPC);
-                else
-                    DestroyObject(oItem);
+                CopyItem(oItem, oPC);
+            }
+            else if (sPage == ANVIL_PAGE_DESTROY)
+            {
+                object oItem = GetLocalObject(DLG_SELF, ANVIL_ITEM);
+                DestroyObject(oItem);
             }
         } break;
-
-        case DLG_EVENT_NODE:
-        {
-            int nNode = GetDialogNode();
-            string sPage = GetDialogPage();
-            if (sPage == ANVIL_PAGE_ITEM && nNode > DLG_NODE_NONE)
-            {
-                string sAction = (nNode ? "Destroy" : "Copy");
-                CacheDialogToken("Action", sAction);
-            }
-        }
     }
 }
 
