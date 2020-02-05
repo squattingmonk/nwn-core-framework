@@ -1529,6 +1529,7 @@ void DoDialogNode(int nClicked)
 void DialogCleanup()
 {
     object oPC = GetPCSpeaker();
+    DeleteLocalString(oPC, DLG_DIALOG);
     DeleteLocalObject(oPC, DLG_SPEAKER);
     DestroyObject(DIALOG);
 }
