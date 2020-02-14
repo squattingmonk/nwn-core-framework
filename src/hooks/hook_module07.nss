@@ -10,6 +10,7 @@
 
 #include "x2_inc_switches"
 #include "core_i_framework"
+#include "core_i_database"
 
 void main()
 {
@@ -26,6 +27,10 @@ void main()
         SetModuleSwitch(MODULE_SWITCH_ENABLE_TAGBASED_SCRIPTS, FALSE);
 
     Debug("Initializing Core Framework...");
+
+    // Ensure the core database tables are set up
+    if (DATABASE_ENABLED)
+        InitializeDatabase();
 
     // Register all plugins specified in the core config file
     LoadPlugins(INSTALLED_PLUGINS);

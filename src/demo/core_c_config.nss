@@ -20,6 +20,15 @@
 #include "util_i_debug"
 
 // -----------------------------------------------------------------------------
+//                               Database Support
+// -----------------------------------------------------------------------------
+
+// This setting controls whether database support should be enabled by default.
+// This setting will only work when the module is being run with NWNX:EE with
+// the SQL plugin enabled. Currently, this also requires an SQLite database.
+const int DATABASE_ENABLED = TRUE;
+
+// -----------------------------------------------------------------------------
 //                                   Debugging
 // -----------------------------------------------------------------------------
 
@@ -63,7 +72,7 @@ const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
 // This is a comma-separated list of plugins that should be loaded OnModuleLoad.
 // The order indicates priority.
-const string INSTALLED_PLUGINS = "bw_defaultevents, dlg_plugin";
+const string INSTALLED_PLUGINS = "bw_defaultevents, dlg_plugin, pqj_l_plugin";
 
 // -----------------------------------------------------------------------------
 //                               Event Management

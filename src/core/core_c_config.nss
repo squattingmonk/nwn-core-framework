@@ -20,6 +20,15 @@
 #include "util_i_debug"
 
 // -----------------------------------------------------------------------------
+//                               Database Support
+// -----------------------------------------------------------------------------
+
+// This setting controls whether database support should be enabled by default.
+// This setting will only work when the module is being run with NWNX:EE with
+// the SQL plugin enabled. Currently, this also requires an SQLite database.
+const int DATABASE_ENABLED = FALSE;
+
+// -----------------------------------------------------------------------------
 //                                   Debugging
 // -----------------------------------------------------------------------------
 
