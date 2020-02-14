@@ -1,4 +1,5 @@
 #include "util_i_color"
+#include "pqj_i_main"
 
 object oPC = GetLastUsedBy();
 string sText = "The quick brown fox jumps over the lazy dog";
@@ -59,5 +60,7 @@ void main()
     hsv.s = 0.0;
     PrintHexColor(HSVToHex(hsv));
 
-
+    object oPC = GetLastUsedBy();
+    int nState = pqj_GetQuestState("test", oPC);
+    pqj_AddJournalQuestEntry("test", nState + 1, oPC);
 }
