@@ -19,14 +19,21 @@
 
 void pqj_InitializeDatabase()
 {
-    if (CreateTable(TABLE_PQJDATA))
-        Debug("Initialized PQJ database");
-    else
+    int nDB = GetDatabaseType();
+    if (nDB)
     {
-        string sError = NWNX_SQL_GetLastError();
-        Debug("Could not initialize PQJ database: " + sError,
-              DEBUG_LEVEL_CRITICAL);
-        DeactivatePlugin(GetCurrentPlugin());
+        string sTable = (nDB == DATABASE_TYPE_SQLITE ? PQJ_TABLE_SQLITE :
+                        (nDB == DATABASE_TYPE_MYSQL  ? PQJ_TABLE_MYSQL  : ""));
+
+        if (CreateTable(sTable))
+            Debug("Initialized PQJ database");
+        else
+        {
+            string sError = NWNX_SQL_GetLastError();
+            Debug("Could not initialize PQJ database: " + sError,
+                  DEBUG_LEVEL_CRITICAL);
+            DeactivatePlugin(GetCurrentPlugin());
+        }
     }
 }
 
@@ -42,21 +49,44 @@ void pqj_RestoreJournalEntries()
     if (!GetIsPC(oPC))
         return;
 
-    string sPCID  = GetPCID(oPC);
-    string sQuery = "SELECT plot_id, state FROM pqjdata WHERE pc_id=?";
-    if (NWNX_SQL_PrepareAndExecuteQuery(sQuery, sPCID))
-    {
-        string sPlotID, sState;
-        string sName = GetName(oPC);
+    string sName = GetName(oPC);
+    int nDatabase = GetDatabaseType();
 
-        while (NWNX_SQL_ReadyToReadNextRow())
+    if (nDatabase)
+    {
+        string sPCID = GetPCID(oPC);
+        string sQuery = "SELECT plot_id, state FROM pqjdata WHERE pc_id=?";
+
+        if (NWNX_SQL_PrepareAndExecuteQuery(sQuery, sPCID))
         {
-            NWNX_SQL_ReadNextRow();
-            sPlotID = NWNX_SQL_ReadDataInActiveRow(0);
-            sState  = NWNX_SQL_ReadDataInActiveRow(1);
+            string sPlotID, sState;
+
+            while (NWNX_SQL_ReadyToReadNextRow())
+            {
+                NWNX_SQL_ReadNextRow();
+                sPlotID = NWNX_SQL_ReadDataInActiveRow(0);
+                sState  = NWNX_SQL_ReadDataInActiveRow(1);
+                Debug("Restoring journal entry; PC: " + sName + ", " +
+                      "PlotID: " + sPlotID + "; PlotState: " + sState);
+                AddJournalQuestEntry(sPlotID, StringToInt(sState), oPC, FALSE);
+            }
+        }
+    }
+    else
+    {
+        string sDB = FALLBACK_DATABASE;
+        string sPlotID, sPlotIDs = GetCampaignString(sDB, PQJ_ENTRIES, oPC);
+        int nState, i, nCount = CountList(sPlotIDs);
+
+        Debug("Found journal entries: " + sPlotIDs);
+
+        for (i; i < nCount; i++)
+        {
+            sPlotID = GetListItem(sPlotIDs, i);
+            nState = GetCampaignInt(sDB, PQJ_PREFIX + sPlotID, oPC);
             Debug("Restoring journal entry; PC: " + sName + ", " +
-                  "PlotID: " + sPlotID + "; PlotState: " + sState);
-            AddJournalQuestEntry(sPlotID, StringToInt(sState), oPC, FALSE);
+                  "PlotID: " + sPlotID + "; PlotState: " + IntToString(nState));
+            AddJournalQuestEntry(sPlotID, nState, oPC, FALSE);
         }
     }
 }
