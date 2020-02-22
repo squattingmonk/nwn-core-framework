@@ -20,13 +20,12 @@
 #include "util_i_debug"
 
 // -----------------------------------------------------------------------------
-//                               Database Support
+//                                   Database
 // -----------------------------------------------------------------------------
 
-// This setting controls whether database support should be enabled by default.
-// This setting will only work when the module is being run with NWNX:EE with
-// the SQL plugin enabled. Currently, this also requires an SQLite database.
-const int DATABASE_ENABLED = FALSE;
+// This is the name of the campaign database to use with Get/SetDatabase*
+// functions if an NWNX:EE SQL database is not detected.
+const string FALLBACK_DATABASE = "core_framework";
 
 // -----------------------------------------------------------------------------
 //                                   Debugging

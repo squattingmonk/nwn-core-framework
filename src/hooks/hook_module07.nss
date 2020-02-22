@@ -29,8 +29,7 @@ void main()
     Debug("Initializing Core Framework...");
 
     // Ensure the core database tables are set up
-    if (DATABASE_ENABLED)
-        InitializeDatabase();
+    InitializeDatabase();
 
     // Register all plugins specified in the core config file
     LoadPlugins(INSTALLED_PLUGINS);

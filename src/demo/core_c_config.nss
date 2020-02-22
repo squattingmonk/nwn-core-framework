@@ -12,7 +12,7 @@
 // Remember: any changes to this file will not be reflected in the module unless
 // you recompile all scripts in which this file is included (however remotely).
 // -----------------------------------------------------------------------------
-// Aknowledgment:
+// Acknowledgment:
 // The scripts contained in this package are adapted from those included in
 // Edward Beck's HCR2 and EPOlson's Common Scripting Framework.
 // -----------------------------------------------------------------------------
@@ -20,13 +20,12 @@
 #include "util_i_debug"
 
 // -----------------------------------------------------------------------------
-//                               Database Support
+//                                   Database
 // -----------------------------------------------------------------------------
 
-// This setting controls whether database support should be enabled by default.
-// This setting will only work when the module is being run with NWNX:EE with
-// the SQL plugin enabled. Currently, this also requires an SQLite database.
-const int DATABASE_ENABLED = TRUE;
+// This is the name of the campaign database to use with Get/SetDatabase*
+// functions if an NWNX:EE SQL database is not detected.
+const string FALLBACK_DATABASE = "core_framework";
 
 // -----------------------------------------------------------------------------
 //                                   Debugging

@@ -15,6 +15,7 @@
 
 #include "nwnx_sql"
 #include "util_i_debug"
+#include "core_c_config"
 
 // -----------------------------------------------------------------------------
 //                                   Constants
@@ -22,13 +23,25 @@
 
 const string PCID = "PCID";
 
+// Database types
+const int DATABASE_TYPE_NONE       = 0;
+const int DATABASE_TYPE_SQLITE     = 1;
+const int DATABASE_TYPE_MYSQL      = 2;
+
 // Table structures for Core tables.
-const string TABLE_PC           = "pc           (id     INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, player TEXT NOT NULL DEFAULT '', UNIQUE (name, player))";
-const string TABLE_PCDATA       = "pcdata       (pc_id  INTEGER,                  varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (pc_id,  varname), FOREIGN KEY (pc_id) REFERENCES pc (id) ON UPDATE CASCADE ON DELETE CASCADE)";
-const string TABLE_PCOBJECTDATA = "pcobjectdata (pc_id  INTEGER,                  varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (pc_id,  varname), FOREIGN KEY (pc_id) REFERENCES pc (id) ON UPDATE CASCADE ON DELETE CASCADE)";
-const string TABLE_PWDATA       = "pwdata       (tag    TEXT NOT NULL DEFAULT '', varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (tag,    varname))";
-const string TABLE_PWOBJECTDATA = "pwobjectdata (tag    TEXT NOT NULL DEFAULT '', varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (tag,    varname))";
-const string TABLE_PLAYERDATA   = "playerdata   (player TEXT NOT NULL DEFAULT '', varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (player, varname))";
+const string SQLITE_TABLE_PC           = "pc           (id     INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, player TEXT NOT NULL DEFAULT '', UNIQUE (name, player))";
+const string SQLITE_TABLE_PCDATA       = "pcdata       (pc_id  INTEGER,                  varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (pc_id,  varname), FOREIGN KEY (pc_id) REFERENCES pc (id) ON UPDATE CASCADE ON DELETE CASCADE)";
+const string SQLITE_TABLE_PCOBJECTDATA = "pcobjectdata (pc_id  INTEGER,                  varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (pc_id,  varname), FOREIGN KEY (pc_id) REFERENCES pc (id) ON UPDATE CASCADE ON DELETE CASCADE)";
+const string SQLITE_TABLE_PWDATA       = "pwdata       (tag    TEXT NOT NULL DEFAULT '', varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (tag,    varname))";
+const string SQLITE_TABLE_PWOBJECTDATA = "pwobjectdata (tag    TEXT NOT NULL DEFAULT '', varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (tag,    varname))";
+const string SQLITE_TABLE_PLAYERDATA   = "playerdata   (player TEXT NOT NULL DEFAULT '', varname TEXT NOT NULL DEFAULT '', value TEXT NOT NULL DEFAULT '', PRIMARY KEY (player, varname))";
+
+const string MYSQL_TABLE_PC           = "pc           (id     INT UNSIGNED NOT NULL AUTO_INCREMENT, name    VARCHAR(64) NOT NULL DEFAULT '', player VARCHAR(64)  NOT NULL DEFAULT '', PRIMARY KEY (id),             UNIQUE  KEY (name, player))";
+const string MYSQL_TABLE_PCDATA       = "pcdata       (pc_id  INT UNSIGNED NOT NULL DEFAULT 0,      varname VARCHAR(64) NOT NULL DEFAULT '', value  TEXT,                             PRIMARY KEY (varname, pc_id), FOREIGN KEY (pc_id) REFERENCES pc (id) ON UPDATE CASCADE ON DELETE CASCADE)";
+const string MYSQL_TABLE_PCOBJECTDATA = "pcobjectdata (pc_id  INT UNSIGNED NOT NULL DEFAULT 0,      varname VARCHAR(64) NOT NULL DEFAULT '', value  TEXT,                             PRIMARY KEY (varname, pc_id), FOREIGN KEY (pc_id) REFERENCES pc (id) ON UPDATE CASCADE ON DELETE CASCADE)";
+const string MYSQL_TABLE_PWDATA       = "pwdata       (tag    VARCHAR(64)  NOT NULL DEFAULT '',     varname VARCHAR(64) NOT NULL DEFAULT '', value  TEXT,                             PRIMARY KEY (varname, tag))";
+const string MYSQL_TABLE_PWOBJECTDATA = "pwobjectdata (tag    VARCHAR(64)  NOT NULL DEFAULT '',     varname VARCHAR(64) NOT NULL DEFAULT '', value  TEXT,                             PRIMARY KEY (varname, tag))";
+const string MYSQL_TABLE_PLAYERDATA   = "playerdata   (player VARCHAR(64)  NOT NULL DEFAULT '',     varname VARCHAR(64) NOT NULL DEFAULT '', value  TEXT,                             PRIMARY KEY (varname, player))";
 
 // Used to yield multiple values based on whether the query is for a PC
 struct QueryHelper
@@ -71,6 +84,11 @@ int NWNX_SQL_PrepareAndExecuteQuery(string sSQL,
         string s5 = "", string s6 = "", string s7 = "", string s8 = "", string s9 = "");
 
 // ----- Database Interface ----------------------------------------------------
+
+// ---< GetDatabaseType >---
+// ---< core_i_database >---
+// Returns the type of database as a DATABASE_TYPE_* constant.
+int GetDatabaseType();
 
 // ---< InitializeDatabase >---
 // ---< core_i_database >---
@@ -236,7 +254,9 @@ int NWNX_SQL_PrepareAndExecuteQuery(string sSQL,
         string s0 = "", string s1 = "", string s2 = "", string s3 = "", string s4 = "",
         string s5 = "", string s6 = "", string s7 = "", string s8 = "", string s9 = "")
 {
-    NWNX_SQL_PrepareQuery(sSQL);
+    if (!NWNX_SQL_PrepareQuery(sSQL))
+        return FALSE;
+
     string sParam;
     int i, nCount = NWNX_SQL_GetPreparedQueryParamCount();
 
@@ -265,6 +285,17 @@ int NWNX_SQL_PrepareAndExecuteQuery(string sSQL,
 
 // ----- Database Interface ----------------------------------------------------
 
+int GetDatabaseType()
+{
+    string sDatabase = GetStringUpperCase(NWNX_SQL_GetDatabaseType());
+    if (sDatabase == "SQLITE")
+        return DATABASE_TYPE_SQLITE;
+    if (sDatabase == "MYSQL")
+        return DATABASE_TYPE_MYSQL;
+
+    return DATABASE_TYPE_NONE;
+}
+
 int CreateTable(string sStructure)
 {
     return NWNX_SQL_ExecuteQuery("CREATE TABLE IF NOT EXISTS " + sStructure);
@@ -272,22 +303,32 @@ int CreateTable(string sStructure)
 
 void InitializeDatabase()
 {
-    string sDatabase = GetStringUpperCase(NWNX_SQL_GetDatabaseType());
-    if (sDatabase != "SQLITE")
+    int nDatabase = GetDatabaseType();
+
+    if (nDatabase == DATABASE_TYPE_SQLITE)
     {
-        Debug("Cannot initialize database", DEBUG_LEVEL_CRITICAL);
-        return;
+        // Needed to ensure our foreign key constraints work
+        NWNX_SQL_ExecuteQuery("PRAGMA foreign_keys=1");
+
+        CreateTable(SQLITE_TABLE_PC);
+        CreateTable(SQLITE_TABLE_PCDATA);
+        CreateTable(SQLITE_TABLE_PCOBJECTDATA);
+        CreateTable(SQLITE_TABLE_PWDATA);
+        CreateTable(SQLITE_TABLE_PWOBJECTDATA);
+        CreateTable(SQLITE_TABLE_PLAYERDATA);
     }
-
-    // Needed to ensure our foreign key constraints work
-    NWNX_SQL_ExecuteQuery("PRAGMA foreign_keys=1");
-
-    CreateTable(TABLE_PC);
-    CreateTable(TABLE_PCDATA);
-    CreateTable(TABLE_PCOBJECTDATA);
-    CreateTable(TABLE_PWDATA);
-    CreateTable(TABLE_PWOBJECTDATA);
-    CreateTable(TABLE_PLAYERDATA);
+    else if (nDatabase == DATABASE_TYPE_MYSQL)
+    {
+        CreateTable(MYSQL_TABLE_PC);
+        CreateTable(MYSQL_TABLE_PCDATA);
+        CreateTable(MYSQL_TABLE_PCOBJECTDATA);
+        CreateTable(MYSQL_TABLE_PWDATA);
+        CreateTable(MYSQL_TABLE_PWOBJECTDATA);
+        CreateTable(MYSQL_TABLE_PLAYERDATA);
+    }
+    else
+        Debug("No supported database found. Falling back to campaign DB...",
+              DEBUG_LEVEL_WARNING);
 }
 
 string GetPCID(object oPC)
@@ -304,24 +345,32 @@ string GetPCID(object oPC)
         sPCID = "";
         string sName = GetName(oPC, TRUE);
         string sPlayer = GetPCPlayerName(oPC);
-        string sQuery = "SELECT id from pc WHERE name=? AND player=?";
+        int nDatabase = GetDatabaseType();
 
-        if (NWNX_SQL_PrepareAndExecuteQuery(sQuery, sName, sPlayer))
+        if (nDatabase)
         {
-            // Load the PCID from the database
-            if (NWNX_SQL_ReadyToReadNextRow())
+            string sQuery= "SELECT id from pc WHERE name=? AND player=?";
+
+            if (NWNX_SQL_PrepareAndExecuteQuery(sQuery, sName, sPlayer))
             {
-                NWNX_SQL_ReadNextRow();
-                sPCID = NWNX_SQL_ReadDataInActiveRow();
-            }
-            else
-            {
-                // Add the PC to the database and return the PCID
-                sQuery = "INSERT INTO pc (name, player) VALUES (?, ?)";
-                NWNX_SQL_PrepareAndExecuteQuery(sQuery, sName, sPlayer);
-                sPCID = IntToString(NWNX_SQL_GetAffectedRows());
+                // Load the PCID from the database
+                if (NWNX_SQL_ReadyToReadNextRow())
+                {
+                    NWNX_SQL_ReadNextRow();
+                    sPCID = NWNX_SQL_ReadDataInActiveRow();
+                }
+                else
+                {
+                    // Add the PC to the database and return the PCID
+                    sQuery = "INSERT INTO pc (name, player) VALUES (?, ?)";
+
+                    NWNX_SQL_PrepareAndExecuteQuery(sQuery, sName, sPlayer);
+                    sPCID = IntToString(NWNX_SQL_GetAffectedRows());
+                }
             }
         }
+        else
+            sPCID = GetCampaignString(FALLBACK_DATABASE, PCID, oPC);
 
         SetLocalString(oPC, PCID, sPCID);
     }
@@ -331,16 +380,30 @@ string GetPCID(object oPC)
 
 void DeleteDatabaseVariable(string sVarName, object oObject = OBJECT_INVALID)
 {
-    struct QueryHelper q = GetQueryHelper(oObject);
-    string sQuery = "DELETE FROM ? WHERE ?=? AND varname=?";
-    NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+    int nDatabase = GetDatabaseType();
+
+    if (nDatabase)
+    {
+        string sQuery = "DELETE FROM ? WHERE ?=? AND varname=?";
+        struct QueryHelper q = GetQueryHelper(oObject);
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+    }
+    else
+        DeleteCampaignVariable(FALLBACK_DATABASE, sVarName, oObject);
 }
 
 void DeleteDatabaseObject(string sVarName, object oObject = OBJECT_INVALID)
 {
-    struct QueryHelper q = GetQueryHelper(oObject, "pwobjectdata", "pcobjectdata");
-    string sQuery = "DELETE FROM ? WHERE ?=? AND varname=?";
-    NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+    int nDatabase = GetDatabaseType();
+
+    if (nDatabase)
+    {
+        string sQuery = "DELETE FROM ? WHERE ?=? AND varname=?";
+        struct QueryHelper q = GetQueryHelper(oObject, "pwobjectdata", "pcobjectdata");
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+    }
+    else
+        DeleteCampaignVariable(FALLBACK_DATABASE, sVarName, oObject);
 }
 
 float GetDatabaseFloat(string sVarName, object oObject = OBJECT_INVALID)
@@ -360,32 +423,47 @@ location GetDatabaseLocation(string sVarName, object oObject = OBJECT_INVALID)
 
 object GetDatabaseObject(string sVarName, object oObject = OBJECT_INVALID)
 {
-    struct QueryHelper q = GetQueryHelper(oObject, "pwobjectdata", "pcobjectdata");
-    string sQuery = "SELECT value FROM ? WHERE ?=? AND varname=?";
-    NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+    int nDatabase = GetDatabaseType();
 
-    if (NWNX_SQL_ReadyToReadNextRow())
+    if (nDatabase)
     {
-        NWNX_SQL_ReadNextRow();
-        return NWNX_SQL_ReadFullObjectInActiveRow();
+        string sQuery = "SELECT value FROM ? WHERE ?=? AND varname=?";
+        struct QueryHelper q = GetQueryHelper(oObject, "pwobjectdata", "pcobjectdata");
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+
+        if (NWNX_SQL_ReadyToReadNextRow())
+        {
+            NWNX_SQL_ReadNextRow();
+            return NWNX_SQL_ReadFullObjectInActiveRow();
+        }
+
+        return OBJECT_INVALID;
     }
 
-    return OBJECT_INVALID;
+    location lLoc = GetLocation(oObject);
+    return RetrieveCampaignObject(FALLBACK_DATABASE, sVarName, lLoc, oObject, oObject);
 }
 
 string GetDatabaseString(string sVarName, object oObject = OBJECT_INVALID)
 {
-    struct QueryHelper q = GetQueryHelper(oObject);
-    string sQuery = "SELECT value FROM ? WHERE ?=? AND varname=?";
-    NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+    int nDatabase = GetDatabaseType();
 
-    if (NWNX_SQL_ReadyToReadNextRow())
+    if (nDatabase)
     {
-        NWNX_SQL_ReadNextRow();
-        return NWNX_SQL_ReadDataInActiveRow();
+        string sQuery = "SELECT value FROM ? WHERE ?=? AND varname=?";
+        struct QueryHelper q = GetQueryHelper(oObject);
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+
+        if (NWNX_SQL_ReadyToReadNextRow())
+        {
+            NWNX_SQL_ReadNextRow();
+            return NWNX_SQL_ReadDataInActiveRow();
+        }
+
+        return "";
     }
 
-    return "";
+    return GetCampaignString(FALLBACK_DATABASE, sVarName, oObject);
 }
 
 void SetDatabaseFloat(string sVarName, float fValue, object oObject = OBJECT_INVALID)
@@ -405,19 +483,34 @@ void SetDatabaseLocation(string sVarName, location lValue, object oObject = OBJE
 
 void SetDatabaseObject(string sVarName, object oValue, object oObject = OBJECT_INVALID)
 {
-    struct QueryHelper q = GetQueryHelper(oObject, "pwobjectdata", "pcobjectdata");
-    NWNX_SQL_PrepareQuery("REPLACE INTO ? (?, varname, value) VALUES (?, ?, ?)");
-    NWNX_SQL_PreparedString(0, q.table);
-    NWNX_SQL_PreparedString(1, q.column);
-    NWNX_SQL_PreparedString(2, q.id);
-    NWNX_SQL_PreparedString(3, sVarName);
-    NWNX_SQL_PreparedObjectFull(4, oValue);
-    NWNX_SQL_ExecutePreparedQuery();
+    int nDatabase = GetDatabaseType();
+
+    if (nDatabase)
+    {
+        string sQuery = "REPLACE INTO ? (?, varname, value) VALUES (?, ?, ?)";
+        struct QueryHelper q = GetQueryHelper(oObject, "pwobjectdata", "pcobjectdata");
+
+        NWNX_SQL_PreparedString(0, q.table);
+        NWNX_SQL_PreparedString(1, q.column);
+        NWNX_SQL_PreparedString(2, q.id);
+        NWNX_SQL_PreparedString(3, sVarName);
+        NWNX_SQL_PreparedObjectFull(4, oValue);
+        NWNX_SQL_ExecutePreparedQuery();
+    }
+    else
+        StoreCampaignObject(FALLBACK_DATABASE, sVarName, oValue, oObject);
 }
 
 void SetDatabaseString(string sVarName, string sValue, object oObject = OBJECT_INVALID)
 {
-    struct QueryHelper q = GetQueryHelper(oObject);
-    string sQuery = "REPLACE INTO ? (?, varname, value) VALUES (?, ?, ?)";
-    NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName, sValue);
+    int nDatabase = GetDatabaseType();
+
+    if (nDatabase)
+    {
+        string sQuery = "REPLACE INTO ? (?, varname, value) VALUES (?, ?, ?)";
+        struct QueryHelper q = GetQueryHelper(oObject);
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName, sValue);
+    }
+    else
+        SetCampaignString(FALLBACK_DATABASE, sVarName, sValue, oObject);
 }
