@@ -135,14 +135,16 @@ void PluginControl_Page()
         DeleteDialogNodes(PLUGIN_PAGE_MAIN);
 
         // Build the list of plugins
+        object oPlugin;
         string sPlugin, sText, sTarget;
-        int i, nStatus, nCount = CountStringList(PLUGINS);
+        int i, nStatus, nCount = CountObjectList(PLUGINS);
 
         for (i; i < nCount; i++)
         {
+            oPlugin = GetListObject(PLUGINS, i);
             sPlugin = GetListString(PLUGINS, i);
             sTarget = AddPluginPage(sPlugin);
-            nStatus = GetIsPluginActivated(sPlugin);
+            nStatus = GetIsPluginActivated(oPlugin);
             sText = sPlugin + " " + PluginStatusText(nStatus);
             AddDialogNode(PLUGIN_PAGE_MAIN, sTarget, sText);
         }
@@ -152,7 +154,8 @@ void PluginControl_Page()
 
     // The page is for a plugin
     string sPlugin = GetDialogData(sPage);
-    int nStatus = GetIsPluginActivated(sPlugin);
+    object oPlugin = GetPlugin(sPlugin);
+    int nStatus = GetIsPluginActivated(oPlugin);
     switch (nStatus)
     {
         case PLUGIN_STATUS_OFF:
@@ -162,11 +165,9 @@ void PluginControl_Page()
             FilterDialogNodes(0, CountDialogNodes(sPage) - 1);
     }
 
-    object oPlugin = GetPlugin(sPlugin);
-    string sDescription = GetLocalString(oPlugin, PLUGIN_DESCRIPTION);
     CacheDialogToken("Plugin", sPlugin);
     CacheDialogToken("Status", PluginStatusText(nStatus));
-    CacheDialogToken("Description", sDescription);
+    CacheDialogToken("Description", GetDescription(oPlugin));
 }
 
 void PluginControl_Node()
@@ -191,6 +192,14 @@ void PluginControl_Node()
 
 void OnLibraryLoad()
 {
+    // Plugin setup
+    object oPlugin = GetPlugin("dlg", TRUE);
+    SetName(oPlugin, "[Plugin] Dynamic Dialogs");
+    SetDescription(oPlugin,
+        "This plugin allows the creation and launching of script-driven dialogs.");
+    SetPluginLibraries(oPlugin, "dlg_l_plugin, dlg_l_tokens, demo_l_dialogs");
+
+    // Event scripts
     RegisterLibraryScript("StartDialog",        0x0100+0x01);
     RegisterLibraryScript("StartGhostDialog",   0x0100+0x02);
 
@@ -202,7 +211,6 @@ void OnLibraryLoad()
     RegisterDialogScript(PLUGIN_DIALOG, "PluginControl_Init", DLG_EVENT_INIT, DLG_PRIORITY_FIRST);
     RegisterDialogScript(PLUGIN_DIALOG, "PluginControl_Page", DLG_EVENT_PAGE);
     RegisterDialogScript(PLUGIN_DIALOG, "PluginControl_Node", DLG_EVENT_NODE);
-
 }
 
 void OnLibraryScript(string sScript, int nEntry)

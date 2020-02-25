@@ -434,17 +434,6 @@
                     "__struct_id": 0,
                     "NAME": {
                       "type": "cexostring",
-                      "value": "[Plugin] Dynamic Dialogs"
-                    },
-                    "RESREF": {
-                      "type": "resref",
-                      "value": "dlg_plugin"
-                    }
-                  },
-                  {
-                    "__struct_id": 0,
-                    "NAME": {
-                      "type": "cexostring",
                       "value": "Template: Data Item"
                     },
                     "RESREF": {
