@@ -24,7 +24,7 @@ void main()
         if (nHour != nOldHour)
         {
             SetLocalInt(OBJECT_SELF, CURRENT_HOUR, nHour);
-            RunEvent(CORE_EVENT_ON_HOUR);
+            RunEvent(MODULE_EVENT_ON_HOUR);
 
             // TODO: add more time-of-day hooks
         }

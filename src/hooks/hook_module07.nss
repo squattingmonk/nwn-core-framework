@@ -31,7 +31,8 @@ void main()
     // Ensure the core database tables are set up
     InitializeDatabase();
 
-    // Register all plugins specified in the core config file
+    // Load all libraries and plugins in the core config file
+    LoadLibraries(INSTALLED_LIBRARIES);
     LoadPlugins(INSTALLED_PLUGINS);
 
     // Run our module load event

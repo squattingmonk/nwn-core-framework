@@ -39,13 +39,12 @@ object TIMERS  = GetDatapoint(CORE_TIMERS);
 
 // Local variable names used for plugin objects.
 const string PLUGIN_ID          = "*ID";
-const string PLUGIN_DESCRIPTION = "*Description";
 const string PLUGIN_LIBRARIES   = "*Libraries";
 const string PLUGIN_STATUS      = "*Status";
 
 // Acceptable values for the plugin's activation status.
-const int PLUGIN_STATUS_OFF = 0;
-const int PLUGIN_STATUS_ON  = 1;
+const int PLUGIN_STATUS_OFF =  0;
+const int PLUGIN_STATUS_ON  =  1;
 
 // The last plugin to run
 const string PLUGIN_LAST = "PLUGIN_LAST";
@@ -127,6 +126,9 @@ const string MODULE_EVENT_ON_PLAYER_UNEQUIP_ITEM      = "OnPlayerUnEquipItem";
 const string MODULE_EVENT_ON_UNACQUIRE_ITEM           = "OnUnAcquireItem";
 const string MODULE_EVENT_ON_USER_DEFINED             = "OnUserDefined";
 
+// These are pseudo-events called by the Core Framework
+const string MODULE_EVENT_ON_SPELLHOOK                = "OnSpellhook";
+const string MODULE_EVENT_ON_HOUR                     = "OnHour";
 // ----- Area Events -----------------------------------------------------------
 
 const string AREA_EVENT_ON_ENTER                      = "OnAreaEnter";
@@ -213,11 +215,8 @@ const string TRIGGER_EVENT_ON_EXIT                    = "OnTriggerExit";
 const string TRIGGER_EVENT_ON_HEARTBEAT               = "OnTriggerHeartbeat";
 const string TRIGGER_EVENT_ON_USER_DEFINED            = "OnTriggerUserDefined";
 
-
-// ----- Core Events -----------------------------------------------------------
+// ----- Plugin Events ---------------------------------------------------------
 
 // These are pseudo-events called by the Core Framework.
-const string CORE_EVENT_ON_SPELLHOOK                  = "OnSpellhook";
-const string CORE_EVENT_ON_PLUGIN_ACTIVATE            = "OnPluginActivate";
-const string CORE_EVENT_ON_PLUGIN_DEACTIVATE          = "OnPluginDeactivate";
-const string CORE_EVENT_ON_HOUR                       = "OnHour";
+const string PLUGIN_EVENT_ON_ACTIVATE                 = "OnPluginActivate";
+const string PLUGIN_EVENT_ON_DEACTIVATE               = "OnPluginDeactivate";

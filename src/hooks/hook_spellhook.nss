@@ -12,7 +12,7 @@
 
 void main()
 {
-    int nState = RunEvent(CORE_EVENT_ON_SPELLHOOK);
+    int nState = RunEvent(MODULE_EVENT_ON_SPELLHOOK);
 
     // The DENIED state stops the spell from executing
     if (nState & EVENT_STATE_DENIED)

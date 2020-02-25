@@ -36,47 +36,68 @@ object EVENT_CURRENT  = GetLocalObject(EVENTS,  EVENT_LAST);
 // Plugins are objects that contain script lists and variables specific to a
 // particular system.
 
+// ---< GetPlugin >---
+// ---< core_i_framework >---
+// Returns the plugin object associated with sPluginID. If bCreate is TRUE, will
+// create the plugin if it does not already exist.
+object GetPlugin(string sPluginID, int bCreate = FALSE);
+
 // ---< LoadPlugin >---
 // ---< core_i_framework >---
-// Creates and returns a data object for the plugin with ID sPlugin. If the
-// plugin was not already loaded, loads a library named sPlugin, runs the
-// plugin's OnPluginActivate scripts, and sets its status to ON.
-//
-// Note: while plugin setup can be done in the OnLibraryLoad() routine of the
-// library sPlugin, you can also create a plugin blueprint with the resref
-// sPlugin.
-object LoadPlugin(string sPlugin);
+// Loads all libraries defined on oPlugin, then runs its activation routine.
+// Returns whether the plugin was successfully activated.
+int LoadPlugin(object oPlugin);
 
 // ---< LoadPlugins >---
 // ---< core_i_framework >---
-// Creates a data object for each plugin in the CSV list sPlugins. If the plugin
-// was not already loaded, loads a library with the same name as the plugin,
-// runs the plugin's OnPluginActivate scripts, and sets its status to ON.
+// Loads the plugin represented by each plugin ID in the CSV list sPlugins,
+// creating the plugin if it does not exist.
 void LoadPlugins(string sPlugins);
 
 // ---< ActivatePlugin >---
 // ---< core_i_framework >---
-// Activates oPlugin if its status is not already ON. Runs the OnPluginActivate
-// script and sets the status to ON. If bForce is TRUE, will activate the plugin
-// even if its status is already ON.
-void ActivatePlugin(object oPlugin, int bForce = FALSE);
+// Runs oPlugin's OnPluginActivate script and sets its status to ON. Returns
+// whether the activation was successful. If bForce is TRUE, will activate the
+// plugin even if its status is already ON.
+int ActivatePlugin(object oPlugin, int bForce = FALSE);
 
 // ---< DeactivatePlugin >---
 // ---< core_i_framework >---
-// Deactivates oPlugin if its status is not already OFF. Runs the
-// OnPluginDeactivate script and sets the status to OFF. If bForce is TRUE, will
-// deactivate the plugin even if its status is already OFF.
-void DeactivatePlugin(object oPlugin, int bForce = FALSE);
+// Runs oPlugin's OnPluginDeactivate script and sets its status to OFF. Returns
+// whether the deactivation was successful. If bForce is TRUE, will deactivate
+// the plugin even if its status is already OFF.
+int DeactivatePlugin(object oPlugin, int bForce = FALSE);
 
-// ---< GetPlugin >---
+// ---< GetIfPluginExists >---
 // ---< core_i_framework >---
-// Returns the plugin object associated with sPluginID.
-object GetPlugin(string sPluginID);
+// Returns whether the plugin with the ID sPluginID exists.
+int GetIfPluginExists(string sPluginID);
 
 // ---< GetIsPluginActivated >---
 // ---< core_i_framework >---
-// Return whether the plugin associated with sPluginID has been activated.
-int GetIsPluginActivated(string sPluginID);
+// Return whether a plugin has been activated.
+int GetIsPluginActivated(object oPlugin);
+
+// ---< GetPluginID >---
+// ---< core_i_framework >---
+// Returns the ID of the plugin represented by oPlugin. This is the inverse of
+// GetPlugin().
+string GetPluginID(object oPlugin);
+
+// ---< GetPluginLibraries >---
+// ---< core_i_framework >---
+// Returns a CSV list of libraries that are loaded when oPlugin is activated.
+string GetPluginLibraries(object oPlugin);
+
+// ---< SetPluginLibraries >---
+// ---< core_i_framework >---
+// Sets a CSV list of libraries that are loaded when oPlugin is activated.
+void SetPluginLibraries(object oPlugin, string sLibraries);
+
+// ---< GetCurrentPlugin >---
+// ---< core_i_framework >---
+// Returns the plugin that is running the current script.
+object GetCurrentPlugin();
 
 // ----- Event Management ------------------------------------------------------
 
@@ -162,7 +183,7 @@ void ClearEventState(object oEvent = OBJECT_INVALID);
 // - sScripts: a CSV list of library scripts
 // - fPriority: the priority at which the scripts should be executed
 // - oSource: the object from which the scripts were retrieved
-void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority, object oSource = OBJECT_INVALID);
+void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = EVENT_PRIORITY_DEFAULT, object oSource = OBJECT_INVALID);
 
 // ---< ExpandEventScripts >---
 // ---< core_i_framework >---
@@ -236,12 +257,19 @@ void BuildPluginBlacklist(object oTarget);
 // ---< RunEvent >---
 // ---< core_i_framework >---
 // Executes all queued scripts for sEvent on oSelf. oInit is the object that
-// triggered the event (e.g., a PC entering an area). Returns bitmasked
-// EVENT_STATE_* constants representing how the queue ended:
+// triggered the event (e.g., a PC entering an area). If bLocalOnly is TRUE,
+// will only execute the scripts if they are defined on oSelf or oInit (e.g.,
+// skips scripts defined by plugins). Returns bitmasked EVENT_STATE_* constants
+// representing how the queue ended:
 // - EVENT_STATE_OK: all queued scripts executed successfully
 // - EVENT_STATE_ABORT: a script cancelled remaining scripts in the queue
 // - EVENT_STATE_DENIED: a script specified that the event should cancelled
-int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF);
+int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF, int bLocalOnly = FALSE);
+
+// ---< RunLocalEvent >---
+// ---< core_i_framework >---
+// Alias for RunEvent() that only executes scripts defined on oSelf.
+int RunLocalEvent(string sEvent, object oSelf = OBJECT_SELF);
 
 // ----- Timer Management ------------------------------------------------------
 
@@ -325,15 +353,15 @@ void SetEventDebugLevel(int nLevel);
 
 // ----- Plugin Management -----------------------------------------------------
 
-object LoadPlugin(string sPlugin)
+object GetPlugin(string sPlugin, int bCreate = FALSE)
 {
     if (sPlugin == "")
         return OBJECT_INVALID;
 
-    Debug("Loading plugin " + sPlugin);
+    Debug("Defining plugin " + sPlugin);
     object oPlugin = GetDataItem(PLUGINS, sPlugin);
 
-    if (!GetIsObjectValid(oPlugin))
+    if (!GetIsObjectValid(oPlugin) && bCreate)
     {
         // It's possible the builder has pre-created a plugin object with all
         // the necessary variables on it. Try to create it. If it's not valid,
@@ -344,88 +372,137 @@ object LoadPlugin(string sPlugin)
         else
             oPlugin = CreateDataItem(PLUGINS, sPlugin);
 
+        // Set the plugin ID
+        SetLocalString(oPlugin, PLUGIN_ID, sPlugin);
+
         // Make the Core aware of this plugin
         AddListString(PLUGINS, sPlugin);
         AddListObject(PLUGINS, oPlugin);
-
-        // Load required libraries. If the plugin is being generated by the
-        // framework, we will try to load a library of the same name as the
-        // plugin. The builder can use the OnLibraryLoad routine to do any
-        // additional setup he needs for the plugin.
-        string sLibrary, sLibraries = GetLocalString(oPlugin, PLUGIN_LIBRARIES);
-        if (sLibraries == "")
-            sLibraries = sPlugin;
-
-        int i, nCount = CountList(sLibraries);
-        for (i = 0; i < nCount; i++)
-        {
-            sLibrary = GetListItem(sLibraries, i);
-            SetLocalObject(PLUGINS, PLUGIN_LAST, oPlugin);
-            LoadLibrary(sLibrary);
-        }
-
-        // Run activation routine
-        ActivatePlugin(oPlugin);
-
-        // Clean up
-        DeleteLocalObject(PLUGINS, PLUGIN_LAST);
     }
 
     return oPlugin;
 }
 
+int LoadPlugin(object oPlugin)
+{
+    if (!GetIsObjectValid(oPlugin))
+        return FALSE;
+
+    string sPlugin = GetPluginID(oPlugin);
+    Debug("Loading plugin '" + sPlugin + "'");
+
+    if (GetIsPluginActivated(oPlugin))
+    {
+        Debug("Plugin '" + sPlugin + "' already loaded", DEBUG_LEVEL_WARNING);
+        return FALSE;
+    }
+
+    // Load any required libraries
+    string sLibrary, sLibraries = GetLocalString(oPlugin, PLUGIN_LIBRARIES);
+    int i, nCount = CountList(sLibraries);
+
+    for (i = 0; i < nCount; i++)
+    {
+        sLibrary = GetListItem(sLibraries, i);
+
+        // Let the library know which plugin is calling it
+        SetLocalObject(PLUGINS, PLUGIN_LAST, oPlugin);
+        LoadLibrary(sLibrary);
+    }
+
+    // Run activation routine
+    int bActivated = ActivatePlugin(oPlugin);
+
+    // Clean up
+    DeleteLocalObject(PLUGINS, PLUGIN_LAST);
+    return bActivated;
+}
+
 void LoadPlugins(string sPlugins)
 {
     string sPlugin;
+    object oPlugin;
     int i, nCount = CountList(sPlugins);
     for (i = 0; i < nCount; i++)
     {
         sPlugin = GetListItem(sPlugins, i);
-        LoadPlugin(sPlugin);
+        oPlugin = GetPlugin(sPlugin, TRUE);
+        LoadPlugin(oPlugin);
     }
 }
 
-void ActivatePlugin(object oPlugin, int bForce = FALSE)
+int ActivatePlugin(object oPlugin, int bForce = FALSE)
 {
     if (!GetIsObjectValid(oPlugin))
-        return;
+        return FALSE;
 
-    string sPlugin = GetLocalString(oPlugin, PLUGIN_ID);
-    if (bForce || !GetLocalInt(oPlugin, PLUGIN_STATUS))
+    string sPlugin = GetPluginID(oPlugin);
+    if (bForce || !GetIsPluginActivated(oPlugin))
     {
-        string sScripts = GetLocalString(oPlugin, CORE_EVENT_ON_PLUGIN_ACTIVATE);
-        RunLibraryScripts(sScripts, oPlugin);
+        int nState = RunLocalEvent(PLUGIN_EVENT_ON_ACTIVATE, oPlugin);
+        if (nState & EVENT_STATE_DENIED)
+        {
+            Warning("Cannot activate plugin '" + sPlugin + "': denied");
+            return FALSE;
+        }
+
+        Debug("Activated plugin '" + sPlugin + "'");
         SetLocalInt(oPlugin, PLUGIN_STATUS, PLUGIN_STATUS_ON);
+        return TRUE;
     }
-    else
-        Debug("Plugin " + sPlugin + " is already activated!", DEBUG_LEVEL_WARNING);
+
+    Warning("Cannot activate plugin '" + sPlugin + "': already active");
+    return FALSE;
 }
 
-void DeactivatePlugin(object oPlugin, int bForce = FALSE)
+int DeactivatePlugin(object oPlugin, int bForce = FALSE)
 {
     if (!GetIsObjectValid(oPlugin))
-        return;
+        return FALSE;
 
-    string sPlugin = GetLocalString(oPlugin, PLUGIN_ID);
-    if (bForce || GetLocalInt(oPlugin, PLUGIN_STATUS))
+    string sPlugin = GetPluginID(oPlugin);
+    if (bForce || GetIsPluginActivated(oPlugin))
     {
-        string sScripts = GetLocalString(oPlugin, CORE_EVENT_ON_PLUGIN_DEACTIVATE);
-        RunLibraryScripts(sScripts, oPlugin);
+        int nState = RunLocalEvent(PLUGIN_EVENT_ON_DEACTIVATE, oPlugin);
+        if (nState & EVENT_STATE_DENIED)
+        {
+            Warning("Cannot deactivate plugin '" + sPlugin + "': denied");
+            return FALSE;
+        }
+
+        Debug("Deactivated plugin '" + sPlugin + "'");
         SetLocalInt(oPlugin, PLUGIN_STATUS, PLUGIN_STATUS_OFF);
+        return TRUE;
     }
-    else
-        Debug("Plugin " + sPlugin + " is already deactivated!", DEBUG_LEVEL_WARNING);
+
+    Warning("Cannot deactivate plugin '" + sPlugin + "': already inactive");
+    return FALSE;
 }
 
-object GetPlugin(string sPlugin)
+int GetIfPluginExists(string sPluginID)
 {
-    return GetDataItem(PLUGINS, sPlugin);
+    object oPlugin = GetPlugin(sPluginID);
+    return GetIsObjectValid(oPlugin);
 }
 
-int GetIsPluginActivated(string sPlugin)
+int GetIsPluginActivated(object oPlugin)
 {
-    object oPlugin = GetPlugin(sPlugin);
-    return GetLocalInt(oPlugin, PLUGIN_STATUS);
+    return GetLocalInt(oPlugin, PLUGIN_STATUS) == PLUGIN_STATUS_ON;
+}
+
+string GetPluginID(object oPlugin)
+{
+    return GetLocalString(oPlugin, PLUGIN_ID);
+}
+
+string GetPluginLibraries(object oPlugin)
+{
+    return GetLocalString(oPlugin, PLUGIN_LIBRARIES);
+}
+
+void SetPluginLibraries(object oPlugin, string sLibraries)
+{
+    SetLocalString(oPlugin, PLUGIN_LIBRARIES, sLibraries);
 }
 
 object GetCurrentPlugin()
@@ -496,7 +573,7 @@ void ClearEventState(object oEvent = OBJECT_INVALID)
     DeleteLocalInt(oEvent, EVENT_STATE);
 }
 
-void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority, object oSource = OBJECT_INVALID)
+void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = EVENT_PRIORITY_DEFAULT, object oSource = OBJECT_INVALID)
 {
     // Sanity check: is the priority within bounds?
     if ((fPriority >= 0.0 && fPriority <= 10.0) ||
@@ -635,7 +712,7 @@ object GetEvent(string sEvent)
         // Sort the event scripts by priority. We do this here to sort the
         // global hooks. We will sort the list again each time the event is
         // called to account for any local hooks. However, this lets us save
-        // some sycles each subsequent run at the cost of some extra right now.
+        // some cycles each subsequent run at the cost of some extra right now.
         SortEventScripts(oEvent);
 
         // Debug
@@ -775,7 +852,7 @@ void BuildPluginBlacklist(object oTarget)
     SetLocalInt(oTarget, EVENT_SOURCE_BLACKLIST, TRUE);
 }
 
-int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF)
+int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF, int bLocalOnly = FALSE)
 {
     // Which object initiated the event?
     if (!GetIsObjectValid(oInit))
@@ -787,7 +864,8 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     object oEvent = InitializeEvent(sEvent, oSelf, oInit);
 
     // Ensure the blacklist is built
-    BuildPluginBlacklist(oSelf);
+    if (!bLocalOnly)
+        BuildPluginBlacklist(oSelf);
 
     // Set last event so scripts know who called them and can set status
     SetLocalObject(EVENTS, EVENT_LAST, oEvent);
@@ -807,14 +885,15 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // Run all scripts registered to the event
     for (i = 0; i < nCount; i++)
     {
+        oSource = GetListObject(oSelf, nIndex, sEvent);
+
+        // Check if the source of the script should be skipped
+        if (oSource != oSelf && (bLocalOnly || GetSourceBlacklisted(oSource, oSelf)))
+            continue;
+
         nIndex    = GetListInt   (oSelf, i,      sEvent);
         sScript   = GetListString(oSelf, nIndex, sEvent);
-        oSource   = GetListObject(oSelf, nIndex, sEvent);
         fPriority = GetListFloat (oSelf, nIndex, sEvent);
-
-        // Check if the source has been blacklisted
-        if (GetSourceBlacklisted(oSource, oSelf))
-            continue;
 
         // Handle special priorities
         if (fPriority == EVENT_PRIORITY_ONLY)
@@ -837,6 +916,11 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // Clean up
     DeleteLocalString(oEvent, EVENT_CURRENT_PLUGIN);
     return nState;
+}
+
+int RunLocalEvent(string sEvent, object oSelf = OBJECT_SELF)
+{
+    return RunEvent(sEvent, oSelf, oSelf, TRUE);
 }
 
 // ----- Timer Management ------------------------------------------------------
