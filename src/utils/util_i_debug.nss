@@ -106,6 +106,23 @@ int IsDebugging(int nLevel, object oTarget = OBJECT_SELF);
 // more verbosity than oTarget, will log using the module's verbosity instead.
 void Debug(string sMessage, int nLevel = DEBUG_LEVEL_NOTICE, object oTarget = OBJECT_SELF);
 
+// ---< Warning >---
+// ---< util_i_debug >---
+// Alias for Debug() that issues a warning.
+void Warning(string sMessage, object oTarget = OBJECT_SELF);
+
+// ---< Error >---
+// ---< util_i_debug >---
+// Alias for Debug() that issues an error.
+void Error(string sMessage, object oTarget = OBJECT_SELF);
+
+// ---< CriticalError >---
+// ---< util_i_debug >---
+// Alias for Debug() tat issues a critical error.
+void CriticalError(string sMessage, object oTarget = OBJECT_SELF);
+
+void CriticalError(string sMessage, object oTarget = OBJECT_SELF);
+
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
@@ -198,4 +215,19 @@ void Debug(string sMessage, int nLevel = DEBUG_LEVEL_NOTICE, object oTarget = OB
         if (nLogging & DEBUG_LOG_PC)
             SendMessageToPC(GetFirstPC(), sMessage);
     }
+}
+
+void Warning(string sMessage, object oTarget = OBJECT_SELF)
+{
+    Debug(sMessage, DEBUG_LEVEL_WARNING, oTarget);
+}
+
+void Error(string sMessage, object oTarget = OBJECT_SELF)
+{
+    Debug(sMessage, DEBUG_LEVEL_ERROR, oTarget);
+}
+
+void CriticalError(string sMessage, object oTarget = OBJECT_SELF)
+{
+    Debug(sMessage, DEBUG_LEVEL_CRITICAL, oTarget);
 }
