@@ -30,9 +30,8 @@ void pqj_InitializeDatabase()
         else
         {
             string sError = NWNX_SQL_GetLastError();
-            Debug("Could not initialize PQJ database: " + sError,
-                  DEBUG_LEVEL_CRITICAL);
-            DeactivatePlugin(GetCurrentPlugin());
+            CriticalError("Could not initialize PQJ database: " + sError);
+            SetEventState(EVENT_STATE_ABORT | EVENT_STATE_DENIED);
         }
     }
 }
@@ -97,9 +96,13 @@ void pqj_RestoreJournalEntries()
 
 void OnLibraryLoad()
 {
-    object oPlugin = GetCurrentPlugin();
-    SetLocalString(oPlugin, CORE_EVENT_ON_PLUGIN_ACTIVATE, "pqj_InitializeDatabase");
-    SetLocalString(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER,  "pqj_RestoreJournalEntries");
+    object oPlugin = GetPlugin("pqj", TRUE);
+    SetName(oPlugin, "[Plugin] Persistent Quests and Journals");
+    SetDescription(oPlugin,
+        "This plugin allows saving and restoring journal information to a database.");
+
+    RegisterEventScripts(oPlugin, PLUGIN_EVENT_ON_ACTIVATE,     "pqj_InitializeDatabase");
+    RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER, "pqj_RestoreJournalEntries");
 
     RegisterLibraryScript("pqj_InitializeDatabase",    1);
     RegisterLibraryScript("pqj_RestoreJournalEntries", 2);
@@ -111,7 +114,6 @@ void OnLibraryScript(string sScript, int nEntry)
     {
         case 1:  pqj_InitializeDatabase();    break;
         case 2:  pqj_RestoreJournalEntries(); break;
-        default: Debug("Library function " + sScript + " not found",
-                       DEBUG_LEVEL_CRITICAL);
+        default: CriticalError("Library function " + sScript + " not found");
     }
 }
