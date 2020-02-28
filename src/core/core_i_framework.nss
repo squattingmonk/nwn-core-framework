@@ -797,7 +797,7 @@ object InitializeEvent(string sEvent, object oSelf, object oInit)
     // been changed.
     if (!GetLocalInt(oSelf, sEvent))
     {
-        Debug("Initializing " + sEvent);
+        Debug("Initializing " + sEvent + " on " + GetName(oSelf));
 
         // Clean up
         DeleteStringList(oSelf, sEvent);
@@ -861,7 +861,8 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     if (!GetIsObjectValid(oInit))
         oInit = oSelf;
 
-    Debug("Running event " + sEvent);
+    Debug("Running " + (bLocalOnly ? "local " : "") + "event " + sEvent +
+          " on " + GetName(oSelf) + "; oInit: " + GetName(oInit));
 
     // Initialize the script list for this event
     object oEvent = InitializeEvent(sEvent, oSelf, oInit);
