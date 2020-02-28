@@ -13,11 +13,14 @@
 
 void main()
 {
-    object oItem = GetItemActivated();
-    int nState = RunTagBasedScript(oItem, X2_ITEM_EVENT_ACTIVATE);
-    if (nState != X2_EXECUTE_SCRIPT_END)
+    object oItem  = GetItemActivated();
+    object oPC    = GetItemActivator();
+    int    nState = RunItemEvent(MODULE_EVENT_ON_ACTIVATE_ITEM, oItem, oPC);
+
+    if (ENABLE_TAGBASED_SCRIPTS && !(nState & EVENT_STATE_DENIED))
     {
-        object oPC = GetItemActivator();
-        RunEvent(MODULE_EVENT_ON_ACTIVATE_ITEM, oPC);
+        string sTag = GetTag(oItem);
+        SetUserDefinedItemEventNumber(X2_ITEM_EVENT_ACTIVATE);
+        RunLibraryScript(sTag);
     }
 }

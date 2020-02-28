@@ -271,6 +271,15 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
 // Alias for RunEvent() that only executes scripts defined on oSelf.
 int RunLocalEvent(string sEvent, object oSelf = OBJECT_SELF);
 
+// ---< RunItemEvent >---
+// ---< core_i_framework >---
+// Runs an item event (e.g., OnAcquireItem) first on the module, then locally on
+// oItem. This allows oItem to specify its own scripts for the event which get
+// executed if the module-level event is not denied. oPC is the PC triggering
+// the event; this enables the script to get the PC using GetEventTriggeredBy().
+// Returns the accumulated status of the two events.
+int RunItemEvent(string sEvent, object oItem, object oPC);
+
 // ----- Timer Management ------------------------------------------------------
 
 // Timers are events that fire at regular intervals. These functions subsume
@@ -334,12 +343,6 @@ void ResetTimer(int nTimerID);
 int GetCurrentTimer();
 
 // ----- Miscellaneous ---------------------------------------------------------
-
-// ---< RunTagBasedScript >---
-// ---< core_i_framework >---
-// Runs the tag-based script for oItem corresponding to nEvent. Returns whether
-// to abort the event.
-int RunTagBasedScript(object oItem, int nEvent);
 
 // ---< SetEventDebugLevel >---
 // ---< core_i_framework >---
@@ -923,6 +926,15 @@ int RunLocalEvent(string sEvent, object oSelf = OBJECT_SELF)
     return RunEvent(sEvent, oSelf, oSelf, TRUE);
 }
 
+int RunItemEvent(string sEvent, object oItem, object oPC)
+{
+    int nStatus = RunEvent(sEvent, oPC);
+    if (!(nStatus & EVENT_STATE_DENIED))
+        nStatus |= RunEvent(sEvent, oPC, oItem, TRUE);
+
+    return nStatus;
+}
+
 // ----- Timer Management ------------------------------------------------------
 
 int CreateTimer(object oTarget, string sEvent, float fInterval, int nIterations = 0, int nJitter = 0)
@@ -1114,17 +1126,6 @@ int GetCurrentTimer()
 }
 
 // ----- Miscellaneous ---------------------------------------------------------
-
-
-int RunTagBasedScript(object oItem, int nEvent)
-{
-    string sScript = GetTag(oItem);
-
-    SetLocalInt(OBJECT_SELF, "X2_L_LAST_ITEM_EVENT", nEvent);
-    DeleteLocalInt(OBJECT_SELF, "X2_L_LAST_RETVAR");
-    RunLibraryScript(sScript);
-    return GetLocalInt(OBJECT_SELF, "X2_L_LAST_RETVAR");
-}
 
 void SetEventDebugLevel(int nLevel)
 {

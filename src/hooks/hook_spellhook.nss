@@ -19,10 +19,14 @@ void main()
         SetModuleOverrideSpellScriptFinished();
     else
     {
-        // Handle the special case of casting a spell at an itme
+        // Handle the special case of casting a spell at an item
         object oItem = GetSpellTargetObject();
 
         if (GetObjectType(oItem) == OBJECT_TYPE_ITEM)
-            RunTagBasedScript(oItem, X2_ITEM_EVENT_SPELLCAST_AT);
+        {
+            string sTag = GetTag(oItem);
+            SetUserDefinedItemEventNumber(X2_ITEM_EVENT_SPELLCAST_AT);
+            RunLibraryScript(sTag);
+        }
     }
 }

@@ -129,6 +129,7 @@ const string MODULE_EVENT_ON_USER_DEFINED             = "OnUserDefined";
 // These are pseudo-events called by the Core Framework
 const string MODULE_EVENT_ON_SPELLHOOK                = "OnSpellhook";
 const string MODULE_EVENT_ON_HOUR                     = "OnHour";
+
 // ----- Area Events -----------------------------------------------------------
 
 const string AREA_EVENT_ON_ENTER                      = "OnAreaEnter";

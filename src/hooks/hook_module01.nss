@@ -13,13 +13,14 @@
 
 void main()
 {
-    // Tag-based item acquire code. This runs before the event is processed so
-    // the tag-based script can set an ABORT status if needed.
-    object oItem = GetModuleItemAcquired();
-    int nState = RunTagBasedScript(oItem, X2_ITEM_EVENT_ACQUIRE);
-    if (nState != X2_EXECUTE_SCRIPT_END)
+    object oItem  = GetModuleItemAcquired();
+    object oPC    = GetModuleItemAcquiredBy();
+    int    nState = RunItemEvent(MODULE_EVENT_ON_ACQUIRE_ITEM, oItem, oPC);
+
+    if (ENABLE_TAGBASED_SCRIPTS && !(nState & EVENT_STATE_DENIED))
     {
-        object oPC = GetModuleItemAcquiredBy();
-        RunEvent(MODULE_EVENT_ON_ACQUIRE_ITEM, oPC);
+        string sTag = GetTag(oItem);
+        SetUserDefinedItemEventNumber(X2_ITEM_EVENT_ACQUIRE);
+        RunLibraryScript(sTag);
     }
 }

@@ -13,11 +13,14 @@
 
 void main()
 {
-    object oItem = GetModuleItemLost();
-    int nState = RunTagBasedScript(oItem, X2_ITEM_EVENT_UNACQUIRE);
-    if (nState != X2_EXECUTE_SCRIPT_END)
+    object oItem  = GetModuleItemLost();
+    object oPC    = GetModuleItemLostBy();
+    int    nState = RunItemEvent(MODULE_EVENT_ON_UNACQUIRE_ITEM, oItem, oPC);
+
+    if (ENABLE_TAGBASED_SCRIPTS && !(nState & EVENT_STATE_DENIED))
     {
-        object oPC = GetModuleItemAcquiredBy();
-        RunEvent(MODULE_EVENT_ON_UNACQUIRE_ITEM, oPC);
+        string sTag = GetTag(oItem);
+        SetUserDefinedItemEventNumber(X2_ITEM_EVENT_UNACQUIRE);
+        RunLibraryScript(sTag);
     }
 }

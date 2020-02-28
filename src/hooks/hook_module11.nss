@@ -13,11 +13,14 @@
 
 void main()
 {
-    object oItem = GetPCItemLastEquipped();
-    int nState = RunTagBasedScript(oItem, X2_ITEM_EVENT_EQUIP);
-    if (nState != X2_EXECUTE_SCRIPT_END)
+    object oItem  = GetPCItemLastEquipped();
+    object oPC    = GetPCItemLastEquippedBy();
+    int    nState = RunItemEvent(MODULE_EVENT_ON_PLAYER_EQUIP_ITEM, oItem, oPC);
+
+    if (ENABLE_TAGBASED_SCRIPTS && !(nState & EVENT_STATE_DENIED))
     {
-        object oPC = GetPCItemLastEquippedBy();
-        RunEvent(MODULE_EVENT_ON_PLAYER_EQUIP_ITEM, oPC);
+        string sTag = GetTag(oItem);
+        SetUserDefinedItemEventNumber(X2_ITEM_EVENT_EQUIP);
+        RunLibraryScript(sTag);
     }
 }
