@@ -96,13 +96,16 @@ void pqj_RestoreJournalEntries()
 
 void OnLibraryLoad()
 {
-    object oPlugin = GetPlugin("pqj", TRUE);
-    SetName(oPlugin, "[Plugin] Persistent Quests and Journals");
-    SetDescription(oPlugin,
-        "This plugin allows saving and restoring journal information to a database.");
+    if (!GetIfPluginExists("pqj"))
+    {
+        object oPlugin = GetPlugin("pqj", TRUE);
+        SetName(oPlugin, "[Plugin] Persistent Quests and Journals");
+        SetDescription(oPlugin,
+            "This plugin allows database-driven persistent journal entries.");
 
-    RegisterEventScripts(oPlugin, PLUGIN_EVENT_ON_ACTIVATE,     "pqj_InitializeDatabase");
-    RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER, "pqj_RestoreJournalEntries");
+        RegisterEventScripts(oPlugin, PLUGIN_EVENT_ON_ACTIVATE,     "pqj_InitializeDatabase");
+        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER, "pqj_RestoreJournalEntries");
+    }
 
     RegisterLibraryScript("pqj_InitializeDatabase",    1);
     RegisterLibraryScript("pqj_RestoreJournalEntries", 2);

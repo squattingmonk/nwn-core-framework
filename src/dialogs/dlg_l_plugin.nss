@@ -120,8 +120,7 @@ void PluginControl_Page()
 {
     object oPC = GetPCSpeaker();
 
-    // No player name means this is a single-player module
-    if (!GetIsDM(oPC) && GetPCPlayerName(oPC) != "")
+    if (!GetIsDM(oPC))
     {
         SetDialogPage(PLUGIN_PAGE_FAIL);
         return;
@@ -189,15 +188,21 @@ void PluginControl_Node()
     }
 }
 
+// -----------------------------------------------------------------------------
+//                               Library Dispatch
+// -----------------------------------------------------------------------------
 
 void OnLibraryLoad()
 {
     // Plugin setup
-    object oPlugin = GetPlugin("dlg", TRUE);
-    SetName(oPlugin, "[Plugin] Dynamic Dialogs");
-    SetDescription(oPlugin,
-        "This plugin allows the creation and launching of script-driven dialogs.");
-    SetPluginLibraries(oPlugin, "dlg_l_plugin, dlg_l_tokens, demo_l_dialogs");
+    if (!GetIfPluginExists("dlg"))
+    {
+        object oPlugin = GetPlugin("dlg", TRUE);
+        SetName(oPlugin, "[Plugin] Dynamic Dialogs");
+        SetDescription(oPlugin,
+            "This plugin allows the creation and launching of script-driven dialogs.");
+        SetPluginLibraries(oPlugin, "dlg_l_plugin, dlg_l_tokens, demo_l_dialogs");
+    }
 
     // Event scripts
     RegisterLibraryScript("StartDialog",        0x0100+0x01);
