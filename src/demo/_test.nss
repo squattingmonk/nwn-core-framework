@@ -63,4 +63,7 @@ void main()
     object oPC = GetLastUsedBy();
     int nState = pqj_GetQuestState("test", oPC);
     pqj_AddJournalQuestEntry("test", nState + 1, oPC);
+
+    effect eDeath = EffectDamage(100, DAMAGE_TYPE_FIRE);
+    ApplyEffectToObject(DURATION_TYPE_INSTANT, eDeath, oPC);
 }

@@ -1,47 +1,57 @@
-/*
-Filename:           h2_fuguedeathoce
-System:             FuguePlayerDeath (client enter hook-in script)
-Author:             Edward Beck (0100010)
-Date Created:       Mar. 25, 2006
-Summary:
+// -----------------------------------------------------------------------------
+//    File: fugue_l_plugin.nss
+//  System: Fugue Death and Resurrection System (library script)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) (af.hog.pilot@gmail.com)
+// -----------------------------------------------------------------------------
+// This library script contains scripts to hook in to Core Framework events.
+// -----------------------------------------------------------------------------
 
-This script should be called via ExecuteScript from the
-RunModuleEventScripts(H2_EVENT_ON_CLIENT_ENTER, oPC) function that is called from h2_cliententer_e.
+#include "util_i_library"
+#include "core_i_framework"
+#include "fugue_i_main"
 
-To make this script execute, a string variable, named OnClientEnterX,
-where X is a number that indicates the order in which you want this client enter script to execute,
-should be assigned the value "h2_fuguedeathoce" under the variables section of Module properties.
+// -----------------------------------------------------------------------------
+//                               Library Dispatch
+// -----------------------------------------------------------------------------
 
-Variables available to all event hook client enter scripts:
-
-GetLocalString(GetEnteringObject(), H2_PC_PLAYER_NAME) : provides the entering PC's player name.
-GetLocalString(GetEnteringObject(), H2_PC_CD_KEY) : provides the entering PC's CD key.
-h2_GetPlayerPersistentString(GetEnteringObject(), H2_UNIQUE_PC_ID) : provides the 10 character unique Hex string
-used to uniquely identify this PC.
-
-The primary reason for having these is so that they are also available in the client leave
-event scripts.
-
-You should not overwrite the above variables, or they will not remain consistant
-for any other executing client enter script which might rely on them. (as well as any client leave scripts)
-
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date:
-Revision Author:
-Revision Summary:
-
-*/
-#include "h2_fuguedeath_i"
-
-void main()
+void OnLibraryLoad()
 {
-    object oPC = GetEnteringObject();
-    int playerstate = h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE);
-    string uniquePCID = h2_GetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID);
-    location ressLoc = h2_GetExternalLocation(uniquePCID + H2_RESS_LOCATION);
-    if (GetTag(GetArea(oPC)) != H2_FUGUE_PLANE && playerstate == H2_PLAYER_STATE_DEAD && !h2_GetIsLocationValid(ressLoc))
+    //Need to check for pw plugin and this is a sub-plugin
+    if (!GetIfPluginExists("pw_fugue"))
     {
-        DelayCommand(H2_CLIENT_ENTER_JUMP_DELAY, h2_SendPlayerToFugue(oPC));
+        object oPlugin = GetPlugin("pw_fugue", TRUE);
+        SetName(oPlugin, "[Plugin] Persistent World Plugin :: Fugue Subsystem");
+        SetDescription(oPlugin,
+            "This plugin controls the fugue system of player death and resurrection.");
+
+        //Add a local event for exiting the fugue plane.
+        object oFuguePlane = GetObjectByTag(H2_FUGUE_PLANE);
+        RegisterEventScripts(oFuguePlane, AREA_EVENT_ON_EXIT, "fugue_OnPlayerExit");
+        RegisterEventScripts(oFuguePlane, AREA_EVENT_ON_ENTER, "fugue_OnPlayerEnter");
+        
+        //Add module level events for the fugue system
+        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER, "fugue_OnClientEnter");
+        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_DEATH, "fugue_OnPlayerDeath", EVENT_PRIORITY_ONLY);
+        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_DYING, "fugue_OnPlayerDying");
+    }
+
+    RegisterLibraryScript("fugue_OnClientEnter", 1);
+    RegisterLibraryScript("fugue_OnPlayerDeath", 2);
+    RegisterLibraryScript("fugue_OnPlayerDying", 3);
+    RegisterLibraryScript("fugue_OnPlayerExit",  4);
+    RegisterLibraryScript("fugue_OnPlayerEnter", 5);
+}
+
+void OnLibraryScript(string sScript, int nEntry)
+{
+    switch (nEntry)
+    {
+        case 1:  fugue_OnClientEnter(); break;
+        case 2:  fugue_OnPlayerDeath(); break;
+        case 3:  fugue_OnPlayerDying(); break;
+        case 4:  fugue_OnPlayerExit();  break;
+        case 5:  fugue_OnPlayerEnter(); break;
+        default: CriticalError("Library function " + sScript + " not found");
     }
 }

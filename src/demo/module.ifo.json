@@ -13,6 +13,13 @@
           "type": "resref",
           "value": "startingarea"
         }
+      },
+      {
+        "__struct_id": 6,
+        "Area_Name": {
+          "type": "resref",
+          "value": "h2_fugueplane"
+        }
       }
     ]
   },
@@ -86,7 +93,7 @@
   },
   "Mod_MinGameVer": {
     "type": "cexostring",
-    "value": "1.79"
+    "value": "1.80"
   },
   "Mod_MinPerHour": {
     "type": "byte",
