@@ -2010,7 +2010,7 @@
         },
         "Bearing": {
           "type": "float",
-          "value": 1.570795655250549
+          "value": 1.570795059204102
         },
         "BodyBag": {
           "type": "byte",

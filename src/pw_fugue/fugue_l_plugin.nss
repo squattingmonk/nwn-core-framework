@@ -27,6 +27,9 @@ void OnLibraryLoad()
 
         //Add a local event for exiting the fugue plane.
         object oFuguePlane = GetObjectByTag(H2_FUGUE_PLANE);
+        object oFugueScripts = GetObjectByTag(H2_WP_FUGUE);
+        AddScriptSource(oFuguePlane, oFugueScripts);
+
         RegisterEventScripts(oFuguePlane, AREA_EVENT_ON_EXIT, "fugue_OnPlayerExit");
         RegisterEventScripts(oFuguePlane, AREA_EVENT_ON_ENTER, "fugue_OnPlayerEnter");
         

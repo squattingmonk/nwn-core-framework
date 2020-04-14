@@ -18,7 +18,15 @@
   },
   "Placeable List": {
     "type": "list",
-    "value": []
+    "value": [
+      {
+        "__struct_id": 9,
+        "Comment": {
+          "type": "cexostring",
+          "value": "Floor Lever - 1"
+        }
+      }
+    ]
   },
   "SoundList": {
     "type": "list",

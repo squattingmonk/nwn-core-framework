@@ -122,5 +122,5 @@ void fugue_OnPlayerExit()
 void fugue_OnPlayerEnter()
 {
     object oPC = GetEnteringObject();
-    SendMessageToPC(oPC, "Welcome to the fugue plane, dead guy!");
+    SendMessageToPC(oPC, "Welcome, from the fugue library function.");
 }
