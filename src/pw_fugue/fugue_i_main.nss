@@ -11,21 +11,17 @@
 //  Squatting Monk's core framework.
 // -----------------------------------------------------------------------------
 
-#include "core_i_database"
+#include "fugue_i_const"
 #include "util_i_csvlists"
+#include "pw_i_core"
 
-// -----------------------------------------------------------------------------
-//                                   Constants
-// -----------------------------------------------------------------------------
 
-const string H2_FUGUE_PLANE = "h2_fugueplane";
-const string H2_WP_FUGUE = "H2_FUGUE";
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
 // -----------------------------------------------------------------------------
 
-// ---< fugue_SendPlayerToFugue >---
+// ---< _SendPlayerToFugue >---
 // ---< fugue_i_main >---
 // Upon player death, send the PC to the fugue plane and resurrect.
 void _SendPlayerToFugue(object oPC);
@@ -51,6 +47,8 @@ void fugue_OnPlayerDying();
 // No matter how a player exits the fugue plane, mark PC as alive.
 void fugue_OnPlayerExit();
 
+void fugue_onPlayerEnter();
+
 // -----------------------------------------------------------------------------
 //                              Function Definitions
 // -----------------------------------------------------------------------------
@@ -58,11 +56,10 @@ void fugue_OnPlayerExit();
 void _SendPlayerToFugue(object oPC)
 {
     object oFugueWP = GetObjectByTag(H2_WP_FUGUE);
-    //SendMessageToPC(oPC, H2_TEXT_YOU_HAVE_DIED);
-    SendMessageToPC(oPC, "You have died.");
+    SendMessageToPC(oPC, H2_TEXT_YOU_HAVE_DIED);
     ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectResurrection(), oPC);
     ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectHeal(GetMaxHitPoints(oPC)), oPC);
-    //h2_RemoveEffects(oPC);  //<-- Make this a call to the pw library?
+    h2_RemoveEffects(oPC);
     ClearAllActions();
     AssignCommand(oPC, JumpToObject(oFugueWP));
 }
@@ -70,13 +67,12 @@ void _SendPlayerToFugue(object oPC)
 void fugue_OnClientEnter()
 {
     object oPC = GetEnteringObject();
-    //int playerstate = h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE);
-    //string uniquePCID = h2_GetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID);
-    //location ressLoc = h2_GetExternalLocation(uniquePCID + H2_RESS_LOCATION);
-    //if (GetTag(GetArea(oPC)) != H2_FUGUE_PLANE && playerstate == H2_PLAYER_STATE_DEAD && !h2_GetIsLocationValid(ressLoc))
+    int playerstate = h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE);
+    string uniquePCID = h2_GetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID);
+    location ressLoc = h2_GetExternalLocation(uniquePCID + H2_RESS_LOCATION);
+    if (GetTag(GetArea(oPC)) != H2_FUGUE_PLANE && playerstate == H2_PLAYER_STATE_DEAD && !h2_GetIsLocationValid(ressLoc))
     {
-        //DelayCommand(H2_CLIENT_ENTER_JUMP_DELAY, _SentPlayerToFugue(oPC));
-        DelayCommand(0.5f, _SendPlayerToFugue(oPC));
+        DelayCommand(H2_CLIENT_ENTER_JUMP_DELAY, _SendPlayerToFugue(oPC));
     }
 }
 
@@ -85,8 +81,8 @@ void fugue_OnPlayerDeath()
     object oPC = GetLastPlayerDied();
 
     //if some other death subsystem set the player state back to alive before this one, no need to continue
-    //if (h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE) != H2_PLAYER_STATE_DEAD)
-    //    return;
+    if (h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE) != H2_PLAYER_STATE_DEAD)
+        return;  //<-- Use core-framework cancellation function?
 
     if (GetTag(GetArea(oPC)) == H2_FUGUE_PLANE)
     {
@@ -96,7 +92,7 @@ void fugue_OnPlayerDeath()
     }
     else
     {
-        //h2_DropAllHenchmen(oPC);
+        h2_DropAllHenchmen(oPC);
         _SendPlayerToFugue(oPC);
     }
 }
@@ -115,12 +111,13 @@ void fugue_OnPlayerDying()
 void fugue_OnPlayerExit()
 {
     object oPC = GetExitingObject();
-    //DeleteLocalInt(oPC, H2_LOGIN_DEATH);
-    //h2_SetPlayerPersistentInt(oPC, H2_PLAYER_STATE, H2_PLAYER_STATE_ALIVE);
+    DeleteLocalInt(oPC, H2_LOGIN_DEATH);
+    h2_SetPlayerPersistentInt(oPC, H2_PLAYER_STATE, H2_PLAYER_STATE_ALIVE);
 }
 
 void fugue_OnPlayerEnter()
 {
-    object oPC = GetEnteringObject();
-    SendMessageToPC(oPC, "Welcome, from the fugue library function.");
+    //Send a debug message to show this function is firing.
+    //object oPC = GetEnteringObject();
+    //SendMessageToPC(oPC, "Welcome, from the fugue library function.");
 }
