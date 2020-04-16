@@ -342,6 +342,19 @@ void ResetTimer(int nTimerID);
 // to be able to reset or stop the timer that triggered the script.
 int GetCurrentTimer();
 
+// ---< GetIsTimerInfinite >---
+// ---< core_i_framework >---
+// Returns whether the timer with the given ID is set to run infinitely.
+int GetIsTimerInfinite(int nTimerID);
+
+// ---< GetTimerRemaining >---
+// ---< core_i_framework >---
+// Returns the remaning number of iterations for the timer with the given ID. If
+// called during a timer script, will not include the current iteration. Returns
+// -1 if nTimerID is not a valid timer ID. Returns 0 if the timer is set to run
+// indefinitely, so be sure to check for this with GetIsTimerInfinite().
+int GetTimerRemaining(int nTimerID);
+
 // ----- Miscellaneous ---------------------------------------------------------
 
 // ---< SetEventDebugLevel >---
@@ -1124,6 +1137,22 @@ int GetCurrentTimer()
 {
     int nCount = CountIntList(TIMERS);
     return GetListInt(TIMERS, nCount - 1);
+}
+
+int GetIsTimerInfinite(int nTimerID)
+{
+    string sTimerID = IntToString(nTimerID);
+    return (GetLocalInt(TIMERS, TIMER_EXISTS + sTimerID) &&
+           !GetLocalInt(TIMERS, TIMER_ITERATIONS + sTimerID));
+}
+
+int GetTimerRemaining(int nTimerID)
+{
+    if (!GetIsTimerValid(nTimerID))
+        return -1;
+
+    string sTimerID = IntToString(nTimerID);
+    return GetLocalInt(TIMERS, TIMER_REMAINING + IntToString(nTimerID));
 }
 
 // ----- Miscellaneous ---------------------------------------------------------
