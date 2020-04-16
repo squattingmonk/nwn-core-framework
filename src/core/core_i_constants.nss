@@ -57,6 +57,7 @@ const string EVENT_PLUGIN           = "EVENT_PLUGIN";           // List of plugi
 const string EVENT_CURRENT_PLUGIN   = "EVENT_CURRENT_PLUGIN";   // Name of the plugin owning the current event script
 const string EVENT_SOURCE_BLACKLIST = "EVENT_SOURCE_BLACKLIST"; // List of blacklisted plugins or objects
 const string EVENT_TRIGGERED        = "EVENT_TRIGGERED";        // The object triggering the event
+const string EVENT_LAST             = "EVENT_LAST";             // The last event to run
 
 const string EVENT_STATE            = "EVENT_STATE";    // State of the event queue
 const int    EVENT_STATE_OK         = 0x00;             // normal (default)
@@ -68,10 +69,6 @@ const float  EVENT_PRIORITY_FIRST   =   9999.0;         // The script is always 
 const float  EVENT_PRIORITY_LAST    =  -9999.0;         // The script is always last
 const float  EVENT_PRIORITY_ONLY    =  11111.0;         // The script will be the only one to execute
 const float  EVENT_PRIORITY_DEFAULT = -11111.0;         // The script will only execute if no other scripts do
-
-// The last event to run
-const string EVENT_LAST      = "EVENT_LAST";
-const string EVENT_LAST_INIT = "EVENT_LAST_INIT";
 
 // ----- Timer Management ------------------------------------------------------
 
@@ -85,6 +82,7 @@ const string TIMER_RUNNING    = "TIMER_RUNNING";    // Whether the timer is curr
 const string TIMER_EVENT      = "TIMER_EVENT";      // The event to execute when the timer elapses
 const string TIMER_TARGET     = "TIMER_TARGET";     // The object on which the timer's script will run
 const string TIMER_TARGETS_PC = "TIMER_TARGETS_PC"; // Whether the timer's target is a PC
+const string TIMER_LAST       = "TIMER_LAST";       // The ID of the last timer to run
 
 // ----- Player Management -----------------------------------------------------
 
