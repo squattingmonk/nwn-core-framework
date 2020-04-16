@@ -1,14 +1,14 @@
 // -----------------------------------------------------------------------------
-//    File: loot_i_config.nss
-//  System: PC Corpse Loot (configuration)
+//    File: fugue_i_items.nss
+//  System: Fugue Death and Resurrection (tag-based scripting)
 //     URL: 
 // Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
 // -----------------------------------------------------------------------------
 // Description:
-//  Configuration File for PW Subsystem.
+//  Tag-based scripting functions for PW Subsystem.
 // -----------------------------------------------------------------------------
 // Builder Use:
-//  Set the constants below as directed in the comments for each constant.
+//  Nothing!  Leave me alone.
 // -----------------------------------------------------------------------------
 // Acknowledgment:
 // -----------------------------------------------------------------------------
@@ -18,10 +18,4 @@
 //   Summary:
 // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
-//                                   Variables
-// -----------------------------------------------------------------------------
-
-//This is the resref of the item that will be used to hold all items that are
-//  looted from the PC corpse when the PC is dying or dead.
-const string H2_LOOT_BAG = "h2_lootbag";
+// There are no items associated with this system.

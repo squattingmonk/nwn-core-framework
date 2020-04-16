@@ -1,14 +1,16 @@
 // -----------------------------------------------------------------------------
-//    File: loot_i_config.nss
-//  System: PC Corpse Loot (configuration)
+//    File: Fugue_i_const.nss
+//  System: Fugue Death and Resurrection (text/language)
 //     URL: 
 // Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
 // -----------------------------------------------------------------------------
 // Description:
-//  Configuration File for PW Subsystem.
+//  Constants for PW Subsystem.
 // -----------------------------------------------------------------------------
 // Builder Use:
-//  Set the constants below as directed in the comments for each constant.
+//  You can translate text literals into various languages in this file, or use
+//  another file and include it instead of this file, as long as the constant
+//  string names are identical.
 // -----------------------------------------------------------------------------
 // Acknowledgment:
 // -----------------------------------------------------------------------------
@@ -19,9 +21,7 @@
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-//                                   Variables
+//                                   Constants
 // -----------------------------------------------------------------------------
 
-//This is the resref of the item that will be used to hold all items that are
-//  looted from the PC corpse when the PC is dying or dead.
-const string H2_LOOT_BAG = "h2_lootbag";
+// There is no text associated with this system.

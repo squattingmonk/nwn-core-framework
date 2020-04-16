@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
-//    File: loot_i_config.nss
-//  System: PC Corpse Loot (configuration)
+//    File: fugue_i_config.nss
+//  System: Fugue Death and Resurrection (configuration)
 //     URL: 
 // Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
 // -----------------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Configuration File for PW Subsystem.
 // -----------------------------------------------------------------------------
 // Builder Use:
-//  Set the constants below as directed in the comments for each constant.
+//  Set the variables below as directed in the comments for each variable.
 // -----------------------------------------------------------------------------
 // Acknowledgment:
 // -----------------------------------------------------------------------------
@@ -22,6 +22,9 @@
 //                                   Variables
 // -----------------------------------------------------------------------------
 
-//This is the resref of the item that will be used to hold all items that are
-//  looted from the PC corpse when the PC is dying or dead.
-const string H2_LOOT_BAG = "h2_lootbag";
+// Tag of the area to be used as the fugue plane.
+const string H2_FUGUE_PLANE = "h2_fugueplane";
+
+// Tag of the waypoint in the fugue plan (H2_FUGUE_PLANE) to send the PC
+//  to upon death.
+const string H2_WP_FUGUE = "H2_FUGUE";

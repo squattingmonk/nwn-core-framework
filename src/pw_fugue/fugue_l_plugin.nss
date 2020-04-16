@@ -10,6 +10,7 @@
 #include "util_i_library"
 #include "core_i_framework"
 #include "fugue_i_main"
+#include "fugue_i_events"
 
 // -----------------------------------------------------------------------------
 //                               Library Dispatch
@@ -21,7 +22,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw_fugue"))
     {
         object oPlugin = GetPlugin("pw_fugue", TRUE);
-        SetName(oPlugin, "[Plugin] Persistent World Plugin :: Fugue Subsystem");
+        SetName(oPlugin, "[Plugin] Persistent World Plugin :: Fugue Death and Resurrection Subsystem");
         SetDescription(oPlugin,
             "This plugin controls the fugue system of player death and resurrection.");
 
@@ -31,7 +32,6 @@ void OnLibraryLoad()
         AddScriptSource(oFuguePlane, oFugueScripts);
 
         RegisterEventScripts(oFuguePlane, AREA_EVENT_ON_EXIT, "fugue_OnPlayerExit");
-        RegisterEventScripts(oFuguePlane, AREA_EVENT_ON_ENTER, "fugue_OnPlayerEnter");
         
         //Add module level events for the fugue system
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER, "fugue_OnClientEnter");
@@ -43,7 +43,6 @@ void OnLibraryLoad()
     RegisterLibraryScript("fugue_OnPlayerDeath", 2);
     RegisterLibraryScript("fugue_OnPlayerDying", 3);
     RegisterLibraryScript("fugue_OnPlayerExit",  4);
-    RegisterLibraryScript("fugue_OnPlayerEnter", 5);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
@@ -54,7 +53,6 @@ void OnLibraryScript(string sScript, int nEntry)
         case 2:  fugue_OnPlayerDeath(); break;
         case 3:  fugue_OnPlayerDying(); break;
         case 4:  fugue_OnPlayerExit();  break;
-        case 5:  fugue_OnPlayerEnter(); break;
         default: CriticalError("Library function " + sScript + " not found");
     }
 }
