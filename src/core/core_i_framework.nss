@@ -69,6 +69,11 @@ int ActivatePlugin(object oPlugin, int bForce = FALSE);
 // the plugin even if its status is already OFF.
 int DeactivatePlugin(object oPlugin, int bForce = FALSE);
 
+// ---< GetIsPlugin >---
+// ---< core_i_framework >---
+// Returns whether oObject is a plugin object.
+int GetIsPlugin(object oObject);
+
 // ---< GetIfPluginExists >---
 // ---< core_i_framework >---
 // Returns whether the plugin with the ID sPluginID exists.
@@ -182,9 +187,10 @@ void ClearEventState(object oEvent = OBJECT_INVALID);
 // - oTarget: the object to attach the scripts to
 // - sEvent: the name of the event which will execute the scripts
 // - sScripts: a CSV list of library scripts
-// - fPriority: the priority at which the scripts should be executed
+// - fPriority: the priority at which the scripts should be executed. If -1.0,
+//   will use the configured global or local priority, depending on the object.
 // - oSource: the object from which the scripts were retrieved
-void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = EVENT_PRIORITY_DEFAULT, object oSource = OBJECT_INVALID);
+void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0, object oSource = OBJECT_INVALID);
 
 // ---< ExpandEventScripts >---
 // ---< core_i_framework >---
@@ -496,6 +502,16 @@ int DeactivatePlugin(object oPlugin, int bForce = FALSE)
     return FALSE;
 }
 
+int GetIsPlugin(object oObject)
+{
+    if (!GetIsObjectValid(oObject))
+        return FALSE;
+
+    string sPlugin = GetPluginID(oObject);
+    object oPlugin = GetPlugin(sPlugin);
+    return oObject == oPlugin;
+}
+
 int GetIfPluginExists(string sPluginID)
 {
     object oPlugin = GetPlugin(sPluginID);
@@ -590,8 +606,11 @@ void ClearEventState(object oEvent = OBJECT_INVALID)
     DeleteLocalInt(oEvent, EVENT_STATE);
 }
 
-void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = EVENT_PRIORITY_DEFAULT, object oSource = OBJECT_INVALID)
+void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0, object oSource = OBJECT_INVALID)
 {
+    if (fPriority == -1.0)
+        fPriority = GetIsPlugin(oTarget) ? GLOBAL_EVENT_PRIORITY : LOCAL_EVENT_PRIORITY;
+
     // Sanity check: is the priority within bounds?
     if ((fPriority >= 0.0 && fPriority <= 10.0) ||
          fPriority == EVENT_PRIORITY_FIRST || fPriority == EVENT_PRIORITY_LAST ||
@@ -612,6 +631,9 @@ void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float 
             AddListObject(oTarget, oSource,   sEvent);
         }
     }
+    else
+        Debug("Could not register " + sEvent + " to " + GetName(oTarget) +
+              ": invalid priority " + FloatToString(fPriority), DEBUG_LEVEL_CRITICAL);
 }
 
 void ExpandEventScripts(object oTarget, string sEvent, string sScripts, float fDefaultPriority, object oSource = OBJECT_INVALID)
