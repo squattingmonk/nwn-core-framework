@@ -26,6 +26,7 @@
 // unsetting their own data.
 object PLUGIN_CURRENT = GetLocalObject(PLUGINS, PLUGIN_LAST);
 object EVENT_CURRENT  = GetLocalObject(EVENTS,  EVENT_LAST);
+int    TIMER_CURRENT  = GetLocalInt   (TIMERS,  TIMER_LAST);
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
@@ -884,12 +885,6 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     if (!bLocalOnly)
         BuildPluginBlacklist(oSelf);
 
-    // Set last event so scripts know who called them and can set status
-    SetLocalObject(EVENTS, EVENT_LAST, oEvent);
-
-    // Set the object triggering the event
-    SetLocalObject(oEvent, EVENT_LAST_INIT, oInit);
-
     // Initialize the event status
     ClearEventState(oEvent);
 
@@ -897,6 +892,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     string sScript;
     object oSource;
     int nExecuted, nIndex, nState;
+    int nTimerID = GetLocalInt(TIMERS, TIMER_LAST);
     int i, nCount = CountIntList(oSelf, sEvent);
 
     // Run all scripts registered to the event
@@ -918,9 +914,15 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
         else if (fPriority == EVENT_PRIORITY_DEFAULT && nExecuted)
             break;
 
+        // Set values that can be gotten by the event scripts. We have to do
+        // this inside the loop so if any of these scripts execute their own
+        // events the remaning scripts will still get the proper values.
+        SetLocalObject(oEvent,  EVENT_TRIGGERED, oInit);    // Triggering object
+        SetLocalObject(EVENTS,  EVENT_LAST,      oEvent);   // Current event
+        SetLocalObject(PLUGINS, PLUGIN_LAST,     oSource);  // Current plugin
+        SetLocalInt   (TIMERS,  TIMER_LAST,      nTimerID); // Current timer
+
         // Execute the script and return the saved state
-        SetLocalObject(PLUGINS, PLUGIN_LAST, oSource);
-        SetLocalObject(oEvent, EVENT_TRIGGERED, oInit);
         Debug("Executing " + sScript);
         RunLibraryScript(sScript, oSelf);
         nExecuted++;
@@ -1045,18 +1047,10 @@ void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
             if (nIterations)
                 SetLocalInt(TIMERS, TIMER_REMAINING + sTimerID, nRemaining - 1);
 
-            // Add the timer to a list of currently executing timer IDs. The
-            // most recent list item is the one that will be retrieved by
-            // GetCurrentTimer(). We do this so any scripts that execute their
-            // own timers won't throw us off.
-            int nCount = CountIntList(TIMERS);
-            AddListInt(TIMERS, nTimerID);
-
             // Run the event hook
+            SetLocalInt(TIMERS, TIMER_LAST, nTimerID);
             RunEvent(sEvent, OBJECT_INVALID, oTarget);
-
-            // Remove the timer from the current list
-            DeleteListInt(TIMERS, nCount);
+            DeleteLocalInt(TIMERS, TIMER_LAST);
 
             // In case one of those scripts we just called reset the timer...
             if (nIterations)
@@ -1135,8 +1129,7 @@ void KillTimer(int nTimerID)
 
 int GetCurrentTimer()
 {
-    int nCount = CountIntList(TIMERS);
-    return GetListInt(TIMERS, nCount - 1);
+    return TIMER_CURRENT;
 }
 
 int GetIsTimerInfinite(int nTimerID)
