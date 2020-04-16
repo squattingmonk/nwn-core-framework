@@ -59,20 +59,15 @@ void rest_OnPlayerRestFinished();
 //  effect.
 void rest_OnPlayerRestCancelled();
 
+// ---< rest_firewood >---
+// Tag-based scripting function for using the rest system item h2_firewood.
+void rest_firewood();
+
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
 
-void rest_Canteen_OnTriggerEnter()
-{
-    object oPC = GetEnteringObject();
-    SetLocalObject(oPC, H2_REST_TRIGGER, OBJECT_SELF);
-}
-void rest_Canteen_OnTriggerExit()
-{
-    object oPC = GetExitingObject();
-    DeleteLocalObject(oPC, H2_REST_TRIGGER);
-}
+// ----- Module Events -----
 
 void rest_OnPlayerRestStarted()
 {
@@ -147,4 +142,17 @@ void rest_OnPlayerRestCancelled()
     h2_SetAvailableFeatsToSavedValues(oPC);
     if (H2_SLEEP_EFFECTS)
         h2_RemoveEffectType(oPC, EFFECT_TYPE_BLINDNESS);
+}
+
+// ----- Tag-based Scripting ---
+
+void rest_firewood()
+{
+    int nEvent = GetUserDefinedItemEventNumber();
+    if (nEvent ==  X2_ITEM_EVENT_ACTIVATE)
+    {
+        object oPC   = GetItemActivator();
+        object oItem = GetItemActivated();
+        h2_UseFirewood(oPC, oItem);
+    }
 }

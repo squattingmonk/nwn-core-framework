@@ -1,46 +1,72 @@
-/*
-Filename:           h2_pcorpse_i
-System:             pc corpse (include script)
-Author:             Edward Beck (0100010)
-Date Created:       Mar. 12, 2006
-Summary:
-HCR2 h2_pccorpse system function definition file.
-This script is consumed by the various pc corpse system scripts as an include file.
+// -----------------------------------------------------------------------------
+//    File: corpse_i_items.nss
+//  System: PC Corpse (tag-based scripting)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Tag-based scripting functions for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  Nothing!  Leave me alone.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date: Dec 31st, 2006
-Revision Author: 0100010
-Revision Summary: v1.5
-Fixed bug where an NPC cleric would not raise a PC from a token
-if H2_ALLOW_CORPSE_RESS_BY_PLAYERS was false.
-Fixed bug where NPC cleric had to have gold on them to raise a PC
-if H2_REQUIRE_GOLD_FOR_RESS was true.
-(cost was already taken care of in the NPC's user defined event when the token was
-activated on them.)
-Changed code to use new gold cost configuration variables.
-*/
-
+#include "pw_i_core"
 #include "corpse_i_const"
 #include "corpse_i_config"
 #include "corpse_i_text"
-#include "pw_i_core"
 
-//This handles moving the pc corpse copy and cleaning up the death corpse container
-//whenever the oCorpseToken item is picked up by a PC.
+// -----------------------------------------------------------------------------
+//                              Function Prototypes
+// -----------------------------------------------------------------------------
+
+// ---< h2_PickUpPlayerCorpse >---
+// This handles moving the pc corpse copy and cleaning up the death corpse 
+//  container whenever oCorpseToken is picked up by a PC.
 void h2_PickUpPlayerCorpse(object oCorpseToken);
 
-//This handles moving the pc corpse copy and creating he death corpse container
-//whenever the oCorpseToken item is dropped by a PC.
+// ---< h2_DropPlayerCorpse >---
+// This handles moving the pc corpse copy and creating the death corpse container
+//  whenever oCorpseToken is dropped by a PC.
 void h2_DropPlayerCorpse(object oCorpseToken);
 
-//This handles the creation of the pc corpse copy of oPC, creation
-//of the death corpse container and the token item used to move the corpse copy around by
-//other PCs when oPC dies.
+// ---< h2_CreatePlayerCorpse >---
+// This handles the creation of the pc corpse copy of oPC, creation of the death
+//  corpse container and the token item used to move the corpse copy around by
+//  other PCs when the oPC dies.
 void h2_CreatePlayerCorpse(object oPC);
 
-//Handles when the corpse token is activated and targeted on on NPC.
+// ---< h2_CorpseTokenActivatedOnNPC >---
+//Handles when the corpse token is activated and targeted on an NPC.
 void h2_CorpseTokenActivatedOnNPC();
+
+// ---< h2_XPLostForRessurection >---
+// Returns the amount of XP that should be lost based on the level of the
+//  raised PC.
+int h2_XPLostForRessurection(object oRaisedPC);
+
+// ---< h2_GoldCostForRessurection >---
+//
+int h2_GoldCostForRessurection(object oCaster, int spellID);
+
+// ---< h2_RaiseSpellCastOnCorpseToken >---
+//
+void h2_RaiseSpellCastOnCorpseToken(int spellID, object oToken = OBJECT_INVALID);
+
+// ---< h2_PerformOffLineRessurectionLogin >---
+//
+void h2_PerformOffLineRessurectionLogin(object oPC, location ressLoc);
+
+// -----------------------------------------------------------------------------
+//                             Function Definitions
+// -----------------------------------------------------------------------------
 
 void h2_PickUpPlayerCorpse(object oCorpseToken)
 {
@@ -231,52 +257,3 @@ void h2_PerformOffLineRessurectionLogin(object oPC, location ressLoc)
     SendMessageToAllDMs(sMessage);
     WriteTimestampedLogEntry(sMessage);
 }
-
-void corpse_OnClientEnter()
-{
-    object oPC = GetEnteringObject();
-    string sUniquePCID = h2_GetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID);
-    location lRessLoc = h2_GetExternalLocation(sUniquePCID + H2_RESS_LOCATION);
-    if (h2_GetIsLocationValid(lRessLoc))
-        h2_PerformOffLineRessurectionLogin(oPC, lRessLoc);
-
-    object oItem = GetFirstItemInInventory(oPC);
-    while (GetIsObjectValid(oItem))
-    {
-        if (GetTag(oItem) == H2_PC_CORPSE_ITEM)
-            DestroyObject(oItem);
-        oItem = GetNextItemInInventory(oPC);
-    }
-}
-
-void corpse_OnClientLeave()
-{
-    object oPC = GetExitingObject();
-    object oItem = GetFirstItemInInventory(oPC);
-    while (GetIsObjectValid(oItem))
-    {
-        if (GetTag(oItem) == H2_PC_CORPSE_ITEM)
-        {
-            location lLastDrop = GetLocalLocation(oItem, H2_LAST_DROP_LOCATION);
-            object oNewToken = CopyObject(oItem, lLastDrop);
-            h2_DropPlayerCorpse(oNewToken);
-        }
-        oItem = GetNextItemInInventory(oPC);
-    }
-}
-
-void corpse_OnPlayerDeath()
-{
-    object oPC = GetLastPlayerDied();
-    object oArea = GetArea(oPC);
-
-    //if some other death subsystem set the player state back to alive before this one, no need to continue
-    if (h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE) != H2_PLAYER_STATE_DEAD)
-        return;
-
-    if (GetLocalInt(oArea, H2_DO_NOT_CREATE_CORPSE_IN_AREA))
-        return;
-    if (!GetLocalInt(oPC, H2_LOGIN_DEATH))
-        h2_CreatePlayerCorpse(oPC);
-}
-

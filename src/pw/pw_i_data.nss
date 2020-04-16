@@ -18,8 +18,9 @@ Revision Summary:
 
 */
 
-#include "h2_debug_i"
-#include "h2_constants_i"
+#include "util_i_debug"
+#include "pw_i_config"
+#include "pw_i_const"
 
 //Gets a local variable of the given type named sVarName onto to a
 //specific placeable object with the tag H2_CORE_DATA_POINT.

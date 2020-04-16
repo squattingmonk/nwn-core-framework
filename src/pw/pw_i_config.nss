@@ -21,9 +21,6 @@
 // Revisions:
 // -----------------------------------------------------------------------------
 
-//If you are using a translation file instead of "pw_i_text", put that include
-#include "pw_i_text"
-
 //The combined length of any player-controlled character's first and last name must
 //  not exceed this value.  player-controlled characters include player-characters
 //  and Dungeon Masters.  This check is accomplished before OnClientEnter hook scripts

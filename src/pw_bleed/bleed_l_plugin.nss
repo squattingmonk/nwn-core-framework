@@ -20,7 +20,8 @@
 
 #include "util_i_library"
 #include "core_i_framework"
-#include "bleed_i_main"
+#include "bleed_i_const"
+#include "bleed_i_events"
 
 // -----------------------------------------------------------------------------
 //                               Library Dispatch
@@ -43,10 +44,17 @@ void OnLibraryLoad()
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_REST_STARTED, "bleed_OnPlayerRestStarted");
     }
 
+    // --- Module Events ---
     RegisterLibraryScript("bleed_OnClientEnter",       1);
     RegisterLibraryScript("bleed_OnPlayerDeath",       2);
     RegisterLibraryScript("bleed_OnPlayerDying",       3);
     RegisterLibraryScript("bleed_OnPlayerRestStarted", 4);
+
+    // --- Tag-based Scripting ---
+    RegisterLibraryScript(H2_HEAL_WIDGET,              5);
+
+    // --- Timers ---
+    RegisterLibraryScript("bleed_OnTimerExpire",       6);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
@@ -57,6 +65,8 @@ void OnLibraryScript(string sScript, int nEntry)
         case 2:  bleed_OnPlayerDeath();       break;
         case 3:  bleed_OnPlayerDying();       break;
         case 4:  bleed_OnPlayerRestStarted(); break;
+        case 5:  bleed_HealWidget();          break;
+        case 6:  bleed_OnTimerExpire();       break;
         default: CriticalError("Library function " + sScript + " not found");
     }
 }

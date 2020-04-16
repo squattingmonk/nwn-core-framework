@@ -24,10 +24,10 @@
 
 void _hookAssociate(object oPaladinMount)
 {
-    if(DKSN_HTF_APPLY_TO_PALADINMOUNT)
+    if(DS_HTF_APPLY_TO_PALADINMOUNT)
     {
         object oAssociate = oPaladinMount;
-        DelayCommand(0.1, ExecuteScript(DKSN_HTF_ASSOCIATE_SCRIPT, oAssociate));
+        DelayCommand(0.1, ExecuteScript(DS_HTF_ASSOCIATE_SCRIPT, oAssociate));
     }
 }
 
@@ -83,7 +83,7 @@ void main()
         if (GetStringLength(sSummonScript) < 1)
         {
             oMount=HorseSummonPaladinMount(bPHBDuration);
-            if(DKSN_HTF_APPLY_TO_ASSOCIATES) 
+            if(DS_HTF_APPLY_TO_ASSOCIATES) 
                 DelayCommand(0.1, _hookAssociate(oPC));
         }
         else

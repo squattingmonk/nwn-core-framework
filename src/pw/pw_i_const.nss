@@ -35,7 +35,6 @@ Added H2_ALLOW_FEAT_RECOVERY, H2_EXPORT_CHAR_TIMER_SCRIPT and several timer cons
 
 
 */
-#include "h2_core_c"
 
 const string H2_CORE_DATA_POINT = "H2_COREDATAPOINT";
 const string H2_PLAYER_DATA_ITEM = "h2_playerdata";
@@ -125,6 +124,7 @@ const string H2_RESS_BY_DM = "H2_RESS_BY_DM";
 
 const string H2_DO_NOT_CREATE_CORPSE_IN_AREA = "H2_DO_NOT_CREATE_CORPSE_IN_AREA";
 
+const string H2_EXPORT_CHAR_ON_TIMER_EXPIRE = "ExportPC_OnTimerExpire";
 const string H2_EXPORT_CHAR_TIMER_SCRIPT = "h2_exportchars";
 const string H2_INITIAL_LOGIN = "H2_INITIALLOGIN";
 const string H2_SAVE_LOCATION = "h2_savelocation"; //name of script to execute to save pc location

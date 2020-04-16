@@ -1,14 +1,14 @@
 // -----------------------------------------------------------------------------
-//    File: loot_i_items.nss
-//  System: PC Corpose Loot (tag-based scripting)
+//    File: deity_i_const.nss
+//  System: Deity Resurrection (constants)
 //     URL: 
 // Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
 // -----------------------------------------------------------------------------
 // Description:
-//  Tag-based Scripting functions for PW Subsystem.
+//  Constants for PW Subsystem.
 // -----------------------------------------------------------------------------
 // Builder Use:
-//  Nothing!  Leave me alone.
+//  None!  Leave me alone.
 // -----------------------------------------------------------------------------
 // Acknowledgment:
 // -----------------------------------------------------------------------------
@@ -18,4 +18,8 @@
 //   Summary:
 // -----------------------------------------------------------------------------
 
-// There are no items associated with this system.
+// -----------------------------------------------------------------------------
+//                                   Constants
+// -----------------------------------------------------------------------------
+
+// There are not constants associated with this system.

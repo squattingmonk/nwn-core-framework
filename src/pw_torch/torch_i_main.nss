@@ -1,31 +1,65 @@
-/*
-Filename:           h2_torchlantrn_i
-System:             torches and lanterns
-Author:             Edward Beck (0100010)
-Date Created:       Aug. 30, 2006
-Summary:
-HCR2 h2_torchlantrn_i script.
-This is an include script for the torches and lanterns subsystem.
+// -----------------------------------------------------------------------------
+//    File: torch_i_main.nss
+//  System: Torch and Lantern (core)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Core functions for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  None!  Leave me alone.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date: Dec 31st, 2006
-Revision Author: 0100010
-Revision Summary: v1.5
-Adjusted code to deal with changes to timer functions.
+#include "torch_i_config"
+#include "torch_i_const"
+#include "torch_i_text"
+#include "pw_i_core"
 
+// -----------------------------------------------------------------------------
+//                              Function Prototypes
+// -----------------------------------------------------------------------------
 
-*/
+// ---< h2_RemoveLight >---
+// Removes ITEM_PROPERTY_LIGHT from the passed object, if it exists.
+void h2_RemoveLight(object oLantern);
 
-#include "h2_torchlantrn_c"
-#include "h2_core_i"
+// ---< h2_AddLigt >---
+// Adds ItemPropertyLight of normal brightness and color white to the passed
+//  object.
+void h2_AddLight(object oLantern);
 
-const string H2_LIGHT_TIMER = "h2_lighttimer";
-const string H2_LIGHT_TIMERID = "H2_LIGHT_TIMERID";
-const string H2_ELAPSED_BURN = "H2_ELAPSEDBURN";
-const string H2_LIGHT_EQUIPPED = "H2_LIGHT_EQUIPPED";
-const string H2_EQUIPPINGPC = "H2_EQUIPPINGPC";
-const string H2_NEEDS_OIL = "H2_NEEDS_OIL";
+// ---< h2_EquippedLightSource >---
+// When a PC uses a light source (torch/lantern), this function determines if it
+//  has the necessary fuel (if required) and how much burn time is remaining.
+void h2_EquippedLightSource(int isLantern);
+
+// ---< h2_UnEquipLightSource >---
+// When a PC stops using a light source, this function sets the appropriate
+//  time variables and kills the associted timer.
+void h2_UnEquipLightSource(int isLantern);
+
+// ---< h2_BurnOutLightSource >---
+// When a light source can no longer function (fuel/time), this function removes
+//  the light source itemproperty and either unequips or destroys the light
+//  source, depending on the type (lantern = unequip, torch = destroy)
+void h2_BurnOutLightSource(object oLight, int isLantern);
+
+// ---< h2_FillLantern >---
+// When a lantern requires oil, this function will add burn time to the lantern
+//  and destroy the oil flask used to fill it.  
+void h2_FillLantern(object oOilFlask, object oLantern);
+
+// -----------------------------------------------------------------------------
+//                             Function Definitions
+// -----------------------------------------------------------------------------
 
 void h2_RemoveLight(object oLantern)
 {
@@ -63,7 +97,7 @@ void h2_EquippedLightSource(int isLantern)
     int elapsedBurn = GetLocalInt(oLight, H2_ELAPSED_BURN);
     int burnLeft = burncount - elapsedBurn;
     float percentRemaining = (IntToFloat(burnLeft) / IntToFloat(burncount)) * 100.0;
-    SendMessageToPC(oPC, H2_TEXT_REMAINING_BURN + FloatToString(percentRemaining, 5, 1) + "%");
+    SendMessageToPC(oPC, H2_TEXT_REMAINING_BURN + FloatToString(percentRemaining, 5, 1) + "%%");
     int timerID = h2_CreateTimer(oLight, H2_LIGHT_TIMER, IntToFloat(burnLeft));
     h2_StartTimer(timerID);
     SetLocalInt(oLight, H2_LIGHT_TIMERID, timerID);

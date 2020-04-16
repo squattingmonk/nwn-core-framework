@@ -47,12 +47,8 @@ void OnLibraryLoad()
     RegisterLibraryScript("rest_OnPlayerRestFinished", 2);
     RegisterLibraryScript("rest_OnPlayerRestCancelled", 3);
 
-    // ----- Local Events -----
-    RegisterLibraryScript("rest_Canteen_OnTriggerEnter"), 4);
-    RegisterLibraryScript("rest_Canteen_OnTriggerExit"), 5);
-
     // ----- Tag Based Scripting -----
-    RegisterLibraryScript(H2_FIREWOOD, 6);
+    RegisterLibraryScript(H2_FIREWOOD, 4);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
@@ -62,9 +58,7 @@ void OnLibraryScript(string sScript, int nEntry)
         case 1:  rest_OnPlayerRestStarted(); break;
         case 2:  rest_OnPlayerRestFinished(); break;
         case 3:  rest_OnPlayerRestCancelled(); break;
-        case 4:  rest_Canteen_OnTriggerEnter(); break;
-        case 5:  rest_Canteen_OnTriggerExit(); break;
-        case 6:  rest_firewood(); break;
+        case 4:  rest_firewood(); break;
         default: CriticalError("Library function " + sScript + " not found");
     }
 }

@@ -1,42 +1,26 @@
-/*
-Filename:           h2_pccorse_c
-System:             pc corpse (user configuration script)
-Author:             Edward Beck (0100010)
-Date Created:       Mar. 26, 2006
-Summary:
+// -----------------------------------------------------------------------------
+//    File: corpse_i_config.nss
+//  System: PC Corpse (configuration)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Configuration File for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  Set the variables below as directed in the comments for each variable.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
-This script is consumed by h2_pccorpse_i as an include directive.
-
-Contains user definable toggles and settings for the pccorpse subsystem.
-Should contains include directives for additional files needed by the user,
-and any _t scripts (text string definition scripts).
-
-This script is freely editable by the mod builder. It should not contain any h2 functions that should
-not be overrideable by the user, put those in h2_core_i or h2_bleedsystem_i.
-
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date: Aug. 30, 2006
-Revision Author: Edward Beck
-Revision Summary: v1.3
-Added include reference to h2_pccorpse_t
-
-Revision Date: Dec 31st, 2006
-Revision Author: Edward Beck (0100010)
-REvision Summary: v1.5
-Added H2_GOLD_COST_FOR_RAISE_DEAD and H2_GOLD_COST_FOR_RESSURECTION as
-user configurable variables.
-
-*/
-
-//You may swap the below #include "hc2_pccorpse_t" text directives for an equivalant language specific
-//one. (All variable names must match however for it to compile properly.)
-#include "h2_pccorpse_t"
-
-
-//All below functions and constants may be overriden by the user, but do not alter the function signature
-//or the name of the constant.
-//Begin function and constant declarations.
+// -----------------------------------------------------------------------------
+//                                   Variables
+// -----------------------------------------------------------------------------
 
 //User defined event number sent to an NPC when a corpse token is activated on them.
 //Pick any integer value that is not being used for another event number.
@@ -63,6 +47,3 @@ const int H2_GOLD_COST_FOR_RAISE_DEAD = 5000;
 //The cost in gold for the ressurection spell. (must be a positive value)
 //This only applies if H2_REQUIRE_GOLD_COST_FOR_RESS = TRUE;
 const int H2_GOLD_COST_FOR_RESSURECTION = 10000;
-
-
-//End function and constant declarations.

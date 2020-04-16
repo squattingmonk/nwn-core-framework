@@ -20,7 +20,7 @@
 
 #include "util_i_library"
 #include "core_i_framework"
-#include "unid_i_main"
+#include "unid_i_events"
 
 // -----------------------------------------------------------------------------
 //                               Library Dispatch
@@ -36,18 +36,18 @@ void OnLibraryLoad()
             "This plugin controls the HCR2 UnID Item on Drop Persistent World Subsystem.");
 
         // ----- Module Events -----
-        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_UNACQUIRE_ITEM, "UnID_OnUnacquireItem");
+        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_UNACQUIRE_ITEM, "unid_OnUnacquireItem");
     }
 
     // ----- Module Events -----
-    RegisterLibraryScript("UnID_OnUnacquireItem", 1);
+    RegisterLibraryScript("unid_OnUnacquireItem", 1);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
 {
     switch (nEntry)
     {
-        case 1:  UnID_OnUnacquireItem(); break;
+        case 1:  unid_OnUnacquireItem(); break;
         default: CriticalError("Library function " + sScript + " not found");
     }
 }

@@ -18,10 +18,14 @@
 //   Summary:
 // -----------------------------------------------------------------------------
 
+#include "pw_i_core"
 #include "bleed_i_const"
 #include "bleed_i_config"
 #include "bleed_i_text"
-#include "pw_i_core"
+
+// -----------------------------------------------------------------------------
+//                              Function Prototypes
+// -----------------------------------------------------------------------------
 
 //Creates and starts a timer to track the bleeding of oPC.
 void h2_BeginPlayerBleeding(object oPC);
@@ -44,6 +48,10 @@ void h2_CheckForSelfStabilize(object oPC);
 
 //Handles when the healing skill widget is used on a target.
 void h2_UseHealWidgetOnTarget(object oTarget);
+
+// -----------------------------------------------------------------------------
+//                             Function Definitions
+// -----------------------------------------------------------------------------
 
 void h2_BeginPlayerBleeding(object oPC)
 {
@@ -181,37 +189,3 @@ void h2_UseHealWidgetOnTarget(object oTarget)
     else //Target was not a PC, just Roll result and let DM decide what happens
         h2_SkillCheck(SKILL_HEAL, oUser);
 }
-
-void bleed_OnClientEnter()
-{
-    object oPC = GetEnteringObject();
-    object oHealWidget = GetItemPossessedBy(oPC, H2_HEAL_WIDGET);
-    if (!GetIsObjectValid(oHealWidget))
-        CreateItemOnObject(H2_HEAL_WIDGET, oPC);
-}
-
-void bleed_OnPlayerDeath()
-{
-    object oPC = OBJECT_SELF;
-    if (h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE) != H2_PLAYER_STATE_DEAD)
-        h2_BeginPlayerBleeding(oPC);
-}
-
-void bleed_OnPlayerRestStarted()
-{
-    object oPC = GetLastPCRested();
-    if (GetLocalInt(oPC, H2_LONG_TERM_CARE) && h2_GetPostRestHealAmount(oPC) > 0)
-    {
-        DeleteLocalInt(oPC, H2_LONG_TERM_CARE);
-        int postRestHealAmt = h2_GetPostRestHealAmount(oPC) * 2;
-        h2_SetPostRestHealAmount(oPC, postRestHealAmt);
-    }
-}
-
-void bleed_OnPlayerDying()
-{
-    object oPC = GetLastPlayerDying();
-    if (h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE) == H2_PLAYER_STATE_DYING)
-        h2_BeginPlayerBleeding(oPC);
-}
-

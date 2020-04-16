@@ -1,56 +1,35 @@
-/*
-Filename:           h2_hungerthrst_i
-System:             hunger and thirst
-Author:             Edward Beck (0100010)
-Date Created:       Sept. 4, 2006
-Summary:
-HCR2 h2_hungerthrst_i script.
-This is an include script for the hunger and thirst subsystem.
+// -----------------------------------------------------------------------------
+//    File: x_i_main.nss
+//  System: x Item on Drop (core)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Core functions for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  None!  Leave me alone.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date: Dec 31st, 2006
-Revision Author: 0100010
-Revision Summary: v1.5
-Adjusted code to deal with changes to timer functions.
+#include "pw_i_core"
+#include "htf_i_const"
+#include "htf_i_config"
+#include "htf_i_text"
 
+// -----------------------------------------------------------------------------
+//                              Function Prototypes
+// -----------------------------------------------------------------------------
 
-*/
-
-#include "h2_hungerthrst_c"
-#include "h2_core_i"
-#include "x3_inc_string"
-
-const string H2_HT_IS_DEHYDRATED = "H2_HT_IS_DEHYDRATED";
-const string H2_HT_IS_STARVING = "H2_HT_IS_STARVING";
-const string H2_HT_CURR_THIRST = "H2_HT_CURR_THIRST";
-const string H2_HT_CURR_HUNGER = "H2_HT_CURR_HUNGER";
-const string H2_HT_CURR_ALCOHOL = "H2_HT_CURR_ALCOHOL";
-//const string H2_HT_TIMER_SCRIPT = "h2_httimer";
-const string H2_HT_TIMER_SCRIPT = "ds_htf_httimer";
-const string H2_HT_INFO_BAR = "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
-const string H2_HT_HUNGER_HOUR_COUNT = "H2_HT_HUNGER_HOUR_COUNT";
-const string H2_HT_THIRST_NONLETHAL_DAMAGE = "H2_HT_THIRST_NONLETHAL_DAMAGE";
-const string H2_HT_HUNGER_NONLETHAL_DAMAGE = "H2_HT_HUNGER_NONLETHAL_DAMAGE";
-const string H2_HT_THIRST_SAVE_COUNT = "H2_HT_THIRST_SAVE_COUNT";
-const string H2_HT_HUNGER_SAVE_COUNT = "H2_HT_HUNGER_SAVE_COUNT";
-const string H2_HT_THIRST_VALUE = "H2_HT_THIRST_VALUE";
-const string H2_HT_HUNGER_VALUE = "H2_HT_HUNGER_VALUE";
-const string H2_HT_ALCOHOL_VALUE = "H2_HT_ALCOHOL_VALUE";
-const string H2_HT_DELAY = "H2_HT_DELAY";
-const string H2_HT_POISON = "H2_HT_POISON";
-const string H2_HT_DISEASE = "H2_HT_DISEASE";
-const string H2_HT_SLEEP = "H2_HT_SLEEP";
-const string H2_HT_HPBONUS = "H2_HT_HPBONUS";
-const string H2_HT_FEEDBACK = "H2_HT_FEEDBACK";
-const string H2_HT_DRUNK_TIMERID = "H2_HT_DRUNK_TIMERID";
-const string H2_HT_DRUNK_TIMER_SCRIPT = "h2_htdrunktimer";
-const string H2_HT_TRIGGER = "H2_HT_TRIGGER";
-const string H2_HT_MAX_CHARGES = "H2_HT_MAX_CHARGES";
-const string H2_HT_CURR_CHARGES = "H2_HT_CURR_CHARGES";
-const string H2_HT_CANTEEN_SOURCE = "H2_HT_CANTEEN_SOURCE";
-const string H2_HT_COLOR_RED = "700";
-const string H2_HT_COLOR_GREEN = "070";
+// -----------------------------------------------------------------------------
+//                             Function Definitions
+// -----------------------------------------------------------------------------
 
 float h2_GetHungerDecrement()
 {
@@ -87,9 +66,11 @@ void h2_InitHungerThirstCheck(object oPC)
     if (!GetLocalInt(oPC, H2_HT_IS_STARVING) && GetLocalFloat(oPC, H2_HT_CURR_HUNGER) == 0.0)
         SetLocalFloat(oPC, H2_HT_CURR_HUNGER, 1.0);
 
-    int timerID = h2_CreateTimer(oPC, H2_HT_TIMER_SCRIPT, HoursToSeconds(1), FALSE);
+    int timerID = CreateTimer(oPC, H2_HT_ON_TIMER_EXPIRE, HoursToSeconds(1), 0, 0);
+    //int timerID = h2_CreateTimer(oPC, H2_HT_TIMER_SCRIPT, HoursToSeconds(1), FALSE);
     //int timerID = h2_CreateTimer(oPC, H2_HT_TIMER_SCRIPT, 10.0, FALSE);
-    h2_StartTimer(timerID);
+    StartTimer(timerID, FALSE);
+    //h2_StartTimer(timerID);
 
     if (GetIsPC(oPC) && H2_HT_DISPLAY_INFO_BARS)
         h2_DisplayHTInfoBars(oPC);
@@ -168,7 +149,8 @@ void h2_PerformHungerThirstCheck(object oPC, float fCustomThirstDecrement = -1.0
     {
         DeleteLocalFloat(oPC, H2_HT_CURR_ALCOHOL);
         int timerID = GetLocalInt(oPC, H2_HT_DRUNK_TIMERID);
-        h2_KillTimer(timerID);
+        KillTimer(timerID);
+        //h2_KillTimer(timerID);
         DeleteLocalInt(oPC, H2_HT_DRUNK_TIMERID);
         return;
     }
@@ -201,7 +183,8 @@ void h2_PerformHungerThirstCheck(object oPC, float fCustomThirstDecrement = -1.0
     if (currAlcohol < 0.4)
     {
         int timerID = GetLocalInt(oPC, H2_HT_DRUNK_TIMERID);
-        h2_KillTimer(timerID);
+        KillTimer(timerID);
+        //h2_KillTimer(timerID);
         DeleteLocalInt(oPC, H2_HT_DRUNK_TIMERID);
     }
     SetLocalFloat(oPC, H2_HT_CURR_THIRST, currThirst);
@@ -235,9 +218,11 @@ void h2_ApplyAlchoholEffects(object oPC, object oItem)
         SetLocalFloat(oPC, H2_HT_CURR_ALCOHOL, currAlcohol);
         if (GetLocalInt(oPC, H2_HT_DRUNK_TIMERID) == 0 && currAlcohol >= 0.4)
         {
-            int timerID = h2_CreateTimer(oPC, H2_HT_DRUNK_TIMER_SCRIPT, 150.0);
+            int timerID = CreateTimer(oPC, H2_HT_DRUNK_ON_TIMER_EXPIRE, 150.0, 0, 30);
+            //int timerID = h2_CreateTimer(oPC, H2_HT_DRUNK_TIMER_SCRIPT, 150.0);
             SetLocalInt(oPC, H2_HT_DRUNK_TIMERID, timerID);
-            h2_StartTimer(timerID);
+            StartTimer(timerID, TRUE);
+            //h2_StartTimer(timerID);
         }
 
         int dropRate = 26 - GetAbilityScore(oPC, ABILITY_CONSTITUTION, TRUE);
@@ -465,4 +450,107 @@ void h2_UseCanteen(object oPC, object oCanteen)
         AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW));
         h2_FillCanteen(oPC, oCanteen, oTarget);
     }
+}
+
+float h2_GetFatigueDecrement()
+{
+    return 1.0 / (H2_FATIGUE_HOURS_WITHOUT_REST);
+}
+
+void h2_DisplayFatigueInfoBar(object oPC)
+{
+    if(GetIsDM(oPC)) return;
+
+    int fatigueCount = FloatToInt(GetLocalFloat(oPC, H2_CURR_FATIGUE) * 100.0);
+    string greenBar = h2_ColorText(GetSubString(H2_FATIGUE_INFO_BAR, 0, fatigueCount), H2_COLOR_GREEN);
+    string redBar = h2_ColorText(GetSubString(H2_FATIGUE_INFO_BAR, fatigueCount, 100 - fatigueCount), H2_COLOR_RED);
+    SendMessageToPC(oPC, H2_TEXT_FATIGUE + greenBar + redBar);
+}
+
+void h2_InitFatigueCheck(object oPC)
+{
+    if (!GetLocalInt(oPC, H2_IS_FATIGUED) && GetLocalFloat(oPC, H2_CURR_FATIGUE) == 0.0)
+        SetLocalFloat(oPC, H2_CURR_FATIGUE, 1.0);
+
+    int timerID = CreateTimer(oPC, H2_FATIGUE_ON_TIMER_EXPIRE, HoursToSeconds(1), 0, 0);
+    //int timerID = h2_CreateTimer(oPC, H2_FATIGUE_TIMER_SCRIPT, HoursToSeconds(1), FALSE);
+    //int timerID = h2_CreateTimer(oPC, H2_FATIGUE_TIMER_SCRIPT, 10.0, FALSE);
+    StartTimer(timerID, FALSE);
+    //h2_StartTimer(timerID);
+
+    if (GetIsPC(oPC) && H2_FATIGUE_DISPLAY_INFO_BAR)
+        h2_DisplayFatigueInfoBar(oPC);
+}
+
+void h2_DoFatigueFortitudeCheck(object oPC)
+{
+    SetLocalInt(oPC, H2_IS_FATIGUED, TRUE);
+    int saveCount = GetLocalInt(oPC, H2_FATIGUE_SAVE_COUNT);
+    if(GetIsPC(oPC)) 
+    {
+        SendMessageToPC(oPC, H2_TEXT_NEAR_COLLAPSE);
+        AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_PAUSE_TIRED, 1.0, 2.0));
+        PlayVoiceChat(VOICE_CHAT_REST, oPC);
+    }
+
+    int fortCheck = FortitudeSave(oPC, saveCount + 10);
+    if (!fortCheck || saveCount >= 10)
+    {
+        effect eStrLoss = ExtraordinaryEffect(EffectAbilityDecrease(ABILITY_STRENGTH, 1));
+        ApplyEffectToObject(DURATION_TYPE_PERMANENT, eStrLoss, oPC);
+        effect eDexLoss = ExtraordinaryEffect(EffectAbilityDecrease(ABILITY_DEXTERITY, 1));
+        ApplyEffectToObject(DURATION_TYPE_PERMANENT, eDexLoss, oPC);
+        effect eMovement = ExtraordinaryEffect(EffectMovementSpeedDecrease(10));
+        ApplyEffectToObject(DURATION_TYPE_PERMANENT, eMovement, oPC);
+        if (saveCount >= 10 && !fortCheck)
+        {
+            if (GetRacialType(oPC) == RACIAL_TYPE_ELF || GetRacialType(oPC) == RACIAL_TYPE_HALFELF)
+                ApplyEffectToObject(DURATION_TYPE_TEMPORARY, ExtraordinaryEffect(EffectKnockdown()), oPC, 180.0);
+            else
+            {
+                ApplyEffectToObject(DURATION_TYPE_TEMPORARY, ExtraordinaryEffect(EffectSleep()), oPC, 180.0);
+                ApplyEffectToObject(DURATION_TYPE_TEMPORARY, ExtraordinaryEffect(EffectVisualEffect(VFX_IMP_SLEEP)), oPC, 180.0);
+            }
+            if(GetIsPC(oPC)) AssignCommand(oPC, SpeakString(H2_TEXT_COLLAPSE));
+            ApplyEffectToObject(DURATION_TYPE_TEMPORARY, ExtraordinaryEffect(EffectBlindness()), oPC, 180.0);
+            SetLocalFloat(oPC, H2_CURR_FATIGUE, 0.33);
+        }
+    }
+    SetLocalInt(oPC, H2_FATIGUE_SAVE_COUNT, saveCount + 1);
+}
+
+void h2_PerformFatigueCheck(object oPC, float fCustomFatigueDecrement = -1.0)
+{
+    if(GetIsDM(oPC)) return;
+
+    if(GetIsPC(oPC))
+        if (h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE) == H2_PLAYER_STATE_DEAD)
+            return;
+
+    float fatigueDrop = (fCustomFatigueDecrement >= 0.0) ? fCustomFatigueDecrement : h2_GetFatigueDecrement();
+
+    float currFatigue = GetLocalFloat(oPC, H2_CURR_FATIGUE);
+    if (currFatigue > 0.0)
+        currFatigue = currFatigue - fatigueDrop;
+    if (currFatigue < 0.0)
+        currFatigue = 0.0;
+    SetLocalFloat(oPC, H2_CURR_FATIGUE, currFatigue);
+    
+    if(GetIsPC(oPC))
+    {
+        if (H2_FATIGUE_DISPLAY_INFO_BAR)
+            h2_DisplayFatigueInfoBar(oPC);
+
+        if (currFatigue < 0.33 && currFatigue > 0.0)
+        {
+            SendMessageToPC(oPC, H2_TEXT_TIRED1);
+            AssignCommand(oPC, SpeakString(H2_TEXT_YAWNS));
+            AssignCommand(oPC, ActionPlayAnimation(ANIMATION_FIREFORGET_PAUSE_BORED));
+        }
+    }
+
+    if (currFatigue == 0.0)
+        h2_DoFatigueFortitudeCheck(oPC);
+    else
+        DeleteLocalInt(oPC, H2_FATIGUE_SAVE_COUNT);
 }

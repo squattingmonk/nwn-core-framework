@@ -24,10 +24,10 @@ Revision Summary:
 
 void _hookAssociate(object oPC)
 {
-    if(DKSN_HTF_APPLY_TO_FAMILIAR)
+    if(DS_HTF_APPLY_TO_FAMILIAR)
     {
         object oAssociate = GetAssociate(ASSOCIATE_TYPE_FAMILIAR, oPC);
-        DelayCommand(0.1, ExecuteScript(DKSN_HTF_ASSOCIATE_SCRIPT, oAssociate));
+        DelayCommand(0.1, ExecuteScript(DS_HTF_ASSOCIATE_SCRIPT, oAssociate));
     }
 }
 
@@ -36,5 +36,5 @@ void main()
     object oPC = OBJECT_SELF;
     SummonFamiliar(oPC);
 
-    if(DKSN_HTF_APPLY_TO_ASSOCIATES) DelayCommand(0.1, _hookAssociate(oPC));
+    if(DS_HTF_APPLY_TO_ASSOCIATES) DelayCommand(0.1, _hookAssociate(oPC));
 }

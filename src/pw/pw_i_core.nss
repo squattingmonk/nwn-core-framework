@@ -23,12 +23,14 @@
 // Revisions:
 // -----------------------------------------------------------------------------
 
+
 #include "x3_inc_string"
 #include "pw_i_const"
 #include "pw_i_text"
 #include "pw_i_config"
 #include "pw_i_data"
 
+#include "core_i_database"
 #include "util_i_debug"
 
 //Returns the number of seconds elapsed since the server was started.
@@ -263,32 +265,6 @@ void h2_AddRestMenuItem(object oPC, string sMenuText, string sActionScript = H2_
 //It should be called from rest event finished script hook-ins.
 void h2_LimitPostRestHeal(object oPC, int postRestHealAmt);
 
-//general functions
-void h2_RunModuleEventScripts(string sEventType)
-{
-    int index = 1;
-    string scriptname = h2_GetModLocalString(sEventType + IntToString(index));
-    while (scriptname != "")
-    {
-        ExecuteScript(scriptname, OBJECT_SELF);
-        index++;
-        scriptname = h2_GetModLocalString(sEventType + IntToString(index));
-    }
-}
-
-void h2_RunAreaEventScripts(string sEventType)
-{
-    int index = 1;
-    string scriptname = GetLocalString(OBJECT_SELF, sEventType + IntToString(index));
-    while (scriptname != "")
-    {
-        ExecuteScript(scriptname, OBJECT_SELF);
-        index++;
-        scriptname = GetLocalString(OBJECT_SELF, sEventType + IntToString(index));
-    }
-    h2_RunModuleEventScripts(sEventType);
-}
-
 int h2_GetSecondsSinceServerStart()
 {
     // get start date and time
@@ -441,7 +417,9 @@ void h2_BootPlayer(object oPC, string sMessage = "", float delay = 0.0)
 void h2_BanPlayerByCDKey(object oPC)
 {
     string sMessage = GetName(oPC) + "_" + GetPCPlayerName(oPC) + " banned by: " + GetName(OBJECT_SELF) + "_" + GetPCPlayerName(OBJECT_SELF);
-    h2_SetExternalString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC), sMessage);
+    
+    SetDatabaseString(H2_BANNED_PREFIX + GetPCPublicCDKEY(oPC), sMessage);
+    //h2_SetExternalString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC), sMessage);
     SendMessageToAllDMs(sMessage);
     WriteTimestampedLogEntry(sMessage);
     h2_BootPlayer(oPC, H2_TEXT_YOU_ARE_BANNED);
@@ -450,7 +428,8 @@ void h2_BanPlayerByCDKey(object oPC)
 void h2_BanPlayerByIPAddress(object oPC)
 {
     string sMessage = GetName(oPC) + "_" + GetPCPlayerName(oPC) + " banned by: " + GetName(OBJECT_SELF) + "_" + GetPCPlayerName(OBJECT_SELF);
-    h2_SetExternalString(H2_BANNED_PREFIX + GetPCIPAddress(oPC), sMessage);
+    SetDatabaseString(H2_BANNED_PREFIX + GetPCIPAddress(oPC), sMessage);
+    //h2_SetExternalString(H2_BANNED_PREFIX + GetPCIPAddress(oPC), sMessage);
     SendMessageToAllDMs(sMessage);
     WriteTimestampedLogEntry(sMessage);
     h2_BootPlayer(oPC, H2_TEXT_YOU_ARE_BANNED);
@@ -846,11 +825,16 @@ string h2_ColorText(string sText, string sColor)
 //heartbeat functions
 void h2_SaveCurrentCalendar()
 {
-    h2_SetExternalInt(H2_CURRENT_HOUR, GetTimeHour());
-    h2_SetExternalInt(H2_CURRENT_DAY, GetCalendarDay());
-    h2_SetExternalInt(H2_CURRENT_MONTH, GetCalendarMonth());
-    h2_SetExternalInt(H2_CURRENT_YEAR, GetCalendarYear());
-    h2_SetExternalInt(H2_CURRENT_MIN, GetTimeMinute());
+    SetDatabaseInt(H2_CURRENT_HOUR, GetTimeHour());
+    SetDatabaseInt(H2_CURRENT_DAY, GetCalendarDay());
+    SetDatabaseInt(H2_CURRENT_MONTH, GetCalendarMonth());
+    SetDatabaseInt(H2_CURRENT_YEAR, GetCalendarYear());
+    SetDatabaseInt(H2_CURRENT_MIN, GetTimeMinute());
+    //h2_SetExternalInt(H2_CURRENT_HOUR, GetTimeHour());
+    //h2_SetExternalInt(H2_CURRENT_DAY, GetCalendarDay());
+    //h2_SetExternalInt(H2_CURRENT_MONTH, GetCalendarMonth());
+    //h2_SetExternalInt(H2_CURRENT_YEAR, GetCalendarYear());
+    //h2_SetExternalInt(H2_CURRENT_MIN, GetTimeMinute());
 }
 
 void h2_SavePCLocation(object oPC)
@@ -869,11 +853,16 @@ void h2_CreateCoreDataPoint()
 
 void h2_RestoreSavedCalendar()
 {
-    int iCurYear = h2_GetExternalInt(H2_CURRENT_YEAR);
-    int iCurMonth = h2_GetExternalInt(H2_CURRENT_MONTH);
-    int iCurDay = h2_GetExternalInt(H2_CURRENT_DAY);
-    int iCurHour = h2_GetExternalInt(H2_CURRENT_HOUR);
-    int iCurMin = h2_GetExternalInt(H2_CURRENT_MIN);
+    int iCurYear = GetDatabaseInt(H2_CURRENT_YEAR);
+    int iCurMonth = GetDatabaseInt(H2_CURRENT_MONTH);
+    int iCurDay = GetDatabaseInt(H2_CURRENT_DAY);
+    int iCurHour = GetDatabaseInt(H2_CURRENT_HOUR);
+    int iCurMin = GetDatabaseInt(H2_CURRENT_MIN);
+    //int iCurYear = h2_GetExternalInt(H2_CURRENT_YEAR);
+    //int iCurMonth = h2_GetExternalInt(H2_CURRENT_MONTH);
+    //int iCurDay = h2_GetExternalInt(H2_CURRENT_DAY);
+    //int iCurHour = h2_GetExternalInt(H2_CURRENT_HOUR);
+    //int iCurMin = h2_GetExternalInt(H2_CURRENT_MIN);
     if(iCurYear) {
         SetTime(iCurHour, iCurMin, 0, 0);
         SetCalendar(iCurYear, iCurMonth, iCurDay);
@@ -886,49 +875,6 @@ void h2_SaveServerStartTime() //Call this after the Calandar has been restored.
     h2_SetModLocalInt(H2_SERVER_START_DAY, GetCalendarDay());
     h2_SetModLocalInt(H2_SERVER_START_MONTH, GetCalendarMonth());
     h2_SetModLocalInt(H2_SERVER_START_YEAR, GetCalendarYear());
-}
-
-void h2_CopyEventVariablesToCoreDataPoint(string sEventType = "")
-{
-    if (sEventType != "")
-    {
-        object oMod = GetModule();
-        int index = 1;
-        string scriptname = GetLocalString(oMod, sEventType + IntToString(index));
-        while (scriptname != "")
-        {
-            h2_SetModLocalString(sEventType + IntToString(index), scriptname);
-            DeleteLocalString(oMod, sEventType + IntToString(index));
-            index++;
-            scriptname = GetLocalString(oMod, sEventType + IntToString(index));
-        }
-    }
-    else
-    {
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_ACQUIRE_ITEM);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_ACTIVATE_ITEM);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_CLIENT_ENTER);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_CLIENT_LEAVE);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_CUTSCENE_ABORT);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_HEARTBEAT);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_MODULE_LOAD);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_PLAYER_DEATH);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_PLAYER_DYING);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_PLAYER_EQUIP_ITEM);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_PLAYER_RESPAWN);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_PLAYER_LEVEL_UP);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_PLAYER_REST_STARTED);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_PLAYER_REST_CANCELLED);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_PLAYER_REST_FINISHED);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_PLAYER_UNEQUIP_ITEM);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_SPELLHOOK);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_UNACQUIRE_ITEM);
-        h2_CopyEventVariablesToCoreDataPoint(H2_EVENT_ON_USER_DEFINED);
-        h2_CopyEventVariablesToCoreDataPoint(H2_AREAEVENT_ON_ENTER);
-        h2_CopyEventVariablesToCoreDataPoint(H2_AREAEVENT_ON_EXIT);
-        h2_CopyEventVariablesToCoreDataPoint(H2_AREAEVENT_ON_HEARTBEAT);
-        h2_CopyEventVariablesToCoreDataPoint(H2_AREAEVENT_ON_USER_DEFINED);
-    }
 }
 
 void h2_AddPlayerDataMenuItem(string sMenuText, string sConvResRef)
@@ -950,8 +896,10 @@ void h2_StartCharExportTimer()
 {
     if (H2_EXPORT_CHARACTERS_INTERVAL > 0.0)
     {
-        int nTimerID = h2_CreateTimer(GetModule(), H2_EXPORT_CHAR_TIMER_SCRIPT, H2_EXPORT_CHARACTERS_INTERVAL);
-        h2_StartTimer(nTimerID);
+        nTimerID = CreateTimer(TIMERS, H2_EXPORT_CHAR_ON_TIMER_EXPIRE, H2_EXPORT_CHARACTERS_INTERVAL, 0, 0);
+        //int nTimerID = h2_CreateTimer(GetModule(), H2_EXPORT_CHAR_TIMER_SCRIPT, H2_EXPORT_CHARACTERS_INTERVAL);
+        StartTimer(nTimerID, FALSE);
+        //h2_StartTimer(nTimerID);
     }
 }
 
@@ -977,10 +925,12 @@ void h2_CreatePlayerDataItem(object oPC)
 
 string h2_GetNewUniquePCID()
 {
-    int nextID = h2_GetExternalInt(H2_NEXT_UNIQUE_PC_ID);
+    int nextID = GetDatabaseInt(H2_NEXT_UNIQUE_PC_ID);
+    //int nextID = h2_GetExternalInt(H2_NEXT_UNIQUE_PC_ID);
     string id = IntToHexString(nextID);
     nextID++;
-    h2_SetExternalInt(H2_NEXT_UNIQUE_PC_ID, nextID);
+    SetDatabaseInt(H2_NEXT_UNIQUE_PC_ID, nextID);
+    //h2_SetExternalInt(H2_NEXT_UNIQUE_PC_ID, nextID);
     return id;
 }
 
@@ -1009,11 +959,13 @@ void h2_SetPlayerID(object oPC)
     {
         uniquepcid = h2_GetNewUniquePCID();
         h2_SetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID, uniquepcid);
-        h2_SetExternalString(uniquepcid, fullpcname);
+        SetDatabaseString(uniquepcid, fullpcname);
+        //h2_SetExternalString(uniquepcid, fullpcname);
     }
     else
     {
-        string storedName = h2_GetExternalString(uniquepcid);
+        storedName = GetDatabaseString(uniquepcid);
+        //string storedName = h2_GetExternalString(uniquepcid);
         if (storedName != fullpcname)
         {
             string sMessage = fullpcname + H2_WARNING_INVALID_PLAYERID + storedName + H2_WARNING_ASSIGNED_NEW_PLAYERID;
@@ -1021,16 +973,19 @@ void h2_SetPlayerID(object oPC)
             SendMessageToAllDMs(sMessage);
             uniquepcid = h2_GetNewUniquePCID();
             h2_SetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID, uniquepcid);
-            h2_SetExternalString(uniquepcid, fullpcname);
+            SetDatabaseString(uniquepcid, fullpcname);
+            //h2_SetExternalString(uniquepcid, fullpcname);
         }
     }
 }
 
 void h2_RegisterPC(object oPC)
 {
-    int registeredCharCount = h2_GetExternalInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX);
+    registeredCharCount = GetDatabaseInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX);
+    //int registeredCharCount = h2_GetExternalInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX);
     h2_SetPlayerPersistentInt(oPC, H2_REGISTERED, TRUE);
-    h2_SetExternalInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX, registeredCharCount + 1);
+    SetDatabaseInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX, registeredCharCount + 1);
+    //h2_SetExternalInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX, registeredCharCount + 1);
     SendMessageToPC(oPC, H2_TEXT_CHAR_REGISTERED);
     SendMessageToPC(oPC, H2_TEXT_TOTAL_REGISTERED_CHARS + IntToString(registeredCharCount + 1));
     SendMessageToPC(oPC, H2_TEXT_MAX_REGISTERED_CHARS + IntToString(H2_REGISTERED_CHARACTERS_ALLOWED));

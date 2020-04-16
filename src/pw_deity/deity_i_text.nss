@@ -1,19 +1,28 @@
-/*
-Filename:           h2_diety_t
-System:             Diety
-Author:             Edward Beck (0100010)
-Date Created:       Sept. 3, 2006
-Summary:
-HCR2 h2_torch item script.
-This is a text script for the diety subsystem.
+// -----------------------------------------------------------------------------
+//    File: deity_i_const.nss
+//  System: Deity Resurrection (text/language)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Constants for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  You can translate text literals into various languages in this file, or use
+//  another file and include it instead of this file, as long as the constant
+//  string names are identical.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date:
-Revision Author:
-Revision Summary:
-
-*/
+// -----------------------------------------------------------------------------
+//                                   Constants
+// -----------------------------------------------------------------------------
 
 const string H2_TEXT_DEITY_REZZED = "Your God has heard your prayers and ressurected you!";
 const string H2_TEXT_DEITY_NO_REZ = "Your God has refused to hear your prayers.";

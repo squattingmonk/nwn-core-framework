@@ -18,11 +18,6 @@
 //   Summary:
 // -----------------------------------------------------------------------------
 
-
-//All below functions and constants may be overriden by the user, but do not alter the function signature
-//or the name of the constant.
-//Begin function and constant declarations.
-
 //Amount of time in seconds between when the player character bleeds while dying.
 //Note this is seconds in real time, not game time.
 //Recommend value: 6 seconds (1 heartbeat/round)

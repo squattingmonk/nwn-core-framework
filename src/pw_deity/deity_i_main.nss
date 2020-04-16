@@ -1,22 +1,45 @@
-/*
-Filename:           h2_deity_i
-System:             Deity (include script)
-Author:             Edward Beck (0100010)
-Date Created:       Sept. 3, 2006
-Summary:
-HCR2 Deity system function definition file.
-This script is consumed by the Deity hook-in scripts as an include file.
+// -----------------------------------------------------------------------------
+//    File: unid_i_main.nss
+//  System: UnID Item on Drop (core)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Core functions for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  None!  Leave me alone.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date:
-Revision Author:
-Revision Summary:
+#include "pw_i_core"
+#include "deity_i_config"
+#include "deity_i_const"
+#include "deity_i_text"
 
-*/
+// -----------------------------------------------------------------------------
+//                              Function Prototypes
+// -----------------------------------------------------------------------------
 
-#include "h2_deity_c"
-#include "h2_core_i"
+// ---< h2_DeityRez >---
+// If a PC is ressurected by his deity, this function resets all approriate
+//  PC variables and send the PC to the deity ressurection waypoint.
+void h2_DeityRez(object oPC);
+
+// ---< h2_CheckForDeityRez >---
+// This function will determine whether the PC will be resurrected by their
+//  diety.
+int h2_CheckForDeityRez(object oPC);
+
+// -----------------------------------------------------------------------------
+//                             Function Definitions
+// -----------------------------------------------------------------------------
 
 void h2_DeityRez(object oPC)
 {
@@ -60,17 +83,4 @@ int h2_CheckForDeityRez(object oPC)
         return TRUE;
     SendMessageToPC(oPC, H2_TEXT_DEITY_NO_REZ);
     return FALSE;
-}
-
-void deity_OnPlayerDeath()
-{
-    object oPC = GetLastPlayerDied();
-
-    //if some other death subsystem set the player state back to alive before this one, no need to continue
-    if (h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE) != H2_PLAYER_STATE_DEAD)
-        return;
-
-    if (h2_CheckForDeityRez(oPC))
-        h2_DeityRez(oPC);
-
 }

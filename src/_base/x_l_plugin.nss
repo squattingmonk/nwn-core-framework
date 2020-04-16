@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
-//    File: unid_l_plugin.nss
-//  System: UnID Item on Drop (library)
+//    File: x_l_plugin.nss
+//  System: x Item on Drop (library)
 //     URL: 
 // Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
 // -----------------------------------------------------------------------------

@@ -1,14 +1,50 @@
+// -----------------------------------------------------------------------------
+//    File: pw_i_events.nss
+//  System: PW Administration (events)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Event functions for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  None!  Leave me alone.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
 #include "pw_i_core"
 
+// -----------------------------------------------------------------------------
+//                              Function Prototypes
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+//                             Function Definitions
+// -----------------------------------------------------------------------------
+
+// ----- Module Events -----
+
 void pw_OnModuleLoad()
 {
-    h2_InitializeDatabase();
+    //h2_InitializeDatabase();
+    
+    
     h2_CreateCoreDataPoint();
+    // ^--- need to change this to use a predefined one unless one doesn't exist, so
+    //  we can use a visual datacenter.
+    
     h2_RestoreSavedCalendar();
-    h2_SaveServerStartTime();
-    h2_CopyEventVariablesToCoreDataPoint();
-    h2_StartCharExportTimer();
+    // ^--- loads from database, needs to change
+
+    h2_SaveServerStartTime();  <--- to core data point
+    //h2_CopyEventVariablesToCoreDataPoint();
+    h2_StartCharExportTimer();  <--- uses timers, fix!
     //SetLocalString(GetModule(), MODULE_VAR_OVERRIDE_SPELLSCRIPT, H2_SPELLHOOK_EVENT_SCRIPT);
 }
 
@@ -33,6 +69,7 @@ void pw_OnClientEnter()
         return;
     }
 
+//  !!!!! uses db
     string sBannedByCDKey = h2_GetExternalString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC));
     string sBannedByIPAddress = h2_GetExternalString(H2_BANNED_PREFIX + GetPCIPAddress(oPC));
     if (sBannedByCDKey != "" || sBannedByIPAddress != "")
@@ -111,30 +148,6 @@ void pw_OnClientLeave()
     }
 }
 
-void pw_OnAreaEnter()
-{
-    if (GetIsPC(GetEnteringObject()))
-    {
-        int playercount = GetLocalInt(OBJECT_SELF, H2_PLAYERS_IN_AREA);
-        SetLocalInt(OBJECT_SELF, H2_PLAYERS_IN_AREA, playercount + 1);
-    }
-}
-
-void pw_OnAreaExit()
-{
-    if (GetIsPC(GetExitingObject()))
-    {
-        int playercount = GetLocalInt(OBJECT_SELF, H2_PLAYERS_IN_AREA);
-        SetLocalInt(OBJECT_SELF, H2_PLAYERS_IN_AREA, playercount - 1);
-    }
-}
-
-void pw_OnPlaceableHeartbeat()
-{
-    if (!GetIsObjectValid(GetFirstItemInInventory(OBJECT_SELF)))
-        DestroyObject(OBJECT_SELF);
-}
-
 void pw_OnPlayerDying()
 {
     object oPC = GetLastPlayerDying();
@@ -163,7 +176,6 @@ void pw_OnPlayerReSpawn()
     h2_SetPlayerPersistentInt(oPC, H2_PLAYER_STATE, H2_PLAYER_STATE_ALIVE);
     h2_RunModuleEventScripts(H2_EVENT_ON_PLAYER_RESPAWN);
 }
-
 
 void pw_OnPlayerLevelUp()
 {
@@ -210,5 +222,50 @@ void pw_OnPlayerRest()
             break;
         case REST_EVENTTYPE_REST_FINISHED:
             break;
+    }
+}
+
+// ---- Area Events -----
+
+void pw_OnAreaEnter()
+{
+    if (GetIsPC(GetEnteringObject()))
+    {
+        int playercount = GetLocalInt(OBJECT_SELF, H2_PLAYERS_IN_AREA);
+        SetLocalInt(OBJECT_SELF, H2_PLAYERS_IN_AREA, playercount + 1);
+    }
+}
+
+void pw_OnAreaExit()
+{
+    if (GetIsPC(GetExitingObject()))
+    {
+        int playercount = GetLocalInt(OBJECT_SELF, H2_PLAYERS_IN_AREA);
+        SetLocalInt(OBJECT_SELF, H2_PLAYERS_IN_AREA, playercount - 1);
+    }
+}
+
+// ----- Placeable Events -----
+
+void pw_OnPlaceableHeartbeat()
+{
+    if (!GetIsObjectValid(GetFirstItemInInventory(OBJECT_SELF)))
+        DestroyObject(OBJECT_SELF);
+}
+
+// ----- Tag-based Scripting -----
+
+void pw_playerdataitem()
+{
+    int nEvent = GetUserDefinedItemEventNumber();
+
+    // * This code runs when the Unique Power property of the item is used
+    // * Note that this event fires PCs only
+    if (nEvent ==  X2_ITEM_EVENT_ACTIVATE)
+    {
+        object oPC = GetItemActivator();
+        SetLocalObject(oPC, H2_PLAYER_DATA_ITEM_TARGET_OBJECT, GetItemActivatedTarget());
+        SetLocalLocation(oPC, H2_PLAYER_DATA_ITEM_TARGET_LOCATION, GetItemActivatedTargetLocation());
+        AssignCommand(oPC, ActionStartConversation(oPC, H2_PLAYER_DATA_ITEM_CONV, TRUE, FALSE));
     }
 }

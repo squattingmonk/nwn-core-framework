@@ -29,13 +29,13 @@
 // ---< h2_UnID >---
 // Sets an unacquired item as unidentifed, assuming the item has not been
 //  acquired during the UnID delay (H2_UNID_DELAY) set in unid_i_config.
-h2_UnID(object oItem);
+void h2_UnID(object oItem);
 
 // ---< h2_UnIDOnDrop >---
 // Deploys a DelayCommand function to UnID the unacquired item if the items
 //  meets minimuma value requirements as set on H2_UNID_MINIMUM_VALUE in
 //  unid_i_config.
-h2_UnIDOnDrop(object oItem);
+void h2_UnIDOnDrop(object oItem);
 
 // -----------------------------------------------------------------------------
 //                             Function Definitions

@@ -22,8 +22,6 @@
 //                                   Constants
 // -----------------------------------------------------------------------------
 
-// ----- Variables -----
-
 //This is the name of the integer variable to set on an item if the item is not
 //  to be unidentified when it is unacquired.  If the variable is not set, or is
 //  set to 0, the item will be unidentified when the time requirement is met.

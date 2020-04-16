@@ -1,23 +1,28 @@
-/*
-Filename:           h2_pccorpse_t
-System:             pc corpse (text include script)
-Author:             Edward Beck (0100010)
-Date Created:       Aug. 30, 2006
-Summary:
-HCR2 String constants
-This file holds the various strings associated with the HCR2 pccorpse subsystem
+// -----------------------------------------------------------------------------
+//    File: corpse_i_const.nss
+//  System: PC Corpse (text/language)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Constants for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  You can translate text literals into various languages in this file, or use
+//  another file and include it instead of this file, as long as the constant
+//  string names are identical.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
-To make an alternate language version of this script, save this script with a different name,
-and translate all of the below text. Then in h2_pccorpse_c, replace [#include "h2_pccorpse_t"]
-with [#include "your new language text script name"].
-
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date:
-Revision Author:
-Revision Summary:
-
-*/
+// -----------------------------------------------------------------------------
+//                                   Constants
+// -----------------------------------------------------------------------------
 
 const string H2_TEXT_CLERIC_RES_GOLD_COST = "I can cast raise dead for 5000 coins, or resurrection for 10000.";
 const string H2_TEXT_CLERIC_NOT_ENOUGH_GOLD = "I'm sorry you do not have enough gold for me to aid you.";

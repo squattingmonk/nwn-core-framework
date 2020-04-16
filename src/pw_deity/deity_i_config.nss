@@ -1,39 +1,30 @@
-/*
-Filename:           h2_deity_c
-System:             Deity (user configuration include script)
-Author:             Edward Beck (0100010)
-Date Created:       Sept. 3, 2006
-Summary:
-HCR2 Diety variable user-configuration variable settings.
-This script is consumed by h2_deity_i as an include directive.
+// -----------------------------------------------------------------------------
+//    File: deity_i_config.nss
+//  System: Deity Resurrection (configuration)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Configuration File for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  Set the variables below as directed in the comments for each variable.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
-This contains user definable toggles and settings for the diety system.
+// -----------------------------------------------------------------------------
+//                                   Variables
+// -----------------------------------------------------------------------------
 
-This script is freely editable by the mod builder. It should not contain any h2 functions or constants
-that should not be overrideable by the user, please put those in h2_diety_i.
-
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date:
-Revision Author:
-Revision Summary:
-
-*/
-
-//You may swap the below #include "h2_torchlantrn_t"  text directives for an equivalant language specific
-//one. (All variable names must match however for it to compile properly.)
-#include "h2_deity_t"
-
-//All below functions and constants may be overriden by the user, but do not alter the function signature
-//or the name of the constant.
-
-//Begin user configurable constant declarations.
-
-//Base percentage chance that a player will be ressurected by their deity.
-//This value is added to the percentage per level defined in the next setting.
-//
-//Allowed values (0 - 100)
-//Default value = 5.0
+// This is the base percentage change a PC will be resurrected by their deity.
+//  Value range is 0.0-100.0
+// Default value: 5.0
 const float H2_BASE_DEITY_REZ_CHANCE = 5.0;
 
 //Percentage chance per level that a player will be ressurected by their deity
