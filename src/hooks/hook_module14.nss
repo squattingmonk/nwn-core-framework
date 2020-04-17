@@ -4,7 +4,7 @@
 //     URL: https://github.com/squattingmonk/nwn-core-framework
 // Authors: Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
 // -----------------------------------------------------------------------------
-// OnPlerRest event hook-in script. Place this script on the OnPlayerRest event
+// OnPlayerRest event hook-in script. Place this script on the OnPlayerRest event
 // under Module Properties.
 // -----------------------------------------------------------------------------
 

@@ -162,3 +162,12 @@ const string H2_COLOR_GREEN = "070";
 const string H2_COLOR_YELLOW = "770";
 const string H2_COLOR_RED = "700";
 const string H2_COLOR_WHITE = "777";
+
+// Custom Events    
+const string REST_EVENT_ON_TRIGGER_ENTER              = "Rest_OnTriggerEnter";
+const string REST_EVENT_ON_TRIGGER_EXIT               = "Rest_OnTriggerExit";
+
+const string AREA_EVENT_ON_ENTER                      = "OnAreaEnter";
+const string AREA_EVENT_ON_EXIT                       = "OnAreaExit";
+const string AREA_EVENT_ON_HEARTBEAT                  = "OnAreaHeartbeat";
+const string AREA_EVENT_ON_USER_DEFINED               = "OnAreaUserDefined";
