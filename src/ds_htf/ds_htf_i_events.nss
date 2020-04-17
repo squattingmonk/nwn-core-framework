@@ -18,7 +18,7 @@
 //   Summary:
 // -----------------------------------------------------------------------------
 
-// #include "x_i_main"
+#include "ds_htf_i_main"
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
@@ -66,10 +66,11 @@ void ds_htf_OnAreaEnter()
     if (ds_GetAreaTravelCost(nAreaType) > 0) ds_CreateAreaTravelTimer(oCreature);
         else if(sAreaPaid != "")
         {
-            int nTimerID = CreateTimer(oCreature, DS_HTF_AREA_ON_TIMER_EXPIRE, DS_HTF_AREATRAVECOST_DELAY, 1, 0);
+            int nTimerID = CreateTimer(oCreature, DS_HTF_AREA_ON_TIMER_EXPIRE, DS_HTF_AREATRAVELCOST_DELAY, 1, 0);
             //int nTimerID = h2_CreateTimer(oCreature, DS_HTF_KILLTIMER_SCRIPT, DS_HTF_AREATRAVELCOST_DELAY, FALSE, 1);
             SetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER, nTimerID);
-            h2_StartTimer(nTimerID);
+            StartTimer(nTimerID);
+            //h2_StartTimer(nTimerID);
         }
 }
 
@@ -86,7 +87,8 @@ void ds_htf_OnAreaExit()
     int nAreaType = GetLocalInt(GetArea(oCreature), DS_HTF_VARIABLE_AREATYPE);
     
     if (GetLocalInt(oCreature, DS_HTF_VARIABLE_AREATIMER) > 0) ds_DestroyAreaTravelTimer(oCreature);
-    if (GetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER) > 0) h2_KillTimer(GetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER));
+    if (GetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER) > 0) KillTimer(GetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER));
+    //if (GetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER) > 0) h2_KillTimer(GetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER));
 }
 
 // ----- Timer Events -----
@@ -120,7 +122,8 @@ void ds_htf_KillTravelCostTimer()
 {
     object oCreature = OBJECT_SELF;
     DeleteLocalString(oCreature, DS_HTF_LAST_TRAVEL_COST_PAID);
-    h2_KillTimer(GetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER));
+    KillTimer(GetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER));
+    //h2_KillTimer(GetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER));
     DeleteLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER);
 }
 

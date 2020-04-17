@@ -20,6 +20,9 @@
 
 #include "util_i_library"
 #include "core_i_framework"
+#include "ds_htf_i_const"
+#include "htf_i_config"
+#include "ds_htf_i_events"
 
 // -----------------------------------------------------------------------------
 //                               Library Dispatch
@@ -43,7 +46,7 @@ void OnLibraryLoad()
 
         // ----- Timer Events -----
         if (H2_USE_HUNGERTHIRST_SYSTEM || H2_USE_FATIGUE_SYSTEM)
-            RegisterEventsScripts(oPlugin, DS_HTF_AREA_ON_TIMER_EXPIRE, "ds_htf_area_OnTimerExpire");
+            RegisterEventScripts(oPlugin, DS_HTF_AREA_ON_TIMER_EXPIRE, "ds_htf_area_OnTimerExpire");
     }
 
     // ----- Local Events -----

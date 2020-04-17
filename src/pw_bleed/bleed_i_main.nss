@@ -57,9 +57,11 @@ void h2_BeginPlayerBleeding(object oPC)
 {
     int nCurrentHitPoints = GetCurrentHitPoints(oPC);
     SetLocalInt(oPC, H2_LAST_HIT_POINTS, nCurrentHitPoints);
-    int timerID = h2_CreateTimer(oPC, H2_BLEED_TIMER_SCRIPT, H2_BLEED_DELAY);
+    int timerID = CreateTimer(oPC, H2_BLEED_ON_TIMER_EXPIRE, H2_BLEED_DELAY);
+    //int timerID = h2_CreateTimer(oPC, H2_BLEED_TIMER_SCRIPT, H2_BLEED_DELAY);
     SetLocalInt(oPC, H2_BLEED_TIMER_ID, timerID);
-    h2_StartTimer(timerID);
+    StartTimer(timerID, TRUE);
+    //h2_StartTimer(timerID);
 }
 
 void h2_MakePlayerFullyRecovered(object oPC)

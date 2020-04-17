@@ -1,22 +1,22 @@
-/*
-Filename:           h2_locals_i
-System:             core (special get/set locals include script)
-Author:             Edward Beck (0100010)
-Date Created:       Mar. 25, 2006
-Summary:
-HCR2 core function definitions for special types of variable setting and getting.
-This file holds the commonly used  special variable set, get and delete functions,
-used throughout the core HCR2 system.
-
-this script is accesible from h2_timers_i, h2_core_i.
-
-Revision Info should only be included for post-release revisions.
------------------
-Revision Date:
-Revision Author:
-Revision Summary:
-
-*/
+// -----------------------------------------------------------------------------
+//    File: pw_i_data.nss
+//  System: PW Administration (player data)
+//     URL: 
+// Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
+// -----------------------------------------------------------------------------
+// Description:
+//  Configuration File for PW Subsystem.
+// -----------------------------------------------------------------------------
+// Builder Use:
+//  Set the constants below as directed in the comments for each constant.
+// -----------------------------------------------------------------------------
+// Acknowledgment:
+// -----------------------------------------------------------------------------
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
+// -----------------------------------------------------------------------------
 
 #include "util_i_debug"
 #include "pw_i_config"

@@ -58,7 +58,8 @@ void corpse_OnClientEnter()
 {
     object oPC = GetEnteringObject();
     string sUniquePCID = h2_GetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID);
-    location lRessLoc = h2_GetExternalLocation(sUniquePCID + H2_RESS_LOCATION);
+    location lRessLoc = GetDatabaseLocation(sUniquePCID + H2_RESS_LOCATION);
+    //location lRessLoc = h2_GetExternalLocation(sUniquePCID + H2_RESS_LOCATION);
     if (h2_GetIsLocationValid(lRessLoc))
         h2_PerformOffLineRessurectionLogin(oPC, lRessLoc);
 

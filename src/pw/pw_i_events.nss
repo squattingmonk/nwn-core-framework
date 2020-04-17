@@ -40,12 +40,12 @@ void pw_OnModuleLoad()
     //  we can use a visual datacenter.
     
     h2_RestoreSavedCalendar();
-    // ^--- loads from database, needs to change
 
     h2_SaveServerStartTime();  <--- to core data point
     //h2_CopyEventVariablesToCoreDataPoint();
     h2_StartCharExportTimer();  <--- uses timers, fix!
     //SetLocalString(GetModule(), MODULE_VAR_OVERRIDE_SPELLSCRIPT, H2_SPELLHOOK_EVENT_SCRIPT);
+    //Where does spellhook get set in core-framework
 }
 
 void pw_OnModuleHeartbeat()
@@ -69,9 +69,10 @@ void pw_OnClientEnter()
         return;
     }
 
-//  !!!!! uses db
-    string sBannedByCDKey = h2_GetExternalString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC));
-    string sBannedByIPAddress = h2_GetExternalString(H2_BANNED_PREFIX + GetPCIPAddress(oPC));
+    string sBannedByCDKey = GetDatabaseString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC);
+    //string sBannedByCDKey = h2_GetExternalString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC));
+    string sBannedIPAddress = GetDatabaseString(H2_BANNED_PREFIX + GetPCIPAddress(oPC));
+    //string sBannedByIPAddress = h2_GetExternalString(H2_BANNED_PREFIX + GetPCIPAddress(oPC));
     if (sBannedByCDKey != "" || sBannedByIPAddress != "")
     {
         SetLocalInt(oPC, H2_LOGIN_BOOT, TRUE);

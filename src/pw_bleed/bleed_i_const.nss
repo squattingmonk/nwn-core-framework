@@ -24,3 +24,4 @@ const string H2_BLEED_TIMER_ID = "H2_BLEEDTIMERID";
 const string H2_TIME_OF_LAST_BLEED_CHECK = "H2_TIME_OF_LAST_BLEED_CHECK";
 const string H2_LONG_TERM_CARE = "H2_LONG_TERM_CARE";
 const string H2_HEAL_WIDGET = "h2_healwidget";
+const string H2_BLEED_ON_TIMER_EXPIRE = "Bleed_OnTimerExpire";

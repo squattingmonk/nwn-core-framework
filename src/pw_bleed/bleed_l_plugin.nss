@@ -54,7 +54,7 @@ void OnLibraryLoad()
     RegisterLibraryScript(H2_HEAL_WIDGET,              5);
 
     // --- Timers ---
-    RegisterLibraryScript("bleed_OnTimerExpire",       6);
+    RegisterLibraryScript(H2_BLEED_ON_TIMER_EXPIRE,    6);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
@@ -65,7 +65,7 @@ void OnLibraryScript(string sScript, int nEntry)
         case 2:  bleed_OnPlayerDeath();       break;
         case 3:  bleed_OnPlayerDying();       break;
         case 4:  bleed_OnPlayerRestStarted(); break;
-        case 5:  bleed_HealWidget();          break;
+        case 5:  bleed_healwidget();          break;
         case 6:  bleed_OnTimerExpire();       break;
         default: CriticalError("Library function " + sScript + " not found");
     }

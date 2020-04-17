@@ -125,6 +125,7 @@ const string H2_RESS_BY_DM = "H2_RESS_BY_DM";
 const string H2_DO_NOT_CREATE_CORPSE_IN_AREA = "H2_DO_NOT_CREATE_CORPSE_IN_AREA";
 
 const string H2_EXPORT_CHAR_ON_TIMER_EXPIRE = "ExportPC_OnTimerExpire";
+const string H2_SAVE_LOCATION_ON_TIMER_EXPIRE = "SavePCLocation_OnTimerExpire";
 const string H2_EXPORT_CHAR_TIMER_SCRIPT = "h2_exportchars";
 const string H2_INITIAL_LOGIN = "H2_INITIALLOGIN";
 const string H2_SAVE_LOCATION = "h2_savelocation"; //name of script to execute to save pc location

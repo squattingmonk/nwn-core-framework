@@ -124,7 +124,8 @@ void bleed_OnTimerExpire()
         int nTimerID = GetLocalInt(oPC, H2_BLEED_TIMER_ID);
         DeleteLocalInt(oPC, H2_BLEED_TIMER_ID);
         DeleteLocalInt(oPC, H2_TIME_OF_LAST_BLEED_CHECK);
-        h2_KillTimer(nTimerID);
+        KillTimer(nTimerID);
+        //h2_KillTimer(nTimerID);
     }
     else
     {

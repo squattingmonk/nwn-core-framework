@@ -23,14 +23,14 @@
 // Revisions:
 // -----------------------------------------------------------------------------
 
-
 #include "x3_inc_string"
 #include "pw_i_const"
-#include "pw_i_text"
 #include "pw_i_config"
+#include "pw_i_text"
 #include "pw_i_data"
 
 #include "core_i_database"
+#include "core_i_framework"
 #include "util_i_debug"
 
 //Returns the number of seconds elapsed since the server was started.
@@ -418,7 +418,7 @@ void h2_BanPlayerByCDKey(object oPC)
 {
     string sMessage = GetName(oPC) + "_" + GetPCPlayerName(oPC) + " banned by: " + GetName(OBJECT_SELF) + "_" + GetPCPlayerName(OBJECT_SELF);
     
-    SetDatabaseString(H2_BANNED_PREFIX + GetPCPublicCDKEY(oPC), sMessage);
+    SetDatabaseString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC), sMessage);
     //h2_SetExternalString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC), sMessage);
     SendMessageToAllDMs(sMessage);
     WriteTimestampedLogEntry(sMessage);
@@ -896,7 +896,7 @@ void h2_StartCharExportTimer()
 {
     if (H2_EXPORT_CHARACTERS_INTERVAL > 0.0)
     {
-        nTimerID = CreateTimer(TIMERS, H2_EXPORT_CHAR_ON_TIMER_EXPIRE, H2_EXPORT_CHARACTERS_INTERVAL, 0, 0);
+        int nTimerID = CreateTimer(TIMERS, H2_EXPORT_CHAR_ON_TIMER_EXPIRE, H2_EXPORT_CHARACTERS_INTERVAL, 0, 0);
         //int nTimerID = h2_CreateTimer(GetModule(), H2_EXPORT_CHAR_TIMER_SCRIPT, H2_EXPORT_CHARACTERS_INTERVAL);
         StartTimer(nTimerID, FALSE);
         //h2_StartTimer(nTimerID);
@@ -964,7 +964,7 @@ void h2_SetPlayerID(object oPC)
     }
     else
     {
-        storedName = GetDatabaseString(uniquepcid);
+        string storedName = GetDatabaseString(uniquepcid);
         //string storedName = h2_GetExternalString(uniquepcid);
         if (storedName != fullpcname)
         {
@@ -981,7 +981,7 @@ void h2_SetPlayerID(object oPC)
 
 void h2_RegisterPC(object oPC)
 {
-    registeredCharCount = GetDatabaseInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX);
+    int registeredCharCount = GetDatabaseInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX);
     //int registeredCharCount = h2_GetExternalInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX);
     h2_SetPlayerPersistentInt(oPC, H2_REGISTERED, TRUE);
     SetDatabaseInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX, registeredCharCount + 1);
@@ -1053,8 +1053,10 @@ void h2_InitializePC(object oPC)
 
     if (H2_SAVE_PC_LOCATION)
     {
-        int timerID = h2_CreateTimer(oPC, H2_SAVE_LOCATION, H2_SAVE_PC_LOCATION_TIMER_INTERVAL);
-        h2_StartTimer(timerID);
+        int timerID = CreateTimer(oPC, H2_SAVE_LOCATION_ON_TIMER_EXPIRE, H2_SAVE_PC_LOCATION_TIMER_INTERVAL);
+        //int timerID = h2_CreateTimer(oPC, H2_SAVE_LOCATION, H2_SAVE_PC_LOCATION_TIMER_INTERVAL);
+        StartTimer(timerID, TRUE);
+        //h2_StartTimer(timerID);
     }
 }
 

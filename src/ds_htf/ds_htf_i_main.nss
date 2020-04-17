@@ -7,11 +7,12 @@
 * Created On:   2019-04-13
 *******************************************************************************/
 
+#include "ds_i_const"
+#include "htf_i_main"
 #include "ds_htf_i_const"
 #include "ds_htf_i_config"
 #include "ds_htf_i_text"
 
-#include "ds_i_const"
 #include "pw_i_core"
 
 //Creates a timer on the PC object using the modified HCR2 timer functions.  The timer duration
@@ -58,16 +59,19 @@ float _calculateTravelCostUnit(object oCreature)
 
 void ds_CreateAreaTravelTimer(object oPC)
 {
-    int timerID = h2_CreateTimer(oPC, DS_HTF_AREATIMER_SCRIPT, DS_HTF_AREATRAVELCOST_DELAY, FALSE, 1);
+    int timerID = CreateTimer(oPC, DS_HTF_AREA_ON_TIMER_EXPIRE, DS_HTF_AREATRAVELCOST_DELAY, 1, 0);
+    //int timerID = h2_CreateTimer(oPC, DS_HTF_AREATIMER_SCRIPT, DS_HTF_AREATRAVELCOST_DELAY, FALSE, 1);
     SetLocalInt(oPC, DS_HTF_VARIABLE_AREATIMER, timerID);
-    h2_StartTimer(timerID);
+    StartTimer(timerID, FALSE);
+    //h2_StartTimer(timerID);
 }
 
 void ds_DestroyAreaTravelTimer(object oPC)
 {
     int timerID = GetLocalInt(oPC, DS_HTF_VARIABLE_AREATIMER);
     DeleteLocalInt(oPC, DS_HTF_VARIABLE_AREATIMER);
-    h2_KillTimer(timerID);
+    KillTimer(timerID);
+    //h2_KillTimer(timerID);
 }
 
 float ds_ModifyFatigueDecrementUnit(object oCreature, float fDecrement)
@@ -145,7 +149,7 @@ void ds_DisplayAssociateHTFValues(object oCreature, float fThirst, float fHunger
     switch (DS_HTF_ASSOCIATE_DISPLAY_TYPE)
     {
         case ASSOCIATE_DISPLAY_NUMBERS:
-            if (H2_USE_HUNGERTHRIST_SYSTEM)
+            if (H2_USE_HUNGERTHIRST_SYSTEM)
             {
                 sThirst += IntToString(currThirst);
                 sHunger += IntToString(currHunger);
@@ -155,7 +159,7 @@ void ds_DisplayAssociateHTFValues(object oCreature, float fThirst, float fHunger
                 sFatigue += IntToString(currFatigue);
         case ASSOCIATE_DISPLAY_BARS:
         case ASSOCIATE_DISPLAY_LETTERS:
-            if (H2_USE_HUNGERTHRIST_SYSTEM)
+            if (H2_USE_HUNGERTHIRST_SYSTEM)
             {
                 sThirst = currThirst > DS_HTF_THRESHHOLD_CAUTION ? h2_ColorText(sThirst, H2_COLOR_GREEN) : 
                             currThirst <= DS_HTF_THRESHHOLD_DIRE ? h2_ColorText(sThirst, H2_COLOR_RED) :
@@ -171,9 +175,11 @@ void ds_DisplayAssociateHTFValues(object oCreature, float fThirst, float fHunger
                                 currFatigue <= DS_HTF_THRESHHOLD_DIRE ? h2_ColorText(sFatigue, H2_COLOR_RED) :
                                                                         h2_ColorText(sFatigue, H2_COLOR_YELLOW);
 
-            sHTFBar = sOpen + 
-                        H2_USE_HUNGERTHIRST_SYSTEM ? sHunger + " " + sDelimiter + " " + sThirst + " " : "" +
-                        H2_USE_FATIGUE_SYSTEM ? sFatigue : "" + sClose;
+            sHTFBar = sOpen; 
+            if (H2_USE_HUNGERTHIRST_SYSTEM)
+                sHTFBar += sHunger + " " + sDelimiter + " " + sThirst + " ";
+            if (H2_USE_FATIGUE_SYSTEM)
+                sHTFBar += sFatigue;
             break;
         default:
             break;
@@ -183,15 +189,16 @@ void ds_DisplayAssociateHTFValues(object oCreature, float fThirst, float fHunger
     {
         if (H2_USE_HUNGERTHIRST_SYSTEM)
         {
-            sThirst = sThirst + _createAssociateHTFBar(currThirst) + " ";
-            sHunger = sHunger + _createAssociateHTFBar(currHunger) + " ";
+            sThirst += _createAssociateHTFBar(currThirst) + " ";
+            sHunger += _createAssociateHTFBar(currHunger) + " ";
+            sHTFBar += sHunger + sThirst;
         }
 
         if (H2_USE_FATIGUE_SYSTEM)
-            sFatigue = sFatigue + _createAssociateHTFBar(currFatigue);
-
-        sHTFBar = H2_USE_HUNGERTHIRST_SYSTEM ? sHunger + sThirst : "" + H2_USE_FATIGUE_SYSTEM ? sFatigue : "";
-        //sHTFBar = sHunger + sThirst + sFatigue;
+        {
+            sFatigue += _createAssociateHTFBar(currFatigue);
+            sHTFBar += sFatigue;
+        }
     }
 
     if (sHTFBar != "") 

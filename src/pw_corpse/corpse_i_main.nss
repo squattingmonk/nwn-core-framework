@@ -247,7 +247,8 @@ void h2_PerformOffLineRessurectionLogin(object oPC, location ressLoc)
     h2_SetPlayerPersistentInt(oPC, H2_PLAYER_STATE, H2_PLAYER_STATE_ALIVE);
     SendMessageToPC(oPC, H2_TEXT_YOU_HAVE_BEEN_RESSURECTED);
     DelayCommand(H2_CLIENT_ENTER_JUMP_DELAY, AssignCommand(oPC, JumpToLocation(ressLoc)));
-    if (H2_APPLY_XP_LOSS_FOR_RESS && !h2_GetExternalInt(uniquePCID + H2_RESS_BY_DM))
+    if (H2_APPLY_XP_LOSS_FOR_RESS && !GetDatabaseInt(uniquePCID + H2_RESS_BY_DM))
+    //if (H2_APPLY_XP_LOSS_FOR_RESS && !h2_GetExternalInt(uniquePCID + H2_RESS_BY_DM))
     {
         int lostXP = h2_XPLostForRessurection(oPC);
         GiveXPToCreature(oPC, -lostXP);
