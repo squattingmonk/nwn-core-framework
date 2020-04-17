@@ -102,3 +102,13 @@ void torch_lantern()
         h2_UnEquipLightSource(FALSE);
     }
 }
+
+// ----- Timer Events -----
+
+void torch_OnTimerExpire()
+{
+    if (GetTag(OBJECT_SELF) == H2_LANTERN)
+        h2_BurnOutLightSource(OBJECT_SELF, TRUE);
+    else
+        h2_BurnOutLightSource(OBJECT_SELF, FALSE);
+}

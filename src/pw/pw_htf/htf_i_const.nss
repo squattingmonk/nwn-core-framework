@@ -67,3 +67,5 @@ const string H2_FATIGUE_EFFECTS = "H2_FATIGUE_EFFECTS";
 const string H2_FATIGUE_TIMER_SCRIPT = "ds_htf_ftimer";
 const string H2_FATIGUE_SAVE_COUNT = "H2_FATIGUE_SAVE_COUNT";
 const string H2_FATIGUE_ON_TIMER_EXPIRE = "F_OnTimerExpire";
+
+// ----- Timer Events -----

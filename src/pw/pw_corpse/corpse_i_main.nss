@@ -18,6 +18,7 @@
 //   Summary:
 // -----------------------------------------------------------------------------
 
+#include "x2_inc_switches"
 #include "corpse_i_const"
 #include "corpse_i_config"
 #include "corpse_i_text"
@@ -233,10 +234,13 @@ void h2_RaiseSpellCastOnCorpseToken(int spellID, object oToken = OBJECT_INVALID)
     else //player was offline
     {
         SendMessageToPC(oCaster, H2_TEXT_OFFLINE_RESS_CASTER_FEEDBACK);
-        h2_SetExternalLocation(uniquePCID + H2_RESS_LOCATION, castLoc);
+        SetDatabaseLocation(uniquePCID + H2_RESS_LOCATION, castLoc);
+        //h2_SetExternalLocation(uniquePCID + H2_RESS_LOCATION, castLoc);
         if (GetIsDM(oCaster))
-            h2_SetExternalInt(uniquePCID + H2_RESS_BY_DM, TRUE);
-        sMessage += H2_TEXT_OFFLINE_PLAYER + " " + h2_GetExternalString(uniquePCID);
+            SetDatabaseInt(uniquePCID + H2_RESS_BY_DM, TRUE);
+            //h2_SetExternalInt(uniquePCID + H2_RESS_BY_DM, TRUE);
+        sMessage += H2_TEXT_OFFLINE_PLAYER + " " + GetDatabaseString(uniquePCID);
+        //sMessage += H2_TEXT_OFFLINE_PLAYER + " " + h2_GetExternalString(uniquePCID);
     }
     SendMessageToAllDMs(sMessage);
     WriteTimestampedLogEntry(sMessage);
@@ -245,7 +249,8 @@ void h2_RaiseSpellCastOnCorpseToken(int spellID, object oToken = OBJECT_INVALID)
 void h2_PerformOffLineRessurectionLogin(object oPC, location ressLoc)
 {
     string uniquePCID = h2_GetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID);
-    h2_DeleteExternalVariable(uniquePCID + H2_RESS_LOCATION);
+    DeleteDatabaseVariable(uniquePCID + H2_RESS_LOCATION);
+    //h2_DeleteExternalVariable(uniquePCID + H2_RESS_LOCATION);
     h2_SetPlayerPersistentInt(oPC, H2_PLAYER_STATE, H2_PLAYER_STATE_ALIVE);
     SendMessageToPC(oPC, H2_TEXT_YOU_HAVE_BEEN_RESSURECTED);
     DelayCommand(H2_CLIENT_ENTER_JUMP_DELAY, AssignCommand(oPC, JumpToLocation(ressLoc)));
@@ -255,7 +260,8 @@ void h2_PerformOffLineRessurectionLogin(object oPC, location ressLoc)
         int lostXP = h2_XPLostForRessurection(oPC);
         GiveXPToCreature(oPC, -lostXP);
     }
-    h2_DeleteExternalVariable(uniquePCID + H2_RESS_BY_DM);
+    DeleteDatabaseVariable(uniquePCID + H2_RESS_BY_DM);
+    //h2_DeleteExternalVariable(uniquePCID + H2_RESS_BY_DM);
     string sMessage = GetName(oPC) + "_" + GetPCPlayerName(oPC) + H2_TEXT_OFFLINE_RESS_LOGIN;
     SendMessageToAllDMs(sMessage);
     WriteTimestampedLogEntry(sMessage);

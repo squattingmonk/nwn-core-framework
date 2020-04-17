@@ -57,7 +57,7 @@ void OnLibraryLoad()
             RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_REST_FINISHED, "fatigue_OnPlayerRestFinished",      4.0);
             
             // ----- Timer Events -----
-            RegisterEventScripts(oPlugin, H2_F_ON_TIMER_EXPIRE,                 "htf_f_OnTimerExpire",               4.0);
+            RegisterEventScripts(oPlugin, H2_FATIGUE_ON_TIMER_EXPIRE,           "htf_f_OnTimerExpire",               4.0);
         }
     }
 
@@ -84,15 +84,18 @@ void OnLibraryLoad()
     }
 
     // ----- Tag-based Scripting -----
-    RegisterLibraryScript(H2_HTF_CANTEEN,                           6);
-    RegisterLibraryScript(H2_HTF_FOODITEM,                          7);
+    RegisterLibraryScript(H2_HT_CANTEEN,                            6);
+    RegisterLibraryScript(H2_HT_FOODITEM,                           7);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
 {
     if (!H2_USE_HUNGERTHIRST_SYSTEM && !H2_USE_FATIGUE_SYSTEM) 
-        nEntry = 1000;
-    
+    {
+        CriticalError("Library function called on inactive system (HTF).");
+        return;
+    }
+
     switch (nEntry)
     {
         // ----- Module Events -----
@@ -110,8 +113,6 @@ void OnLibraryScript(string sScript, int nEntry)
         case 8:  htf_ht_OnTimerExpire();              break;
         case 9:  htf_f_OnTimerExpire();               break;
         case 10: htf_drunk_OnTimerExpire();           break;
-
-        case 1000:  CriticalError("Library function called on inactive system (HTF).");
         default: CriticalError("Library function " + sScript + " not found");
     }
 }

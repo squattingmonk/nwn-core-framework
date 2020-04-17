@@ -42,7 +42,7 @@ const string H2_CAMPFIRE_BURN = "H2_CAMPFIRE_BURN";
 const string H2_CAMPFIRE_START_TIME = "H2_CAMPFIRE_START_TIME";
 
 // Custom Events
-const string REST_EVENT_ON_TRIGGER_CLICK = "Rest_OnTriggerClick"
+const string REST_EVENT_ON_TRIGGER_CLICK = "Rest_OnTriggerClick";
 const string REST_EVENT_ON_TRIGGER_ENTER = "Rest_OnTriggerEnter";
 const string REST_EVENT_ON_TRIGGER_EXIT = "Rest_OnTriggerExit";
 const string REST_EVENT_ON_TRIGGER_HEARTBEAT = "Rest_OnTriggerHeartbeat";

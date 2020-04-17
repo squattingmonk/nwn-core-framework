@@ -20,7 +20,6 @@
 
 #include "util_i_library"
 #include "core_i_framework"
-#include "pw_i_items"
 #include "pw_i_events"
 
 // -----------------------------------------------------------------------------
@@ -71,7 +70,7 @@ void OnLibraryLoad()
     RegisterLibraryScript("pw_OnPlaceableHeartbeat", 12);
 
     // ----- Tag-based Scripting -----
-    RegisterLibraryScript(H2_PLAYER_DATA_ITEM),      13);
+    RegisterLibraryScript(H2_PLAYER_DATA_ITEM,       13);
 }
 
 void OnLibraryScript(string sScript, int nEntry)

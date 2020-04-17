@@ -18,6 +18,7 @@
 //   Summary:
 // -----------------------------------------------------------------------------
 
+#include "x2_inc_switches"
 #include "htf_i_main"
 
 // -----------------------------------------------------------------------------
@@ -51,7 +52,8 @@ void hungerthirst_OnPlayerDeath()
     DeleteLocalFloat(oPC, H2_HT_CURR_HUNGER);
     DeleteLocalFloat(oPC, H2_HT_CURR_ALCOHOL);
     int timerID = GetLocalInt(oPC, H2_HT_DRUNK_TIMERID);
-    h2_KillTimer(timerID);
+    KillTimer(timerID);
+    //h2_KillTimer(timerID);
     DeleteLocalInt(oPC, H2_HT_DRUNK_TIMERID);
     DeleteLocalInt(oPC, H2_HT_IS_DEHYDRATED);
     DeleteLocalInt(oPC, H2_HT_IS_STARVING);
@@ -64,7 +66,8 @@ void hungerthirst_OnPlayerRestFinished()
     object oPC = GetLastPCRested();
     DeleteLocalFloat(oPC, H2_HT_CURR_ALCOHOL);
     int timerID = GetLocalInt(oPC, H2_HT_DRUNK_TIMERID);
-    h2_KillTimer(timerID);
+    KillTimer(timerID);
+    //h2_KillTimer(timerID);
     DeleteLocalInt(oPC, H2_HT_DRUNK_TIMERID);
 }
 

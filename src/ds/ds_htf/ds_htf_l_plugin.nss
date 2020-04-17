@@ -64,15 +64,16 @@ void OnLibraryLoad()
 void OnLibraryScript(string sScript, int nEntry)
 {
     if (!H2_USE_HUNGERTHIRST_SYSTEM && !H2_USE_FATIGUE_SYSTEM)
-        nEntry = 1000;
+        {
+            CriticalError("Library function called on inactive system (DS_HTF)");
+            return;
+        }
 
     switch (nEntry)
     {
         case 1: ds_htf_OnAreaEnter();        break;
         case 2: ds_htf_OnAreaExit();         break;
         case 3: ds_htf_area_OnTimerExpire(); break;
-        
-        case 1000: Critical Error("Library function called on inactive system (DS_HTF)");
         default: CriticalError("Library function " + sScript + " not found");
     }
 }

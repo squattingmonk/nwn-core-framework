@@ -43,7 +43,7 @@ void OnLibraryLoad()
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_REST_STARTED, "bleed_OnPlayerRestStarted", 4.0);
 
         // ----- Timer Events -----
-        RegisterEventScripts(oPlugin, BLEED_EVENT_ON_TIMER_EXPIRE,         H2_BLEED_ON_TIMER_EXPIRE,    4.0);
+        RegisterEventScripts(oPlugin, BLEED_EVENT_ON_TIMER_EXPIRE,         BLEED_ON_TIMER_EXPIRE,       4.0);
     }
 
     // --- Module Events ---
@@ -55,7 +55,7 @@ void OnLibraryLoad()
     RegisterLibraryScript(H2_HEAL_WIDGET,              4);
 
     // --- Timer Events ---
-    RegisterLibraryScript(H2_BLEED_ON_TIMER_EXPIRE,    5);
+    RegisterLibraryScript(BLEED_ON_TIMER_EXPIRE,       5);
 }
 
 void OnLibraryScript(string sScript, int nEntry)

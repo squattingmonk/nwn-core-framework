@@ -58,8 +58,8 @@ void OnLibraryLoad()
     // ----- Custom Events -----
     if (H2_REQUIRE_REST_TRIGGER_OR_CAMPFIRE)
     {
-        RegisterLibraryScript("rest_OnTriggerEnter",        4);
-        RegisterLibraryScript("rest_OnTriggerExit",         5);
+        RegisterLibraryScript("rest_OnTriggerEnter",    4);
+        RegisterLibraryScript("rest_OnTriggerExit",     5);
     }   
 
     // ----- Tag Based Scripting -----
@@ -76,11 +76,8 @@ void OnLibraryScript(string sScript, int nEntry)
         case 3: rest_OnPlayerRestStarted();   break;
 
         // ----- Custom Events -----
-        if (H2_REQUIRE_REST_TRIGGER_OR_CAMPFIRE)
-        {        
-            case 4: rest_OnTriggerEnter();        break;
-            case 5: rest_OnTriggerExit();         break;
-        }
+        case 4: rest_OnTriggerEnter();        break;
+        case 5: rest_OnTriggerExit();         break;
 
         // ----- Tag-based Scripting
         case 6: rest_firewood();              break;

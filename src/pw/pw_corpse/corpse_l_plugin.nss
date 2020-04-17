@@ -48,7 +48,7 @@ void OnLibraryLoad()
     RegisterLibraryScript("corpse_OnPlayerDeath", 3);
     
     // --- Tag-based Scripting ---
-    RegisterLibraryScript(H2_PC_CORPSE_ITEM),     4);
+    RegisterLibraryScript(H2_PC_CORPSE_ITEM,     4);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
@@ -61,7 +61,7 @@ void OnLibraryScript(string sScript, int nEntry)
         case 3:  corpse_OnPlayerDeath(); break;
         
         // ----- Tag-based Scripting -----
-        case 4:  corpse_pccorposeitem(); break;
+        case 4:  corpse_pccorpseitem(); break;
         default: CriticalError("Library function " + sScript + " not found");
     }
 }

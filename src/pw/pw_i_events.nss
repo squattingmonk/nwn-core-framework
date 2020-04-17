@@ -18,6 +18,7 @@
 //   Summary:
 // -----------------------------------------------------------------------------
 
+#include "x2_inc_switches"
 #include "pw_i_core"
 
 // -----------------------------------------------------------------------------
@@ -41,9 +42,9 @@ void pw_OnModuleLoad()
     
     h2_RestoreSavedCalendar();
 
-    h2_SaveServerStartTime();  <--- to core data point
+    h2_SaveServerStartTime();  //<--- to core data point
     //h2_CopyEventVariablesToCoreDataPoint();
-    h2_StartCharExportTimer();  <--- uses timers, fix!
+    h2_StartCharExportTimer();  //<--- uses timers, fix!
     //SetLocalString(GetModule(), MODULE_VAR_OVERRIDE_SPELLSCRIPT, H2_SPELLHOOK_EVENT_SCRIPT);
     //Where does spellhook get set in core-framework
 }
@@ -69,9 +70,9 @@ void pw_OnClientEnter()
         return;
     }
 
-    string sBannedByCDKey = GetDatabaseString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC);
+    string sBannedByCDKey = GetDatabaseString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC));
     //string sBannedByCDKey = h2_GetExternalString(H2_BANNED_PREFIX + GetPCPublicCDKey(oPC));
-    string sBannedIPAddress = GetDatabaseString(H2_BANNED_PREFIX + GetPCIPAddress(oPC));
+    string sBannedByIPAddress = GetDatabaseString(H2_BANNED_PREFIX + GetPCIPAddress(oPC));
     //string sBannedByIPAddress = h2_GetExternalString(H2_BANNED_PREFIX + GetPCIPAddress(oPC));
     if (sBannedByCDKey != "" || sBannedByIPAddress != "")
     {
@@ -104,7 +105,8 @@ void pw_OnClientEnter()
 
     if (!bIsDM && H2_REGISTERED_CHARACTERS_ALLOWED > 0 && !h2_GetPlayerPersistentInt(oPC, H2_REGISTERED))
     {
-        int registeredCharCount = h2_GetExternalInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX);
+        int registeredCharCount = GetDatabaseInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX);
+        //int registeredCharCount = h2_GetExternalInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX);
         if (registeredCharCount >= H2_REGISTERED_CHARACTERS_ALLOWED)
         {
             SetLocalInt(oPC, H2_LOGIN_BOOT, TRUE);
@@ -121,11 +123,6 @@ void pw_OnClientEnter()
     SetLocalString(oPC, H2_PC_PLAYER_NAME ,GetPCPlayerName(oPC));
     SetLocalString(oPC, H2_PC_CD_KEY, GetPCPublicCDKey(oPC));
     h2_CreatePlayerDataItem(oPC);
-
-    if (!H2_READ_CHECK)
-        SendMessageToPC(oPC, H2_TEXT_SETTINGS_NOT_READ);
-    else
-        SendMessageToPC(oPC, H2_TEXT_ON_LOGIN_MESSAGE);
 
     string sCurrentGameTime = h2_GetCurrentGameTime(H2_SHOW_DAY_BEFORE_MONTH_IN_LOGIN);
     SendMessageToPC(oPC, sCurrentGameTime);
@@ -175,7 +172,7 @@ void pw_OnPlayerReSpawn()
 {
     object oPC = GetLastRespawnButtonPresser();
     h2_SetPlayerPersistentInt(oPC, H2_PLAYER_STATE, H2_PLAYER_STATE_ALIVE);
-    h2_RunModuleEventScripts(H2_EVENT_ON_PLAYER_RESPAWN);
+    //h2_RunModuleEventScripts(H2_EVENT_ON_PLAYER_RESPAWN);
 }
 
 void pw_OnPlayerLevelUp()

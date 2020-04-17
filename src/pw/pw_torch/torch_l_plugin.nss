@@ -36,15 +36,21 @@ void OnLibraryLoad()
             "This plugin controls the HCR2 Torch and Lantern Subsystem.");
 
         // ----- Module Events -----
-        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_SPELLHOOK, "torch_OnSpellHook", 4.0);
+        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_SPELLHOOK,   "torch_OnSpellHook",   4.0);
+
+        // ----- Timer Events -----
+        RegisterEventScripts(oPlugin, TORCH_EVENT_ON_TIMER_EXPIRE, "torch_OnTimerExpire", 4.0);
     }
 
     // ----- Module Events -----
-    RegisterLibraryScript("torch_OnSpellHook", 1);
+    RegisterLibraryScript("torch_OnSpellHook",   1);
 
     // ----- Tag-based Scripting -----
-    RegisterLibraryScript(H2_LANTERN,          2);
-    RegisterLibraryScript(H2_OILFLASK,         3);
+    RegisterLibraryScript(H2_LANTERN,            2);
+    RegisterLibraryScript(H2_OILFLASK,           3);
+
+    // ----- Timer Events -----
+    RegisterLibraryScript("torch_OnTimerExpire", 4);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
@@ -52,11 +58,14 @@ void OnLibraryScript(string sScript, int nEntry)
     switch (nEntry)
     {
         // ----- Module Events -----
-        case 1: torch_OnSpellHook(); break;
+        case 1: torch_OnSpellHook();   break;
 
         // ----- Tag-based Scripting -----
-        case 2: torch_lantern();     break;
-        case 3: torch_oilflask();    break;
+        case 2: torch_lantern();       break;
+        case 3: torch_oilflask();      break;
+
+        // ----- Timer Events -----
+        case 4: torch_OnTimerExpire(); break;
         default: CriticalError("Library function " + sScript + " not found");
     }
 }

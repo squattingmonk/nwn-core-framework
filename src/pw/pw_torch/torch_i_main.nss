@@ -98,8 +98,10 @@ void h2_EquippedLightSource(int isLantern)
     int burnLeft = burncount - elapsedBurn;
     float percentRemaining = (IntToFloat(burnLeft) / IntToFloat(burncount)) * 100.0;
     SendMessageToPC(oPC, H2_TEXT_REMAINING_BURN + FloatToString(percentRemaining, 5, 1) + "%%");
-    int timerID = h2_CreateTimer(oLight, H2_LIGHT_TIMER, IntToFloat(burnLeft));
-    h2_StartTimer(timerID);
+    int timerID = CreateTimer(oLight, TORCH_EVENT_ON_TIMER_EXPIRE, IntToFloat(burnLeft), 1, 0);
+    //int timerID = h2_CreateTimer(oLight, H2_LIGHT_TIMER, IntToFloat(burnLeft));
+    StartTimer(timerID, TRUE);
+    //h2_StartTimer(timerID);
     SetLocalInt(oLight, H2_LIGHT_TIMERID, timerID);
     SetLocalObject(oLight, H2_EQUIPPINGPC, oPC);
 }
@@ -115,13 +117,15 @@ void h2_UnEquipLightSource(int isLantern)
     elapsedBurn = elapsedBurn + (timeUnEquipped - timeEquipped);
     SetLocalInt(oLight, H2_ELAPSED_BURN, elapsedBurn);
     int timerID = GetLocalInt(oLight, H2_LIGHT_TIMERID);
-    h2_KillTimer(timerID);
+    KillTimer(timerID);
+    //h2_KillTiimer(timerID);
 }
 
 void h2_BurnOutLightSource(object oLight, int isLantern)
 {
     int timerID = GetLocalInt(oLight, H2_LIGHT_TIMERID);
-    h2_KillTimer(timerID);
+    KillTimer(timerID);
+    //h2_KillTimer(timerID);
     object oPC = GetLocalObject(oLight, H2_EQUIPPINGPC);
     if (isLantern)
     {
