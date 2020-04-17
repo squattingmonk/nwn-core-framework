@@ -69,6 +69,11 @@ int ActivatePlugin(object oPlugin, int bForce = FALSE);
 // the plugin even if its status is already OFF.
 int DeactivatePlugin(object oPlugin, int bForce = FALSE);
 
+// ---< GetIsPlugin >---
+// ---< core_i_framework >---
+// Returns whether oObject is a plugin object.
+int GetIsPlugin(object oObject);
+
 // ---< GetIfPluginExists >---
 // ---< core_i_framework >---
 // Returns whether the plugin with the ID sPluginID exists.
@@ -175,16 +180,16 @@ void ClearEventState(object oEvent = OBJECT_INVALID);
 
 // ---< RegisterEventScripts >---
 // ---< core_i_framework >---
-// Registers all scripts in sScripts to sEvent on oTarget, marking them as being
-// supplied by oSource and having a priority of fPriority. This can be used to
-// programatically add local event scripts.
+// Registers all scripts in sScripts to sEvent on oTarget with a priority of
+// fPriority. This can be used to programatically add event scripts to plugins
+// or other objects.
 // Parameters:
 // - oTarget: the object to attach the scripts to
 // - sEvent: the name of the event which will execute the scripts
 // - sScripts: a CSV list of library scripts
-// - fPriority: the priority at which the scripts should be executed
-// - oSource: the object from which the scripts were retrieved
-void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = EVENT_PRIORITY_DEFAULT, object oSource = OBJECT_INVALID);
+// - fPriority: the priority at which the scripts should be executed. If -1.0,
+//   will use the configured global or local priority, depending on the object.
+void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0);
 
 // ---< ExpandEventScripts >---
 // ---< core_i_framework >---
@@ -193,6 +198,7 @@ void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float 
 // An event hook string is a CSV list of scripts and priorities, each specified
 // in the format X[:Y], where X is a library script and Y is the priority at
 // which it should run (for example, MyOnModuleLoadScript:6.0).
+// This is an internal function that need not be used by the builder.
 // Parameters:
 // - oTarget: The object to check for event hook strings. May be:
 //   - a plugin object (for global hooks)
@@ -496,6 +502,16 @@ int DeactivatePlugin(object oPlugin, int bForce = FALSE)
     return FALSE;
 }
 
+int GetIsPlugin(object oObject)
+{
+    if (!GetIsObjectValid(oObject))
+        return FALSE;
+
+    string sPlugin = GetPluginID(oObject);
+    object oPlugin = GetPlugin(sPlugin);
+    return oObject == oPlugin;
+}
+
 int GetIfPluginExists(string sPluginID)
 {
     object oPlugin = GetPlugin(sPluginID);
@@ -590,28 +606,54 @@ void ClearEventState(object oEvent = OBJECT_INVALID)
     DeleteLocalInt(oEvent, EVENT_STATE);
 }
 
-void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = EVENT_PRIORITY_DEFAULT, object oSource = OBJECT_INVALID)
+string PriorityToString(float fPriority)
 {
-    // Sanity check: is the priority within bounds?
-    if ((fPriority >= 0.0 && fPriority <= 10.0) ||
-         fPriority == EVENT_PRIORITY_FIRST || fPriority == EVENT_PRIORITY_LAST ||
-         fPriority == EVENT_PRIORITY_ONLY  || fPriority == EVENT_PRIORITY_DEFAULT)
+    if (fPriority == EVENT_PRIORITY_FIRST)   return "first";
+    if (fPriority == EVENT_PRIORITY_LAST)    return "last";
+    if (fPriority == EVENT_PRIORITY_ONLY)    return "only";
+    if (fPriority == EVENT_PRIORITY_DEFAULT) return "default";
+
+    return FloatToString(fPriority, 0, 1);
+}
+
+float StringToPriority(string sPriority, float fDefaultPriority)
+{
+    if (sPriority == "first")   return EVENT_PRIORITY_FIRST;
+    if (sPriority == "last")    return EVENT_PRIORITY_LAST;
+    if (sPriority == "only")    return EVENT_PRIORITY_ONLY;
+    if (sPriority == "default") return EVENT_PRIORITY_DEFAULT;
+
+    float fPriority = StringToFloat(sPriority);
+    if (fPriority == 0.0 && sPriority != "0.0")
+        return fDefaultPriority;
+    else
+        return fPriority;
+}
+
+void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0)
+{
+    if (!GetIsObjectValid(oTarget))
+        return;
+
+    if (fPriority == -1.0)
+        fPriority = GetIsPlugin(oTarget) ? GLOBAL_EVENT_PRIORITY : LOCAL_EVENT_PRIORITY;
+
+    string sScript, sList, sName = GetName(oTarget);
+    string sPriority = PriorityToString(fPriority);
+    int i, nCount = CountList(sScripts);
+
+    for (i = 0; i < nCount; i++)
     {
-        if (!GetIsObjectValid(oSource))
-            oSource = oTarget;
-
-        string sScript;
-        int i, nCount = CountList(sScripts);
-
-        for (i = 0; i < nCount; i++)
-        {
-            sScript = GetListItem(sScripts, i);
-
-            AddListString(oTarget, sScript,   sEvent);
-            AddListFloat (oTarget, fPriority, sEvent);
-            AddListObject(oTarget, oSource,   sEvent);
-        }
+        sScript = GetListItem(sScripts, i);
+        sList = AddListItem(sList, sScript + ":" + sPriority);
+        Debug("Registering event script on " + sName + ":" +
+              "\n    Event: " + sEvent +
+              "\n    Script: " + sScript +
+              "\n    Priority: " + sPriority);
     }
+
+    AddLocalListItem(oTarget, sEvent, sList);
+    SetLocalInt(oTarget, sEvent, FALSE);
 }
 
 void ExpandEventScripts(object oTarget, string sEvent, string sScripts, float fDefaultPriority, object oSource = OBJECT_INVALID)
@@ -619,28 +661,44 @@ void ExpandEventScripts(object oTarget, string sEvent, string sScripts, float fD
     if (sScripts == "")
         return;
 
+    if (!GetIsObjectValid(oSource))
+        oSource = oTarget;
+
     float fPriority;
     string sScript, sPriority;
+    string sTarget = GetName(oTarget);
+    string sSource = GetName(oSource);
     int i, nScripts = CountList(sScripts);
 
     for (i = 0; i < nScripts; i++)
     {
         sScript = GetListItem(sScripts, i);
         sPriority = StringParse(sScript, ":", TRUE);
-        fPriority = fDefaultPriority;
 
         if (sPriority != sScript)
-        {
             sScript = StringRemoveParsed(sScript, sPriority, ":", TRUE);
 
-            if      (sPriority == "first")   fPriority = EVENT_PRIORITY_FIRST;
-            else if (sPriority == "last")    fPriority = EVENT_PRIORITY_LAST;
-            else if (sPriority == "only")    fPriority = EVENT_PRIORITY_ONLY;
-            else if (sPriority == "default") fPriority = EVENT_PRIORITY_DEFAULT;
-            else                             fPriority = StringToFloat(sPriority);
+        fPriority = StringToPriority(sPriority, fDefaultPriority);
+        if ((fPriority < 0.0 || fPriority > 10.0) &&
+            (fPriority != EVENT_PRIORITY_FIRST && fPriority != EVENT_PRIORITY_LAST &&
+             fPriority != EVENT_PRIORITY_ONLY  && fPriority != EVENT_PRIORITY_DEFAULT))
+        {
+            CriticalError("Could not expand script on " + sTarget + ":" +
+                          "\n    Event: " + sEvent +
+                          "\n    Script: " + sScript +
+                          "\n    Priority: " + sPriority +
+                          "\n    Source: " + sSource);
+            continue;
         }
 
-        RegisterEventScripts(oTarget, sEvent, sScript, fPriority, oSource);
+        Debug("Expanding event script on " + sTarget + ":" +
+              "\n    Event: " + sEvent +
+              "\n    Script: " + sScript +
+              "\n    Priority: " + PriorityToString(fPriority) +
+              "\n    Source: " + sSource);
+        AddListString(oTarget, sScript,   sEvent);
+        AddListFloat (oTarget, fPriority, sEvent);
+        AddListObject(oTarget, oSource,   sEvent);
     }
 }
 
