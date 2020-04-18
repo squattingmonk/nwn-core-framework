@@ -1053,10 +1053,13 @@ void h2_InitializePC(object oPC)
 
     if (H2_SAVE_PC_LOCATION)
     {
-        int timerID = CreateTimer(oPC, H2_SAVE_LOCATION_ON_TIMER_EXPIRE, H2_SAVE_PC_LOCATION_TIMER_INTERVAL);
-        //int timerID = h2_CreateTimer(oPC, H2_SAVE_LOCATION, H2_SAVE_PC_LOCATION_TIMER_INTERVAL);
-        StartTimer(timerID, TRUE);
-        //h2_StartTimer(timerID);
+        if (H2_SAVE_PC_LOCATION_TIMER_INTERVAL > 0.0)
+        {
+            int timerID = CreateTimer(oPC, H2_SAVE_LOCATION_ON_TIMER_EXPIRE, H2_SAVE_PC_LOCATION_TIMER_INTERVAL, 0, 0);
+            //int timerID = h2_CreateTimer(oPC, H2_SAVE_LOCATION, H2_SAVE_PC_LOCATION_TIMER_INTERVAL);
+            StartTimer(timerID, TRUE);
+            //h2_StartTimer(timerID);
+        }
     }
 }
 

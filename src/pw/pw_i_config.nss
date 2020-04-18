@@ -50,7 +50,7 @@ const float H2_CLIENT_ENTER_JUMP_DELAY = 1.0;
 
 //Time interval in real-world seconds between each location save for a PC.
 //Default value: 180.0
-const float H2_SAVE_PC_LOCATION_TIMER_INTERVAL = 180.0;
+const float H2_SAVE_PC_LOCATION_TIMER_INTERVAL = 0.0;
 
 //Set the below to true to remove all starting equipment from a newly created character.
 //Default value: FALSE
@@ -62,7 +62,7 @@ const int H2_STRIP_ON_FIRST_LOGIN = FALSE;
 //depending on your server performance.
 //Individual player exports also occur if this value is above 0 whenevr the player rests or levels up.
 //The default value is 0.0.
-const float H2_EXPORT_CHARACTERS_INTERVAL = 0.0;
+const float H2_EXPORT_CHARACTERS_INTERVAL = 30.0;
 
 //Set this to the number of registered characters (alive or dead) that you want the player
 //to be allowed to play. When a player chooses to retire a character it becomes unregistered

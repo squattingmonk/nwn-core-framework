@@ -33,7 +33,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("ds_htf"))
     {
         object oPlugin = GetPlugin("ds_htf", TRUE);
-        SetName(oPlugin, "[Plugin] HCR2 Plugin :: Hunger Thirst Fatigue (Dark Sun) Subystem");
+        SetName(oPlugin, "[Plugin] DS :: Hunger Thirst Fatigue");
         SetDescription(oPlugin,
             "This plugin controls the HCR2 Hunger Thirst Fatigue (Dark Sun) Subsystem.");
 

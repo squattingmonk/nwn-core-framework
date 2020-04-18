@@ -276,3 +276,12 @@ void pw_ExportPCs_OnTimerExpire()
 {
     ExportAllCharacters();
 }
+
+void pw_SavePCLocation_OnTimerExpire()
+{
+    if (GetIsObjectValid(OBJECT_SELF) && GetIsPC(OBJECT_SELF))
+    {
+        location loc = GetLocation(OBJECT_SELF);
+        h2_SavePCLocation(OBJECT_SELF);
+    }
+}

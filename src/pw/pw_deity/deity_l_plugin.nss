@@ -34,7 +34,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw_deity"))
     {
         object oPlugin = GetPlugin("pw_deity", TRUE);
-        SetName(oPlugin, "[Plugin] HCR2 Plugin :: Deity Resurrection Subystem");
+        SetName(oPlugin, "[Plugin] HCR2 :: Deity Resurrection");
         SetDescription(oPlugin,
             "This plugin controls the HCR2 Deity Resurrection Subsystem.");
 

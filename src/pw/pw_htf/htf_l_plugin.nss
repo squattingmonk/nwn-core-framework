@@ -35,7 +35,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw_htf"))
     {
         object oPlugin = GetPlugin("pw_htf", TRUE);
-        SetName(oPlugin, "[Plugin] HCR2 Plugin :: Hunger Thirst Fatigue Subsystem");
+        SetName(oPlugin, "[Plugin] HCR2 :: Hunger Thirst Fatigue");
         SetDescription(oPlugin,
             "This plugin controls the HCR2 Hunger Thirst Fatigue Subsystem.");
 

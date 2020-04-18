@@ -34,7 +34,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("ds"))
     {
         object oPlugin = GetPlugin("ds", TRUE);
-        SetName(oPlugin, "[Plugin] Dark Sun System :: Primary");
+        SetName(oPlugin, "[Plugin] DS :: Core");
         SetDescription(oPlugin,
             "This plugin controls the UnID Item on Drop Persistent World Subsystem.");
 

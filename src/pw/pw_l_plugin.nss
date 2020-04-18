@@ -32,7 +32,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw"))
     {
         object oPlugin = GetPlugin("pw", TRUE);
-        SetName(oPlugin, "[Plugin] Persistent World Plugin :: HCR2 Core System");
+        SetName(oPlugin, "[Plugin] HCR2 :: Core");
         SetDescription(oPlugin,
             "This plugin controls basic functions of the HCR2-base persistent world system.");
 
@@ -53,7 +53,8 @@ void OnLibraryLoad()
         RegisterEventScripts(oPlugin, PLACEABLE_EVENT_ON_HEARTBEAT,     "pw_OnPlaceableHeartbeat", 9.0);
 
         // ----- Timer Events -----
-        RegisterEventScripts(oPlugin, H2_SAVE_LOCATION_ON_TIMER_EXPIRE, "pw_ExportPCs_OnTimerExpire", 9.0);
+        RegisterEventScripts(oPlugin, H2_SAVE_LOCATION_ON_TIMER_EXPIRE, "pw_SavePCLocation_OnTimerExpire", 9.0);
+        RegisterEventScripts(oPlugin, H2_EXPORT_CHAR_ON_TIMER_EXPIRE,   "pw_ExportPCs_OnTimerExpire", 9.0);
     }
 
     // ----- Module Events -----
@@ -76,7 +77,8 @@ void OnLibraryLoad()
     RegisterLibraryScript(H2_PLAYER_DATA_ITEM,          13);
 
     // ----- Timer Events -----
-    RegisterLibraryScript("pw_ExportPCs_OnTimerExpire", 14);
+    RegisterLibraryScript("pw_SavePCLocation_OnTimerExpire", 14);
+    RegisterLibraryScript("pw_ExportPCs_OnTimerExpire", 15);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
@@ -104,7 +106,8 @@ void OnLibraryScript(string sScript, int nEntry)
         case 13:  pw_playerdataitem();         break;
 
         // ----- Timer Events -----
-        case 14: pw_ExportPCs_OnTimerExpire(); break;
+        case 14: pw_SavePCLocation_OnTimerExpire(); break;
+        case 15: pw_ExportPCs_OnTimerExpire(); break;
         default: CriticalError("Library function " + sScript + " not found");
     }
 }

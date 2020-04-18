@@ -1126,7 +1126,7 @@ void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
             if (IsDebugging(DEBUG_LEVEL_NOTICE))
             {
                 Debug("Calling next iteration of timer " + sTimerID + " in " +
-                      FloatToString(fTimerInterval) + " seconds. Runs remaining: " +
+                      FloatToString(fTimerInterval, 0, 1) + " seconds. Runs remaining: " +
                       (nIterations ? IntToString(nRemaining) : "Infinite"));
             }
 

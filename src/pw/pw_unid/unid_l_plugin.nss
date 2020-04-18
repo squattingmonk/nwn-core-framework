@@ -31,7 +31,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw_unid"))
     {
         object oPlugin = GetPlugin("pw_unid", TRUE);
-        SetName(oPlugin, "[Plugin] Persistent World Plugin :: UnID Item On Drop System");
+        SetName(oPlugin, "[Plugin] HCR2 :: UnID On Drop");
         SetDescription(oPlugin,
             "This plugin controls the HCR2 UnID Item on Drop Persistent World Subsystem.");
 

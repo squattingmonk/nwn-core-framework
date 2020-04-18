@@ -21,7 +21,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw_fugue"))
     {
         object oPlugin = GetPlugin("pw_fugue", TRUE);
-        SetName(oPlugin, "[Plugin] HCR2 Plugin :: Fugue Death and Resurrection Subsystem");
+        SetName(oPlugin, "[Plugin] HCR2 :: Fugue Death and Resurrection");
         SetDescription(oPlugin,
             "This plugin controls the HCR 2 Fugue Death and Resurrection subsytem.");
 

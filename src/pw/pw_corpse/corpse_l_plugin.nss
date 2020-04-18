@@ -32,7 +32,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw_corpse"))
     {
         object oPlugin = GetPlugin("pw_corpse", TRUE);
-        SetName(oPlugin, "[Plugin] HCR2 Plugin :: PC Corpse Subsystem");
+        SetName(oPlugin, "[Plugin] HCR2 :: PC Corpse");
         SetDescription(oPlugin,
             "This plugin controls the HCR2 PC Corpse Persistent World Subsystem.");
 

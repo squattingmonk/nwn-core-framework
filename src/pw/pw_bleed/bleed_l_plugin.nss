@@ -33,7 +33,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw_bleed"))
     {
         object oPlugin = GetPlugin("pw_bleed", TRUE);
-        SetName(oPlugin, "[Plugin] Persistent World Plugin :: Bleed System");
+        SetName(oPlugin, "[Plugin] HCR2 :: Bleed");
         SetDescription(oPlugin,
             "This plugin controls the Bleed Persistent World Subsystem.");
 

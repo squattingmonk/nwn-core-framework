@@ -31,7 +31,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw_torch"))
     {
         object oPlugin = GetPlugin("pw_torch", TRUE);
-        SetName(oPlugin, "[Plugin] HCR2 Plugin :: Torch and Lantern Subsystem");
+        SetName(oPlugin, "[Plugin] HCR2 :: Torch and Lantern");
         SetDescription(oPlugin,
             "This plugin controls the HCR2 Torch and Lantern Subsystem.");
 

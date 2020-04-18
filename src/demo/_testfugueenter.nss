@@ -1,6 +1,8 @@
 
 void main()
 {
+    SpawnScriptDebugger();
+    
     object oSelf = OBJECT_SELF;
     string sTag = GetTag(oSelf);
     object oPC = GetLastUsedBy();
@@ -13,5 +15,4 @@ void main()
         ClearAllActions();
         AssignCommand(oPC, JumpToObject(oTarget));
     }
-
 }

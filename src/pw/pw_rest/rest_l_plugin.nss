@@ -33,7 +33,7 @@ void OnLibraryLoad()
     if (!GetIfPluginExists("pw_rest"))
     {
         object oPlugin = GetPlugin("pw_rest", TRUE);
-        SetName(oPlugin, "[Plugin] HCR2 Plugin :: Rest Subsystem");
+        SetName(oPlugin, "[Plugin] HCR2 :: Rest");
         SetDescription(oPlugin,
             "This plugin controls the HCR2 Rest Persistent World Subsystem.");
 
