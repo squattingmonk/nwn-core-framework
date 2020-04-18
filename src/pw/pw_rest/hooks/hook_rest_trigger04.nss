@@ -8,7 +8,7 @@
 // under Trigger Properties.
 // -----------------------------------------------------------------------------
 
-#include "pw_i_const"
+#include "rest_i_const"
 #include "core_i_framework"
 
 void main()

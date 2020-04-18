@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
-//    File: ds_l_plugin.nss
-//  System: UnID Item on Drop Persistent World Subsystem (library)
+//    File: dmfi_l_plugin.nss
+//  System: DMFI (library)
 //     URL: 
 // Authors: Edward A. Burke (tinygiant) <af.hog.pilot@gmail.com>
 // -----------------------------------------------------------------------------
@@ -11,18 +11,14 @@
 //  None!  Leave me alone.
 // -----------------------------------------------------------------------------
 // Acknowledgment:
-// This script is a copy of Edward Becks HCR2 script h2_core_i modified and renamed
-//  to work under Michael Sinclair's (Squatting Monk) core-framework system and
-//  for use in the Dark Sun Persistent World.  Some of the HCR2 pw functions
-//  have been removed because they are duplicates from the core-framework or no
-//  no longer applicable to the pw system within the core-framework.
 // -----------------------------------------------------------------------------
-// Revisions:
+//  Revision:
+//      Date:
+//    Author:
+//   Summary:
 // -----------------------------------------------------------------------------
 
-#include "util_i_library"
-#include "core_i_framework"
-#include "ds_i_main"
+#include "dmfi_i_events"
 
 // -----------------------------------------------------------------------------
 //                               Library Dispatch
@@ -31,25 +27,30 @@
 void OnLibraryLoad()
 {
     //Need to check for pw plugin and this is a sub-plugin
-    if (!GetIfPluginExists("ds"))
+    if (!GetIfPluginExists("dmfi"))
     {
-        object oPlugin = GetPlugin("ds", TRUE);
-        SetName(oPlugin, "[Plugin] Dark Sun System :: Primary");
+        object oPlugin = GetPlugin("dmfi", TRUE);
+        SetName(oPlugin, "[Plugin] DM Friendly Initiative :: Wands & Widgets 1.09");
         SetDescription(oPlugin,
-            "This plugin controls the UnID Item on Drop Persistent World Subsystem.");
+            "This plugin implements the DMFI W&W 1.09 System.");
 
-        //Add module level events
-        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER, "ds_OnClientEnter", 4.0);
+        // ----- Module Events -----
+        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER, "dmfi_OnClientEnter");
+        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_CHAT,  "dmfi_OnPlayerChat");
     }
 
-    RegisterLibraryScript("ds_OnClientEnter", 1);
+    // ----- Module Events -----
+    RegisterLibraryScript("dmfi_OnClientEnter",         1);
+    RegisterLibraryScript("dmfi_OnPlayerChat",          2);
 }
 
 void OnLibraryScript(string sScript, int nEntry)
 {
     switch (nEntry)
     {
-        case 1:  ds_OnClientEnter(); break;
+        // ----- Module Events -----
+        case 1:   dmfi_OnClientEnter(); break;
+        case 2:   dmfi_OnPlayerChat();  break;
         default: CriticalError("Library function " + sScript + " not found");
     }
 }

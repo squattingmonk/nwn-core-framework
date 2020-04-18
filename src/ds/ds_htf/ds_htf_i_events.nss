@@ -69,7 +69,7 @@ void ds_htf_OnAreaEnter()
             int nTimerID = CreateTimer(oCreature, DS_HTF_AREA_ON_TIMER_EXPIRE, DS_HTF_AREATRAVELCOST_DELAY, 1, 0);
             //int nTimerID = h2_CreateTimer(oCreature, DS_HTF_KILLTIMER_SCRIPT, DS_HTF_AREATRAVELCOST_DELAY, FALSE, 1);
             SetLocalInt(oCreature, DS_HTF_VARIABLE_KILLTIMER, nTimerID);
-            StartTimer(nTimerID);
+            StartTimer(nTimerID, FALSE);
             //h2_StartTimer(nTimerID);
         }
 }

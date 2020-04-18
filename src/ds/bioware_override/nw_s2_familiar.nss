@@ -20,7 +20,7 @@ Revision Summary:
 
 */
 
-#include "ds_htf_c"
+#include "ds_htf_i_config"
 
 void _hookAssociate(object oPC)
 {

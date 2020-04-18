@@ -185,6 +185,8 @@ void pw_OnPlayerLevelUp()
 void pw_OnPlayerRest()
 {
     object oPC = GetLastPCRested();
+    SendMessageToPC(oPC, "REST MESSAGE FROM PLUGIN.");
+    
     if (H2_EXPORT_CHARACTERS_INTERVAL > 0.0)
         ExportSingleCharacter(oPC);
     int nRestEventType = GetLastRestEventType();
@@ -266,4 +268,11 @@ void pw_playerdataitem()
         SetLocalLocation(oPC, H2_PLAYER_DATA_ITEM_TARGET_LOCATION, GetItemActivatedTargetLocation());
         AssignCommand(oPC, ActionStartConversation(oPC, H2_PLAYER_DATA_ITEM_CONV, TRUE, FALSE));
     }
+}
+
+// ----- Timer Events -----
+
+void pw_ExportPCs_OnTimerExpire()
+{
+    ExportAllCharacters();
 }

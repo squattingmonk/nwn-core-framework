@@ -66,7 +66,7 @@ void h2_InitHungerThirstCheck(object oPC)
     if (!GetLocalInt(oPC, H2_HT_IS_STARVING) && GetLocalFloat(oPC, H2_HT_CURR_HUNGER) == 0.0)
         SetLocalFloat(oPC, H2_HT_CURR_HUNGER, 1.0);
 
-    int timerID = CreateTimer(oPC, H2_HT_ON_TIMER_EXPIRE, HoursToSeconds(1), 0, 0);
+    int timerID = CreateTimer(oPC, H2_HT_ON_TIMER_EXPIRE, 2.0, 0, 0);
     //int timerID = h2_CreateTimer(oPC, H2_HT_TIMER_SCRIPT, HoursToSeconds(1), FALSE);
     //int timerID = h2_CreateTimer(oPC, H2_HT_TIMER_SCRIPT, 10.0, FALSE);
     StartTimer(timerID, FALSE);
@@ -472,7 +472,7 @@ void h2_InitFatigueCheck(object oPC)
     if (!GetLocalInt(oPC, H2_IS_FATIGUED) && GetLocalFloat(oPC, H2_CURR_FATIGUE) == 0.0)
         SetLocalFloat(oPC, H2_CURR_FATIGUE, 1.0);
 
-    int timerID = CreateTimer(oPC, H2_FATIGUE_ON_TIMER_EXPIRE, HoursToSeconds(1), 0, 0);
+    int timerID = CreateTimer(oPC, H2_FATIGUE_ON_TIMER_EXPIRE, 1.0, 0, 0);
     //int timerID = h2_CreateTimer(oPC, H2_FATIGUE_TIMER_SCRIPT, HoursToSeconds(1), FALSE);
     //int timerID = h2_CreateTimer(oPC, H2_FATIGUE_TIMER_SCRIPT, 10.0, FALSE);
     StartTimer(timerID, FALSE);
