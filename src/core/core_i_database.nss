@@ -73,7 +73,7 @@ location StringToLocation(string sLocation);
 // ---< core_i_database >---
 // Returns a helper structure that contains the appropriate table, column, and
 // ID to use for a query based on whether oObject is a PC.
-struct QueryHelper GetQueryHelper(object oObject, string sTable = "pwtable", string sPCTable = "pcdata");
+struct QueryHelper GetQueryHelper(object oObject, string sTable = "pwdata", string sPCTable = "pcdata");
 
 // ---< NWNX_SQL_PrepareAndExecuteQuery >---
 // ---< core_i_database >---
@@ -236,7 +236,7 @@ location StringToLocation(string sLocation)
     return lReturnValue;
 }
 
-struct QueryHelper GetQueryHelper(object oObject, string sTable = "pwtable", string sPCTable = "pcdata")
+struct QueryHelper GetQueryHelper(object oObject, string sTable = "pwdata", string sPCTable = "pcdata")
 {
     if (!GetIsObjectValid(oObject))
         oObject = GetModule();
