@@ -35,6 +35,8 @@ object TIMERS  = GetDatapoint(CORE_TIMERS);
 //                              Framework Variables
 // -----------------------------------------------------------------------------
 
+const string CORE_INITIALIZED = "CORE_INITIALIZED";
+
 // ----- Plugin Management -----------------------------------------------------
 
 // Local variable names used for plugin objects.
@@ -95,7 +97,6 @@ const string LOGIN_DEATH       = "LOGIN_DEATH";
 // ----- Miscellaneous ---------------------------------------------------------
 
 const string CURRENT_HOUR = "CURRENT_HOUR";
-
 
 // -----------------------------------------------------------------------------
 //                                  Event Names

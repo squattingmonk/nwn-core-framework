@@ -15,6 +15,7 @@
 #include "util_i_varlists"
 #include "util_i_libraries"
 #include "core_i_constants"
+#include "core_i_database"
 #include "core_c_config"
 
 // -----------------------------------------------------------------------------
@@ -31,6 +32,12 @@ int    TIMER_CURRENT  = GetLocalInt   (TIMERS,  TIMER_LAST);
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
 // -----------------------------------------------------------------------------
+
+// ---< InitializeCoreFramework >---
+// ---< core_i_framework >---
+// Runs initial setup for the Core Framework. This is a system function that
+// need not be used by the builder.
+void InitializeCoreFramework();
 
 // ----- Plugin Management -----------------------------------------------------
 
@@ -374,6 +381,30 @@ void SetEventDebugLevel(int nLevel);
 //                             Function Definitions
 // -----------------------------------------------------------------------------
 
+void InitializeCoreFramework()
+{
+    object oModule = GetModule();
+    if (GetLocalInt(oModule, CORE_INITIALIZED))
+        return;
+
+    SetLocalInt(oModule, CORE_INITIALIZED, TRUE);
+
+    // Start debugging
+    SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
+    SetDebugLogging(DEBUG_LOGGING);
+
+    Debug("Initializing Core Framework...");
+
+    // Ensure the core database tables are set up
+    InitializeDatabase();
+
+    // Load all libraries and plugins in the core config file
+    LoadLibraries(INSTALLED_LIBRARIES);
+    LoadPlugins(INSTALLED_PLUGINS);
+
+    Debug("Successfully initialized Core Framework");
+}
+
 // ----- Plugin Management -----------------------------------------------------
 
 object GetPlugin(string sPlugin, int bCreate = FALSE)
@@ -381,11 +412,12 @@ object GetPlugin(string sPlugin, int bCreate = FALSE)
     if (sPlugin == "")
         return OBJECT_INVALID;
 
-    Debug("Defining plugin " + sPlugin);
     object oPlugin = GetDataItem(PLUGINS, sPlugin);
 
     if (!GetIsObjectValid(oPlugin) && bCreate)
     {
+        Debug("Defining plugin " + sPlugin);
+
         // It's possible the builder has pre-created a plugin object with all
         // the necessary variables on it. Try to create it. If it's not valid,
         // we can generate one from scratch.
@@ -802,6 +834,8 @@ object GetEvent(string sEvent)
         // Debug
         DumpEventScripts(oEvent, sEvent);
     }
+    else
+        Debug("Got existing event " + sEvent);
 
     return oEvent;
 }
@@ -910,6 +944,8 @@ object InitializeEvent(string sEvent, object oSelf, object oInit)
         // Sort the events by priority
         SortEventScripts(oSelf, sEvent);
 
+        DumpEventScripts(oSelf, sEvent);
+
         // Mark the event as initialized
         SetLocalInt(oSelf, sEvent, TRUE);
     }
@@ -938,6 +974,11 @@ void BuildPluginBlacklist(object oTarget)
 
 int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF, int bLocalOnly = FALSE)
 {
+    // Ensure the Framework has been loaded. Can't do this OnModuleLoad because
+    // some events fire before OnModuleLoad.
+    if (!GetLocalInt(GetModule(), CORE_INITIALIZED))
+        InitializeCoreFramework();
+
     // Which object initiated the event?
     if (!GetIsObjectValid(oInit))
         oInit = oSelf;

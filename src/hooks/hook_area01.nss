@@ -15,6 +15,8 @@ void main()
     // Don't run this event if the entering object is a PC that is about to be
     // booted.
     object oPC = GetEnteringObject();
+    WriteTimestampedLogEntry(GetName(OBJECT_SELF) + " entered by " + GetName(oPC));
+
     if (GetIsPC(oPC) && GetLocalInt(oPC, LOGIN_BOOT))
         return;
 
