@@ -62,7 +62,7 @@ const int H2_STRIP_ON_FIRST_LOGIN = FALSE;
 //depending on your server performance.
 //Individual player exports also occur if this value is above 0 whenevr the player rests or levels up.
 //The default value is 0.0.
-const float H2_EXPORT_CHARACTERS_INTERVAL = 30.0;
+const float H2_EXPORT_CHARACTERS_INTERVAL = 180.0;
 
 //Set this to the number of registered characters (alive or dead) that you want the player
 //to be allowed to play. When a player chooses to retire a character it becomes unregistered

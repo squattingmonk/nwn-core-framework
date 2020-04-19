@@ -20,6 +20,13 @@
           "type": "resref",
           "value": "h2_fugueplane"
         }
+      },
+      {
+        "__struct_id": 6,
+        "Area_Name": {
+          "type": "resref",
+          "value": "travelarea01"
+        }
       }
     ]
   },

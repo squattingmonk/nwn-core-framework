@@ -1,0 +1,435 @@
+NDB V1.0
+0000008 0000003 0000137 0000050 0000094
+n00 util_i_color
+n01 util_i_libraries
+n02 x3_inc_string
+n03 util_i_math
+n04 util_i_debug
+n05 util_i_csvlists
+n06 util_i_datapoint
+N07 _loadlibs
+s 03 vector
+sf f x
+sf f y
+sf f z
+s 03 RGB
+sf i r
+sf i g
+sf i b
+s 03 HSV
+sf f h
+sf f s
+sf f v
+f ffffffff ffffffff 000 s STRING_COLOR_BLACK
+f ffffffff ffffffff 000 s STRING_COLOR_BLUE
+f ffffffff ffffffff 000 s STRING_COLOR_GREEN
+f ffffffff ffffffff 000 s STRING_COLOR_PINK
+f ffffffff ffffffff 000 s STRING_COLOR_RED
+f ffffffff ffffffff 000 s STRING_COLOR_ROSE
+f ffffffff ffffffff 000 s STRING_COLOR_WHITE
+f ffffffff ffffffff 002 s StringToRGBString
+fp s
+fp s
+f ffffffff ffffffff 003 s StringParse
+fp s
+fp s
+fp i
+f ffffffff ffffffff 004 s StringRemoveParsed
+fp s
+fp s
+fp s
+fp i
+f ffffffff ffffffff 003 s StringReplace
+fp s
+fp s
+fp s
+f ffffffff ffffffff 003 i clamp
+fp i
+fp i
+fp i
+f ffffffff ffffffff 003 f fclamp
+fp f
+fp f
+fp f
+f ffffffff ffffffff 002 i max
+fp i
+fp i
+f ffffffff ffffffff 002 i min
+fp i
+fp i
+f ffffffff ffffffff 002 f fmax
+fp f
+fp f
+f ffffffff ffffffff 002 f fmin
+fp f
+fp f
+f ffffffff ffffffff 001 f floor
+fp f
+f ffffffff ffffffff 001 f frac
+fp f
+f ffffffff ffffffff 002 f fmod
+fp f
+fp f
+f ffffffff ffffffff 000 s COLOR_TOKEN
+f ffffffff ffffffff 000 i COLOR_BLACK
+f ffffffff ffffffff 000 i COLOR_GRAY
+f ffffffff ffffffff 000 i COLOR_GRAY_DARK
+f ffffffff ffffffff 000 i COLOR_GRAY_LIGHT
+f ffffffff ffffffff 000 i COLOR_WHITE
+f ffffffff ffffffff 000 i COLOR_RED
+f ffffffff ffffffff 000 i COLOR_RED_DARK
+f ffffffff ffffffff 000 i COLOR_RED_LIGHT
+f ffffffff ffffffff 000 i COLOR_ORANGE
+f ffffffff ffffffff 000 i COLOR_ORANGE_DARK
+f ffffffff ffffffff 000 i COLOR_ORANGE_LIGHT
+f ffffffff ffffffff 000 i COLOR_BROWN
+f ffffffff ffffffff 000 i COLOR_BROWN_LIGHT
+f ffffffff ffffffff 000 i COLOR_GOLD
+f ffffffff ffffffff 000 i COLOR_YELLOW
+f ffffffff ffffffff 000 i COLOR_YELLOW_DARK
+f ffffffff ffffffff 000 i COLOR_YELLOW_LIGHT
+f ffffffff ffffffff 000 i COLOR_GREEN
+f ffffffff ffffffff 000 i COLOR_GREEN_DARK
+f ffffffff ffffffff 000 i COLOR_GREEN_LIGHT
+f ffffffff ffffffff 000 i COLOR_TURQUOISE
+f ffffffff ffffffff 000 i COLOR_CYAN
+f ffffffff ffffffff 000 i COLOR_BLUE
+f ffffffff ffffffff 000 i COLOR_BLUE_DARK
+f ffffffff ffffffff 000 i COLOR_BLUE_LIGHT
+f ffffffff ffffffff 000 i COLOR_PURPLE
+f ffffffff ffffffff 000 i COLOR_VIOLET
+f ffffffff ffffffff 000 i COLOR_VIOLET_DARK
+f ffffffff ffffffff 000 i COLOR_VIOLET_LIGHT
+f ffffffff ffffffff 000 i COLOR_PINK
+f ffffffff ffffffff 000 i COLOR_DEFAULT
+f ffffffff ffffffff 000 i COLOR_ATTENTION
+f ffffffff ffffffff 000 i COLOR_BUG
+f ffffffff ffffffff 000 i COLOR_FAIL
+f ffffffff ffffffff 000 i COLOR_SUCCESS
+f ffffffff ffffffff 000 i COLOR_DEBUG
+f ffffffff ffffffff 000 i COLOR_INFO
+f ffffffff ffffffff 000 i COLOR_MAGIC
+f ffffffff ffffffff 000 i COLOR_DIVINE
+f ffffffff ffffffff 003 t0001 GetRGB
+fp i
+fp i
+fp i
+f ffffffff ffffffff 003 t0002 GetHSV
+fp f
+fp f
+fp f
+f ffffffff ffffffff 001 t0001 HexToRGB
+fp i
+f ffffffff ffffffff 001 i RGBToHex
+fp t0001
+f ffffffff ffffffff 001 t0002 RGBToHSV
+fp t0001
+f ffffffff ffffffff 001 t0001 HSVToRGB
+fp t0002
+f ffffffff ffffffff 001 t0002 HexToHSV
+fp i
+f ffffffff ffffffff 001 i HSVToHex
+fp t0002
+f 00000ad5 00000e4f 003 s GetColorCode
+fp i
+fp i
+fp i
+f 000009b5 00000ad5 001 s HexToColor
+fp i
+f ffffffff ffffffff 001 i ColorToHex
+fp s
+f 00000e87 00000ef5 002 s ColorString
+fp s
+fp s
+f ffffffff ffffffff 002 s HexColorString
+fp s
+fp i
+f ffffffff ffffffff 002 s RGBColorString
+fp s
+fp t0001
+f ffffffff ffffffff 002 s HSVColorString
+fp s
+fp t0002
+f ffffffff ffffffff 001 s UnColorString
+fp s
+f ffffffff ffffffff 000 s DEBUG_COLOR
+f ffffffff ffffffff 000 s DEBUG_LEVEL
+f ffffffff ffffffff 000 s DEBUG_LOG
+f ffffffff ffffffff 000 i DEBUG_LEVEL_CRITICAL
+f ffffffff ffffffff 000 i DEBUG_LEVEL_ERROR
+f ffffffff ffffffff 000 i DEBUG_LEVEL_WARNING
+f ffffffff ffffffff 000 i DEBUG_LEVEL_NOTICE
+f ffffffff ffffffff 000 i DEBUG_LOG_NONE
+f ffffffff ffffffff 000 i DEBUG_LOG_FILE
+f ffffffff ffffffff 000 i DEBUG_LOG_DM
+f ffffffff ffffffff 000 i DEBUG_LOG_PC
+f ffffffff ffffffff 000 i DEBUG_LOG_ALL
+f 00000709 00000839 001 i GetDebugLevel
+fp o
+f ffffffff ffffffff 002 v SetDebugLevel
+fp i
+fp o
+f 00000839 000009b5 001 s GetDebugColor
+fp i
+f 00000e4f 00000e87 002 v SetDebugColor
+fp i
+fp s
+f ffffffff ffffffff 000 i GetDebugLogging
+f ffffffff ffffffff 001 v SetDebugLogging
+fp i
+f 000006cd 00000709 002 i IsDebugging
+fp i
+fp o
+f 000004cb 000006cd 003 v Debug
+fp s
+fp i
+fp o
+f ffffffff ffffffff 002 v Warning
+fp s
+fp o
+f ffffffff ffffffff 002 v Error
+fp s
+fp o
+f ffffffff ffffffff 002 v CriticalError
+fp s
+fp o
+f ffffffff ffffffff 002 i GetSubStringCount
+fp s
+fp s
+f ffffffff ffffffff 001 s TrimString
+fp s
+f ffffffff ffffffff 001 i CountList
+fp s
+f ffffffff ffffffff 002 s GetListItem
+fp s
+fp i
+f ffffffff ffffffff 002 i FindListItem
+fp s
+fp s
+f ffffffff ffffffff 002 i HasListItem
+fp s
+fp s
+f ffffffff ffffffff 002 s DeleteListItem
+fp s
+fp i
+f ffffffff ffffffff 002 s RemoveListItem
+fp s
+fp s
+f ffffffff ffffffff 003 s AddListItem
+fp s
+fp s
+fp i
+f ffffffff ffffffff 003 s MergeLists
+fp s
+fp s
+fp i
+f ffffffff ffffffff 004 s AddLocalListItem
+fp o
+fp s
+fp s
+fp i
+f ffffffff ffffffff 003 s DeleteLocalListItem
+fp o
+fp s
+fp i
+f ffffffff ffffffff 003 s RemoveLocalListItem
+fp o
+fp s
+fp s
+f ffffffff ffffffff 004 s MergeLocalList
+fp o
+fp s
+fp s
+fp i
+f ffffffff ffffffff 000 s DATA_PREFIX
+f ffffffff ffffffff 000 s DATA_POINT
+f ffffffff ffffffff 000 s DATA_ITEM
+f 00000146 00000286 002 o CreateDatapoint
+fp s
+fp o
+f 00000058 00000146 003 o GetDatapoint
+fp s
+fp o
+fp i
+f 00000286 000002eb 003 v SetDatapoint
+fp s
+fp o
+fp o
+f ffffffff ffffffff 002 o CreateDataItem
+fp o
+fp s
+f ffffffff ffffffff 002 o GetDataItem
+fp o
+fp s
+f ffffffff ffffffff 003 v SetDataItem
+fp o
+fp s
+fp o
+f ffffffff ffffffff 000 s LIB_ENTRY
+f ffffffff ffffffff 000 s LIB_LOADED
+f ffffffff ffffffff 000 s LIB_RETURN
+f ffffffff ffffffff 000 s LIB_SCRIPT
+f ffffffff ffffffff 000 s LIB_LAST_ENTRY
+f ffffffff ffffffff 000 s LIB_LAST_LIBRARY
+f ffffffff ffffffff 000 s LIB_LAST_SCRIPT
+f ffffffff ffffffff 001 i GetIsLibraryLoaded
+fp s
+f 0000030b 000004cb 002 v LoadLibrary
+fp s
+fp i
+f ffffffff ffffffff 002 v LoadLibraries
+fp s
+fp i
+f ffffffff ffffffff 002 i RunLibraryScript
+fp s
+fp o
+f ffffffff ffffffff 002 v RunLibraryScripts
+fp s
+fp o
+f 000002eb 0000030b 000 v main
+f 0000000d 00000015 000 v #loader
+f 00000015 00000058 000 v #globals
+v 00000017 ffffffff 00000000 o LIBRARIES
+v 00000058 00000144 00000000 o #retval
+v 00000058 0000013e 00000004 i bCreate
+v 00000058 0000013e 00000008 o oOwner
+v 00000058 0000013e 0000000c s sSystem
+v 00000089 00000138 00000010 o oData
+v 00000146 00000284 00000000 o #retval
+v 00000146 0000027e 00000004 o oOwner
+v 00000146 0000027e 00000008 s sSystem
+v 00000177 00000278 0000000c e2 lLoc
+v 000001c2 00000278 00000010 o oData
+v 00000286 000002e3 00000000 o oOwner
+v 00000286 000002e3 00000004 o oTarget
+v 00000286 000002e3 00000008 s sSystem
+v 0000030b 000004c3 00000000 i bForce
+v 0000030b 000004c3 00000004 s sLibrary
+v 000004cb 000006c5 00000000 o oTarget
+v 000004cb 000006c5 00000004 i nLevel
+v 000004cb 000006c5 00000008 s sMessage
+v 000004eb 000006b9 0000000c s sColor
+v 0000050b 000006b9 00000010 s sPrefix
+v 00000513 000005c6 00000014 i #switcheval
+v 000005ee 000006b9 00000014 i nLogging
+v 000006cd 00000707 00000000 i #retval
+v 000006cd 00000701 00000004 o oTarget
+v 000006cd 00000701 00000008 i nLevel
+v 00000709 00000837 00000000 i #retval
+v 00000709 00000831 00000004 o oTarget
+v 0000070b 0000082b 00000008 o oModule
+v 00000720 0000082b 0000000c i nModule
+v 000007b9 0000082b 00000010 i nTarget
+v 00000839 000009b3 00000000 s #retval
+v 00000839 000009ad 00000004 i nLevel
+v 0000083b 000009a7 00000008 s sColor
+v 00000887 00000979 0000000c i nColor
+v 0000088f 0000093f 00000010 i #switcheval
+v 000009b5 00000ad3 00000000 s #retval
+v 000009b5 00000acd 00000004 i nColor
+v 00000a1f 00000ac7 00000008 i nRed
+v 00000a47 00000ac7 0000000c i nGreen
+v 00000a6f 00000ac7 00000010 i nBlue
+v 00000ad5 00000e4d 00000000 s #retval
+v 00000ad5 00000e47 00000004 i nBlue
+v 00000ad5 00000e47 00000008 i nGreen
+v 00000ad5 00000e47 0000000c i nRed
+v 00000e4f 00000e7f 00000000 s sColor
+v 00000e4f 00000e7f 00000004 i nLevel
+v 00000e87 00000ef3 00000000 s #retval
+v 00000e87 00000eed 00000004 s sColor
+v 00000e87 00000eed 00000008 s sString
+l00 0000080 00000015 00000015
+l00 0000081 00000015 00000015
+l00 0000082 00000015 00000015
+l00 0000087 00000015 00000015
+l00 0000088 00000015 00000015
+l00 0000089 00000015 00000015
+l01 0000039 00000015 00000046
+l06 0000086 00000058 00000068
+l06 0000087 0000006e 00000081
+l06 0000089 00000087 000000bd
+l06 0000091 000000bd 000000e4
+l06 0000092 000000ea 00000110
+l06 0000094 00000116 00000138
+l06 0000095 0000013e 00000146
+l06 0000070 00000146 00000156
+l06 0000071 0000015c 0000016f
+l06 0000073 00000175 00000192
+l06 0000074 00000192 000001a1
+l06 0000075 000001a7 000001ba
+l06 0000077 000001c0 000001ff
+l06 0000078 000001ff 00000225
+l06 0000079 00000225 00000238
+l06 0000080 00000238 00000256
+l06 0000081 00000256 00000278
+l06 0000082 0000027e 00000286
+l06 0000099 00000286 00000296
+l06 0000100 0000029c 000002af
+l06 0000102 000002b5 000002e3
+l06 0000103 000002e3 000002eb
+l07 0000005 000002eb 00000309
+l07 0000006 00000309 0000030b
+l01 0000096 0000030b 00000370
+l01 0000098 00000370 000003bd
+l01 0000100 000003c3 000003ec
+l01 0000101 000003ec 00000418
+l01 0000102 00000418 0000043d
+l01 0000103 0000043d 00000468
+l01 0000104 00000468 0000047d
+l01 0000106 00000483 00000485
+l01 0000107 00000485 000004c3
+l01 0000108 000004c3 000004cb
+l04 0000191 000004cb 000004e3
+l04 0000193 000004e9 00000509
+l04 0000194 00000509 0000050b
+l04 0000196 0000050b 0000055b
+l04 0000198 0000055b 0000055b
+l04 0000199 00000584 00000584
+l04 0000200 000005a4 000005a4
+l04 0000203 000005cc 000005ec
+l04 0000205 000005ec 00000613
+l04 0000207 00000613 00000623
+l04 0000208 00000629 00000636
+l04 0000210 0000063c 00000662
+l04 0000212 00000662 00000672
+l04 0000213 00000678 00000685
+l04 0000215 0000068b 0000069b
+l04 0000216 000006a1 000006b3
+l04 0000218 000006c5 000006cd
+l04 0000186 000006cd 00000701
+l04 0000187 00000701 00000709
+l04 0000132 00000709 0000071e
+l04 0000133 0000071e 0000074a
+l04 0000135 0000074a 00000789
+l04 0000136 0000078f 000007b1
+l04 0000138 000007b7 000007e3
+l04 0000139 000007e3 0000082b
+l04 0000140 00000831 00000839
+l04 0000149 00000839 00000871
+l04 0000151 00000871 0000087f
+l04 0000153 00000885 00000887
+l04 0000154 00000887 000008d7
+l04 0000156 000008d7 000008d7
+l04 0000157 000008f1 000008f1
+l04 0000158 0000090b 0000090b
+l04 0000159 00000925 00000925
+l04 0000162 00000945 00000963
+l04 0000163 00000963 00000979
+l04 0000166 00000985 000009a7
+l04 0000167 000009ad 000009b5
+l00 0000332 000009b5 000009f3
+l00 0000333 000009f9 00000a17
+l00 0000335 00000a1d 00000a45
+l00 0000336 00000a45 00000a6d
+l00 0000337 00000a6d 00000a8d
+l00 0000338 00000a8d 00000ac7
+l00 0000339 00000acd 00000ad5
+l00 0000325 00000ad5 00000e47
+l00 0000328 00000e47 00000e4f
+l04 0000171 00000e4f 00000e7f
+l04 0000172 00000e7f 00000e87
+l00 0000359 00000e87 00000e95
+l00 0000360 00000e9b 00000ec5
+l00 0000362 00000ecb 00000eed
+l00 0000363 00000eed 00000ef5
