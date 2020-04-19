@@ -214,12 +214,12 @@ void ExpandEventScripts(object oTarget, string sEvent, string sScripts, float fD
 // ---< core_i_framework >---
 // Sorts by priority all event script for sEvent that have been registered to
 // oTarget. This is an internal function that need not be used by the builder.
-void SortEventScripts(object oTarget, string sEvent = "");
+void SortEventScripts(object oTarget, string sEvent);
 
 // ---< DumpEventScripts >---
 // ---< core_i_framework >---
 // Prints all scripts registered to oTarget for sEvent as debug output.
-void DumpEventScripts(object oTarget, string sEvent = "");
+void DumpEventScripts(object oTarget, string sEvent);
 
 // ---< GetEvent >---
 // ---< core_i_framework >---
@@ -702,7 +702,7 @@ void ExpandEventScripts(object oTarget, string sEvent, string sScripts, float fD
     }
 }
 
-void SortEventScripts(object oTarget, string sEvent = "")
+void SortEventScripts(object oTarget, string sEvent)
 {
     int i, j, nLarger, nCount = CountFloatList(oTarget, sEvent);
     float fCurrent, fCompare;
@@ -724,7 +724,7 @@ void SortEventScripts(object oTarget, string sEvent = "")
                 continue;
 
             fCompare = GetListFloat(oTarget, j, sEvent);
-            if ((fCompare > fCurrent) || (fCompare == fCurrent && i < j))
+            if ((fCompare > fCurrent) || (fCompare == fCurrent && i > j))
                 nLarger++;
         }
 
@@ -732,18 +732,27 @@ void SortEventScripts(object oTarget, string sEvent = "")
     }
 }
 
-void DumpEventScripts(object oTarget, string sEvent = "")
+void DumpEventScripts(object oTarget, string sEvent)
 {
     if (IsDebugging(DEBUG_LEVEL_NOTICE))
     {
-        Debug("Dumping event scripts for " + sEvent);
+        float fPriority;
+        object oSource;
         int i, nIndex, nCount = CountIntList(oTarget, sEvent);
+        string sScript, sCount = IntToString(nCount);
+
+        Debug("Dumping " + sCount + " event scripts for " + sEvent);
         for (i = 0; i < nCount; i++)
         {
-            nIndex = GetListInt(oTarget, i, sEvent);
-            Debug("Script: "   +               GetListString(oTarget, nIndex, sEvent));
-            Debug("Source: "   +       GetName(GetListObject(oTarget, nIndex, sEvent)));
-            Debug("Priority: " + FloatToString(GetListFloat (oTarget, nIndex, sEvent)) + "\n");
+            nIndex    = GetListInt   (oTarget, i,      sEvent);
+            sScript   = GetListString(oTarget, nIndex, sEvent);
+            fPriority = GetListFloat (oTarget, nIndex, sEvent);
+            oSource   = GetListObject(oTarget, nIndex, sEvent);
+
+            Debug("Dumping event script " + IntToString(i + 1) + "/" + sCount +
+                  "\n    Script: " + sScript +
+                  "\n    Priority: " + PriorityToString(fPriority) +
+                  "\n    Source: " + GetName(oSource));
         }
     }
 }
@@ -788,7 +797,7 @@ object GetEvent(string sEvent)
         // global hooks. We will sort the list again each time the event is
         // called to account for any local hooks. However, this lets us save
         // some cycles each subsequent run at the cost of some extra right now.
-        SortEventScripts(oEvent);
+        SortEventScripts(oEvent, sEvent);
 
         // Debug
         DumpEventScripts(oEvent, sEvent);
@@ -952,19 +961,39 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     int nExecuted, nIndex, nState;
     int nTimerID = GetLocalInt(TIMERS, TIMER_LAST);
     int i, nCount = CountIntList(oSelf, sEvent);
+    string sCount = "/" + IntToString(nCount);
 
     // Run all scripts registered to the event
     for (i = 0; i < nCount; i++)
     {
-        oSource = GetListObject(oSelf, nIndex, sEvent);
-
-        // Check if the source of the script should be skipped
-        if (oSource != oSelf && (bLocalOnly || GetSourceBlacklisted(oSource, oSelf)))
-            continue;
-
         nIndex    = GetListInt   (oSelf, i,      sEvent);
         sScript   = GetListString(oSelf, nIndex, sEvent);
         fPriority = GetListFloat (oSelf, nIndex, sEvent);
+        oSource   = GetListObject(oSelf, nIndex, sEvent);
+
+        if (IsDebugging(DEBUG_LEVEL_NOTICE))
+        {
+            Debug("Checking " + sEvent + " script " + IntToString(i + 1) + sCount +
+                  "\n    Script: " + sScript +
+                  "\n    Priority: " + PriorityToString(fPriority) +
+                  "\n    Source: " + GetName(oSource));
+        }
+
+        // Check if the source of the script should be skipped
+        if (oSource != oSelf)
+        {
+            if (bLocalOnly)
+            {
+                Debug("Skipping script: not a local event script");
+                continue;
+            }
+
+            if (GetSourceBlacklisted(oSource, oSelf))
+            {
+                Debug("Skipping script: " + GetName(oSource) + " is blacklisted");
+                continue;
+            }
+        }
 
         // Handle special priorities
         if (fPriority == EVENT_PRIORITY_ONLY)
