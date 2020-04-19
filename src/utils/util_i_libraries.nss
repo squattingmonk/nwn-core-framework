@@ -137,7 +137,7 @@ int RunLibraryScript(string sScript, object oSelf = OBJECT_SELF)
     }
     else
     {
-        Debug(sScript + " is not a library script. Executing..", DEBUG_LEVEL_WARNING);
+        Debug(sScript + " is not a library script; executing directly.");
         ExecuteScript(sScript, oSelf);
     }
 
