@@ -48,8 +48,8 @@ void OnLibraryLoad()
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_REST,      "pw_OnPlayerRest",         4.0);
 
         // ----- Local Events -----
-        RegisterEventScripts(oPlugin, AREA_EVENT_ON_ENTER,              "pw_OnAreaEnter");
-        RegisterEventScripts(oPlugin, AREA_EVENT_ON_EXIT,               "pw_OnAreaExit");
+        RegisterEventScripts(oPlugin, AREA_EVENT_ON_ENTER,              "pw_OnAreaEnter", 4.0);
+        RegisterEventScripts(oPlugin, AREA_EVENT_ON_EXIT,               "pw_OnAreaExit", 4.0);
         RegisterEventScripts(oPlugin, PLACEABLE_EVENT_ON_HEARTBEAT,     "pw_OnPlaceableHeartbeat", 9.0);
 
         // ----- Timer Events -----

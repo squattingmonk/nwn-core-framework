@@ -18,6 +18,8 @@ void main()
     if (GetIsPC(oPC) && GetLocalInt(oPC, LOGIN_BOOT))
         return;
 
+    SpawnScriptDebugger();
+
     RunEvent(AREA_EVENT_ON_ENTER, oPC);
     AddScriptSource(oPC);
 }

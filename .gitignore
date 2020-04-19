@@ -5,3 +5,4 @@
 
 # Ignore the nasher directory
 .nasher/
+src/_scriptdump/

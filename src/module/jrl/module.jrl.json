@@ -1,0 +1,76 @@
+{
+  "__data_type": "JRL ",
+  "Categories": {
+    "type": "list",
+    "value": [
+      {
+        "__struct_id": 0,
+        "Comment": {
+          "type": "cexostring",
+          "value": ""
+        },
+        "EntryList": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "End": {
+                "type": "word",
+                "value": 0
+              },
+              "ID": {
+                "type": "dword",
+                "value": 1
+              },
+              "Text": {
+                "type": "cexolocstring",
+                "value": {
+                  "0": "Test entry 1"
+                }
+              }
+            },
+            {
+              "__struct_id": 1,
+              "End": {
+                "type": "word",
+                "value": 0
+              },
+              "ID": {
+                "type": "dword",
+                "value": 2
+              },
+              "Text": {
+                "type": "cexolocstring",
+                "value": {
+                  "0": "Test entry 2"
+                }
+              }
+            }
+          ]
+        },
+        "Name": {
+          "type": "cexolocstring",
+          "value": {
+            "0": "PQJ Test Entry"
+          }
+        },
+        "Picture": {
+          "type": "word",
+          "value": 65535
+        },
+        "Priority": {
+          "type": "dword",
+          "value": 4
+        },
+        "Tag": {
+          "type": "cexostring",
+          "value": "test"
+        },
+        "XP": {
+          "type": "dword",
+          "value": 0
+        }
+      }
+    ]
+  }
+}
