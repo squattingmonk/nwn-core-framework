@@ -10,14 +10,9 @@
 
 #include "x2_inc_switches"
 #include "core_i_framework"
-#include "core_i_database"
 
 void main()
 {
-    // Start debugging
-    SetDebugLevel(DEFAULT_DEBUG_LEVEL);
-    SetDebugLogging(DEBUG_LOGGING);
-
     // Set the spellhook event
     SetModuleOverrideSpellscript(SPELLHOOK_EVENT_SCRIPT);
 
@@ -25,15 +20,6 @@ void main()
     // avoid conflicts with OnSpellCastAt; it will be handled by the spellhook.
     if (ENABLE_TAGBASED_SCRIPTS)
         SetModuleSwitch(MODULE_SWITCH_ENABLE_TAGBASED_SCRIPTS, FALSE);
-
-    Debug("Initializing Core Framework...");
-
-    // Ensure the core database tables are set up
-    InitializeDatabase();
-
-    // Load all libraries and plugins in the core config file
-    LoadLibraries(INSTALLED_LIBRARIES);
-    LoadPlugins(INSTALLED_PLUGINS);
 
     // Run our module load event
     RunEvent(MODULE_EVENT_ON_MODULE_LOAD);
