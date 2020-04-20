@@ -64,6 +64,6 @@ void main()
     int nState = pqj_GetQuestState("test", oPC);
     pqj_AddJournalQuestEntry("test", nState + 1, oPC);
 
-    effect eDeath = EffectDamage(6, DAMAGE_TYPE_FIRE);
-    ApplyEffectToObject(DURATION_TYPE_INSTANT, eDeath, oPC);
+    //effect eDeath = EffectDamage(6, DAMAGE_TYPE_FIRE);
+    //ApplyEffectToObject(DURATION_TYPE_INSTANT, eDeath, oPC);
 }

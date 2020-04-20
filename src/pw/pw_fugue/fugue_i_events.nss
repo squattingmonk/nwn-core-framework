@@ -46,7 +46,7 @@ void fugue_OnPlayerExit();
 // -----------------------------------------------------------------------------
 
 void fugue_OnClientEnter()
-{
+{/*
     object oPC = GetEnteringObject();
     int playerstate = h2_GetPlayerPersistentInt(oPC, H2_PLAYER_STATE);
     string uniquePCID = h2_GetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID);
@@ -55,7 +55,7 @@ void fugue_OnClientEnter()
     if (GetTag(GetArea(oPC)) != H2_FUGUE_PLANE && playerstate == H2_PLAYER_STATE_DEAD && !h2_GetIsLocationValid(ressLoc))
     {
         DelayCommand(H2_CLIENT_ENTER_JUMP_DELAY, h2_SendPlayerToFugue(oPC));
-    }
+    }*/
 }
 
 void fugue_OnPlayerDeath()

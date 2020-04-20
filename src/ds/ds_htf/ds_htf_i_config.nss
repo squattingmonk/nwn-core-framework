@@ -12,7 +12,7 @@
 //  a PC who has accidentally entered an area with a travel cost to exit without
 //  penalty to his HTF stats as long as he does so before this time runs out.
 //  Set the desired delay in this constant.  Units = seconds.
-const float DS_HTF_AREATRAVELCOST_DELAY = 5.0;
+const float DS_HTF_AREATRAVELCOST_DELAY = 15.0;
 
 //Some races and other variables can affect the factor used to decrement the value
 //  of the Hunger, Thirst and Fatigue bars for each PC.  If you want to use

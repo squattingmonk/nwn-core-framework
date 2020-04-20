@@ -31,8 +31,8 @@
 
 // Although the systems are now combined, you can elect can use only one or the
 //  other.
-const int H2_USE_HUNGERTHIRST_SYSTEM = TRUE;
-const int H2_USE_FATIGUE_SYSTEM = TRUE;
+const int H2_USE_HUNGERTHIRST_SYSTEM = FALSE;
+const int H2_USE_FATIGUE_SYSTEM = FALSE;
 
 //This value plus the base constitution score of a player, is the number
 //of in-game hours they can go without drinking water with no chance of ill effects.

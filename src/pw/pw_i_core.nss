@@ -428,6 +428,7 @@ void h2_BanPlayerByCDKey(object oPC)
 void h2_BanPlayerByIPAddress(object oPC)
 {
     string sMessage = GetName(oPC) + "_" + GetPCPlayerName(oPC) + " banned by: " + GetName(OBJECT_SELF) + "_" + GetPCPlayerName(OBJECT_SELF);
+    
     SetDatabaseString(H2_BANNED_PREFIX + GetPCIPAddress(oPC), sMessage);
     //h2_SetExternalString(H2_BANNED_PREFIX + GetPCIPAddress(oPC), sMessage);
     SendMessageToAllDMs(sMessage);
@@ -896,9 +897,10 @@ void h2_StartCharExportTimer()
 {
     if (H2_EXPORT_CHARACTERS_INTERVAL > 0.0)
     {
-        int nTimerID = CreateTimer(TIMERS, H2_EXPORT_CHAR_ON_TIMER_EXPIRE, H2_EXPORT_CHARACTERS_INTERVAL, 0, 0);
+        //**timers**
+        //int nTimerID = CreateTimer(TIMERS, H2_EXPORT_CHAR_ON_TIMER_EXPIRE, H2_EXPORT_CHARACTERS_INTERVAL, 0, 0);
         //int nTimerID = h2_CreateTimer(GetModule(), H2_EXPORT_CHAR_TIMER_SCRIPT, H2_EXPORT_CHARACTERS_INTERVAL);
-        StartTimer(nTimerID, FALSE);
+        //StartTimer(nTimerID, FALSE);
         //h2_StartTimer(nTimerID);
     }
 }
@@ -929,6 +931,7 @@ string h2_GetNewUniquePCID()
     //int nextID = h2_GetExternalInt(H2_NEXT_UNIQUE_PC_ID);
     string id = IntToHexString(nextID);
     nextID++;
+
     SetDatabaseInt(H2_NEXT_UNIQUE_PC_ID, nextID);
     //h2_SetExternalInt(H2_NEXT_UNIQUE_PC_ID, nextID);
     return id;
@@ -975,7 +978,6 @@ void h2_SetPlayerID(object oPC)
             h2_SetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID, uniquepcid);
             SetDatabaseString(uniquepcid, fullpcname);
             //h2_SetExternalString(uniquepcid, fullpcname);
-        }
     }
 }
 
@@ -987,7 +989,7 @@ void h2_RegisterPC(object oPC)
     SetDatabaseInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX, registeredCharCount + 1);
     //h2_SetExternalInt(GetPCPlayerName(oPC) + H2_REGISTERED_CHAR_SUFFIX, registeredCharCount + 1);
     SendMessageToPC(oPC, H2_TEXT_CHAR_REGISTERED);
-    SendMessageToPC(oPC, H2_TEXT_TOTAL_REGISTERED_CHARS + IntToString(registeredCharCount + 1));
+    //SendMessageToPC(oPC, H2_TEXT_TOTAL_REGISTERED_CHARS + IntToString(registeredCharCount + 1));
     SendMessageToPC(oPC, H2_TEXT_MAX_REGISTERED_CHARS + IntToString(H2_REGISTERED_CHARACTERS_ALLOWED));
 }
 
@@ -1055,9 +1057,10 @@ void h2_InitializePC(object oPC)
     {
         if (H2_SAVE_PC_LOCATION_TIMER_INTERVAL > 0.0)
         {
-            int timerID = CreateTimer(oPC, H2_SAVE_LOCATION_ON_TIMER_EXPIRE, H2_SAVE_PC_LOCATION_TIMER_INTERVAL, 0, 0);
+            //**timers**
+            //int timerID = CreateTimer(oPC, H2_SAVE_LOCATION_ON_TIMER_EXPIRE, H2_SAVE_PC_LOCATION_TIMER_INTERVAL, 0, 0);
             //int timerID = h2_CreateTimer(oPC, H2_SAVE_LOCATION, H2_SAVE_PC_LOCATION_TIMER_INTERVAL);
-            StartTimer(timerID, TRUE);
+            //StartTimer(timerID, TRUE);
             //h2_StartTimer(timerID);
         }
     }

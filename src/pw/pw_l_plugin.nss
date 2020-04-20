@@ -40,7 +40,7 @@ void OnLibraryLoad()
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER,     "pw_OnClientEnter",        4.0);
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_LEAVE,     "pw_OnClientLeave",        4.0);
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_HEARTBEAT,        "pw_OnModuleHeartbeat",    4.0);
-        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_MODULE_LOAD,      "pw_OnModuleLoad",         4.0);
+        //RegisterEventScripts(oPlugin, MODULE_EVENT_ON_MODULE_LOAD,      "pw_OnModuleLoad",         4.0);
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_DEATH,     "pw_OnPlayerDeath",        4.0);
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_DYING,     "pw_OnPlayerDying",        4.0);
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_LEVEL_UP,  "pw_OnPlayerLevelUp",      4.0);
