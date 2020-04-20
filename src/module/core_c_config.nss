@@ -72,7 +72,7 @@ const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 // This is a comma-separated list of libraries that should be loaded
 // OnModuleLoad. These libraries are loaded before plugins are installed, so
 // they can programatically generate plugins to be installed.
-const string INSTALLED_LIBRARIES = "pqj_l_plugin,dlg_l_plugin,pw_l_plugin,bleed_l_plugin,corpse_l_plugin,deity_l_plugin,fugue_l_plugin,htf_l_plugin,loot_l_plugin,rest_l_plugin,torch_l_plugin,unid_l_plugin,ds_l_plugin,ds_htf_l_plugin";
+const string INSTALLED_LIBRARIES = "pqj_l_plugin,dlg_l_plugin,demo_l_plugin,pw_l_plugin,bleed_l_plugin,corpse_l_plugin,deity_l_plugin,fugue_l_plugin,htf_l_plugin,loot_l_plugin,rest_l_plugin,torch_l_plugin,unid_l_plugin,ds_l_plugin,ds_htf_l_plugin";
 /*const string INSTALLED_LIBRARIES =  "pqj_l_plugin," +
                                     "dlg_l_plugin," +
                                     "pw_l_plugin," +
