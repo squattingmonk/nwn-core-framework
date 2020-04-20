@@ -232,7 +232,6 @@ location StringToLocation(string sLocation)
 
         lReturnValue = Location(oArea, vPosition, fOrientation);
     }
-
     return lReturnValue;
 }
 
@@ -279,7 +278,6 @@ int NWNX_SQL_PrepareAndExecuteQuery(string sSQL,
 
         NWNX_SQL_PreparedString(i, sParam);
     }
-
     return NWNX_SQL_ExecutePreparedQuery();
 }
 
@@ -299,6 +297,11 @@ int GetDatabaseType()
 int CreateTable(string sStructure)
 {
     return NWNX_SQL_ExecuteQuery("CREATE TABLE IF NOT EXISTS " + sStructure);
+}
+
+int CreateEntry(string sStructure)
+{
+    return NWNX_SQL_ExecuteQuery(sStructure);
 }
 
 void InitializeDatabase()
@@ -374,7 +377,6 @@ string GetPCID(object oPC)
 
         SetLocalString(oPC, PCID, sPCID);
     }
-
     return sPCID;
 }
 
@@ -384,9 +386,9 @@ void DeleteDatabaseVariable(string sVarName, object oObject = OBJECT_INVALID)
 
     if (nDatabase)
     {
-        string sQuery = "DELETE FROM ? WHERE ?=? AND varname=?";
         struct QueryHelper q = GetQueryHelper(oObject);
-        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+        string sQuery = "DELETE FROM " + q.table + " WHERE " + q.column + "=? AND varname=?";
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.id, sVarName);
     }
     else
         DeleteCampaignVariable(FALLBACK_DATABASE, sVarName, oObject);
@@ -398,9 +400,9 @@ void DeleteDatabaseObject(string sVarName, object oObject = OBJECT_INVALID)
 
     if (nDatabase)
     {
-        string sQuery = "DELETE FROM ? WHERE ?=? AND varname=?";
         struct QueryHelper q = GetQueryHelper(oObject, "pwobjectdata", "pcobjectdata");
-        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+        string sQuery = "DELETE FROM " + q.table + " WHERE " + q.column + "=? AND varname=?";
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.id, sVarName);
     }
     else
         DeleteCampaignVariable(FALLBACK_DATABASE, sVarName, oObject);
@@ -427,19 +429,17 @@ object GetDatabaseObject(string sVarName, object oObject = OBJECT_INVALID)
 
     if (nDatabase)
     {
-        string sQuery = "SELECT value FROM ? WHERE ?=? AND varname=?";
         struct QueryHelper q = GetQueryHelper(oObject, "pwobjectdata", "pcobjectdata");
-        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+        string sQuery = "SELECT value FROM " + q.table + " WHERE " + q.column + "=? AND varname=?";
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.id, sVarName);
 
         if (NWNX_SQL_ReadyToReadNextRow())
         {
             NWNX_SQL_ReadNextRow();
             return NWNX_SQL_ReadFullObjectInActiveRow();
         }
-
         return OBJECT_INVALID;
     }
-
     location lLoc = GetLocation(oObject);
     return RetrieveCampaignObject(FALLBACK_DATABASE, sVarName, lLoc, oObject, oObject);
 }
@@ -450,19 +450,17 @@ string GetDatabaseString(string sVarName, object oObject = OBJECT_INVALID)
 
     if (nDatabase)
     {
-        string sQuery = "SELECT value FROM ? WHERE ?=? AND varname=?";
         struct QueryHelper q = GetQueryHelper(oObject);
-        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName);
+        string sQuery = "SELECT value FROM " + q.table + " WHERE " + q.column + "=? AND varname=?";
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.id, sVarName);
 
         if (NWNX_SQL_ReadyToReadNextRow())
         {
             NWNX_SQL_ReadNextRow();
             return NWNX_SQL_ReadDataInActiveRow();
         }
-
         return "";
     }
-
     return GetCampaignString(FALLBACK_DATABASE, sVarName, oObject);
 }
 
@@ -487,14 +485,12 @@ void SetDatabaseObject(string sVarName, object oValue, object oObject = OBJECT_I
 
     if (nDatabase)
     {
-        string sQuery = "REPLACE INTO ? (?, varname, value) VALUES (?, ?, ?)";
         struct QueryHelper q = GetQueryHelper(oObject, "pwobjectdata", "pcobjectdata");
+        string sQuery = "REPLACE INTO " + q.table + "(" + q.column + ",varname, value) VALUES (?, ?, ?)";
 
-        NWNX_SQL_PreparedString(0, q.table);
-        NWNX_SQL_PreparedString(1, q.column);
-        NWNX_SQL_PreparedString(2, q.id);
-        NWNX_SQL_PreparedString(3, sVarName);
-        NWNX_SQL_PreparedObjectFull(4, oValue);
+        NWNX_SQL_PreparedString(0, q.id);
+        NWNX_SQL_PreparedString(1, sVarName);
+        NWNX_SQL_PreparedObjectFull(2, oValue);
         NWNX_SQL_ExecutePreparedQuery();
     }
     else
@@ -507,9 +503,9 @@ void SetDatabaseString(string sVarName, string sValue, object oObject = OBJECT_I
 
     if (nDatabase)
     {
-        string sQuery = "REPLACE INTO ? (?, varname, value) VALUES (?, ?, ?)";
         struct QueryHelper q = GetQueryHelper(oObject);
-        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName, sValue);
+        string sQuery = "REPLACE INTO " + q.table + "(" + q.column + ",varname, value) VALUES (?, ?, ?)";
+        NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.id, sVarName, sValue);
     }
     else
         SetCampaignString(FALLBACK_DATABASE, sVarName, sValue, oObject);
