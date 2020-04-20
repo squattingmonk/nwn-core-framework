@@ -826,11 +826,20 @@ string h2_ColorText(string sText, string sColor)
 //heartbeat functions
 void h2_SaveCurrentCalendar()
 {
+    /*string sSQL = "REPLACE INTO pwdata (tag, varname, value) VALUES ('MODULE', 'H2_CURRENTHOUR', '13')";
+    CreateEntry(sSQL);
+
+    //string sSQL1 = "REPLACE INTO pwdata (tag, varname, value) VALUES (" + GetTag(GetModule()) + "," + H2_CURRENT_DAY + "," + IntToString(GetCalendarDay()) + ")";
+    //CreateEntry(sSQL1);*/
+
+    
     SetDatabaseInt(H2_CURRENT_HOUR, GetTimeHour());
     SetDatabaseInt(H2_CURRENT_DAY, GetCalendarDay());
     SetDatabaseInt(H2_CURRENT_MONTH, GetCalendarMonth());
     SetDatabaseInt(H2_CURRENT_YEAR, GetCalendarYear());
     SetDatabaseInt(H2_CURRENT_MIN, GetTimeMinute());
+    
+    
     //h2_SetExternalInt(H2_CURRENT_HOUR, GetTimeHour());
     //h2_SetExternalInt(H2_CURRENT_DAY, GetCalendarDay());
     //h2_SetExternalInt(H2_CURRENT_MONTH, GetCalendarMonth());
@@ -978,6 +987,7 @@ void h2_SetPlayerID(object oPC)
             h2_SetPlayerPersistentString(oPC, H2_UNIQUE_PC_ID, uniquepcid);
             SetDatabaseString(uniquepcid, fullpcname);
             //h2_SetExternalString(uniquepcid, fullpcname);
+        }
     }
 }
 

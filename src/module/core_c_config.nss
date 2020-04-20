@@ -72,7 +72,7 @@ const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 // This is a comma-separated list of libraries that should be loaded
 // OnModuleLoad. These libraries are loaded before plugins are installed, so
 // they can programatically generate plugins to be installed.
-const string INSTALLED_LIBRARIES = "dlg_l_plugin,demo_l_plugin,pw_l_plugin,bleed_l_plugin,corpse_l_plugin,deity_l_plugin,fugue_l_plugin,htf_l_plugin,loot_l_plugin,rest_l_plugin,torch_l_plugin,unid_l_plugin,ds_l_plugin,ds_htf_l_plugin";
+const string INSTALLED_LIBRARIES = "pqj_l_plugin,dlg_l_plugin,demo_l_plugin,pw_l_plugin,bleed_l_plugin,corpse_l_plugin,deity_l_plugin,fugue_l_plugin,htf_l_plugin,loot_l_plugin,rest_l_plugin,torch_l_plugin,unid_l_plugin,ds_l_plugin,ds_htf_l_plugin";
 /*const string INSTALLED_LIBRARIES =  "pqj_l_plugin," +
                                     "dlg_l_plugin," +
                                     "pw_l_plugin," +
@@ -91,7 +91,7 @@ const string INSTALLED_LIBRARIES = "dlg_l_plugin,demo_l_plugin,pw_l_plugin,bleed
 // This is a comma-separated list of plugins that should be loaded OnModuleLoad.
 // Plugins can define libraries to install. If the IDs for those libraries are
 // in this list, they will be loaded.
-const string INSTALLED_PLUGINS = "bw_defaultevents,dlg,pw,pw_bleed,pw_corpse,pw_deity,pw_fugue,pw_htf,pw_loot,pw_rest,pw_torch,pw_unid,ds,ds_htf";
+const string INSTALLED_PLUGINS = "bw_defaultevents,pqj,dlg,pw,pw_bleed,pw_corpse,pw_deity,pw_fugue,pw_htf,pw_loot,pw_rest,pw_torch,pw_unid,ds,ds_htf";
 /*const string INSTALLED_PLUGINS =    "bw_defaultevents," +
                                     "pqj," +
                                     "dlg," +

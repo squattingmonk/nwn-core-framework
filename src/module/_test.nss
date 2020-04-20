@@ -64,6 +64,10 @@ void main()
     int nState = pqj_GetQuestState("test", oPC);
     pqj_AddJournalQuestEntry("test", nState + 1, oPC);
 
+    SendMessageToPC(oPC, "The module tag is: " + GetTag(GetModule()));
+    SendMessageToPC(oPC, "The placeable tag is: " + GetTag(OBJECT_SELF));
+    SendMessageToPC(oPC, "The placeable name is: " + GetName(OBJECT_SELF));
+
     //effect eDeath = EffectDamage(6, DAMAGE_TYPE_FIRE);
     //ApplyEffectToObject(DURATION_TYPE_INSTANT, eDeath, oPC);
 }

@@ -301,6 +301,11 @@ int CreateTable(string sStructure)
     return NWNX_SQL_ExecuteQuery("CREATE TABLE IF NOT EXISTS " + sStructure);
 }
 
+int CreateEntry(string sStructure)
+{
+    return NWNX_SQL_ExecuteQuery(sStructure);
+}
+
 void InitializeDatabase()
 {
     int nDatabase = GetDatabaseType();
@@ -380,7 +385,6 @@ string GetPCID(object oPC)
 
 void DeleteDatabaseVariable(string sVarName, object oObject = OBJECT_INVALID)
 {
-/*
     int nDatabase = GetDatabaseType();
 
     if (nDatabase)
@@ -391,12 +395,10 @@ void DeleteDatabaseVariable(string sVarName, object oObject = OBJECT_INVALID)
     }
     else
         DeleteCampaignVariable(FALLBACK_DATABASE, sVarName, oObject);
-*/
 }
 
 void DeleteDatabaseObject(string sVarName, object oObject = OBJECT_INVALID)
 {
-/*
     int nDatabase = GetDatabaseType();
 
     if (nDatabase)
@@ -407,7 +409,6 @@ void DeleteDatabaseObject(string sVarName, object oObject = OBJECT_INVALID)
     }
     else
         DeleteCampaignVariable(FALLBACK_DATABASE, sVarName, oObject);
-*/
 }
 
 float GetDatabaseFloat(string sVarName, object oObject = OBJECT_INVALID)
@@ -427,7 +428,6 @@ location GetDatabaseLocation(string sVarName, object oObject = OBJECT_INVALID)
 
 object GetDatabaseObject(string sVarName, object oObject = OBJECT_INVALID)
 {
-/*
     int nDatabase = GetDatabaseType();
 
     if (nDatabase)
@@ -447,13 +447,10 @@ object GetDatabaseObject(string sVarName, object oObject = OBJECT_INVALID)
 
     location lLoc = GetLocation(oObject);
     return RetrieveCampaignObject(FALLBACK_DATABASE, sVarName, lLoc, oObject, oObject);
-*/
-return OBJECT_INVALID;
 }
 
 string GetDatabaseString(string sVarName, object oObject = OBJECT_INVALID)
 {
-/*
     int nDatabase = GetDatabaseType();
 
     if (nDatabase)
@@ -472,8 +469,6 @@ string GetDatabaseString(string sVarName, object oObject = OBJECT_INVALID)
     }
 
     return GetCampaignString(FALLBACK_DATABASE, sVarName, oObject);
-*/
-return "";
 }
 
 void SetDatabaseFloat(string sVarName, float fValue, object oObject = OBJECT_INVALID)
@@ -493,7 +488,6 @@ void SetDatabaseLocation(string sVarName, location lValue, object oObject = OBJE
 
 void SetDatabaseObject(string sVarName, object oValue, object oObject = OBJECT_INVALID)
 {
-/*
     int nDatabase = GetDatabaseType();
 
     if (nDatabase)
@@ -510,20 +504,19 @@ void SetDatabaseObject(string sVarName, object oValue, object oObject = OBJECT_I
     }
     else
         StoreCampaignObject(FALLBACK_DATABASE, sVarName, oValue, oObject);
-*/
 }
 
 void SetDatabaseString(string sVarName, string sValue, object oObject = OBJECT_INVALID)
 {
-/*    int nDatabase = GetDatabaseType();
+    int nDatabase = GetDatabaseType();
 
     if (nDatabase)
     {
         string sQuery = "REPLACE INTO ? (?, varname, value) VALUES (?, ?, ?)";
         struct QueryHelper q = GetQueryHelper(oObject);
         NWNX_SQL_PrepareAndExecuteQuery(sQuery, q.table, q.column, q.id, sVarName, sValue);
+
     }
     else
         SetCampaignString(FALLBACK_DATABASE, sVarName, sValue, oObject);
-*/
 }
