@@ -15,7 +15,9 @@ int StartingConditional()
 {
     int nNodes = GetLocalInt(DIALOG, DLG_NODES);
     int nNode  = GetLocalInt(DIALOG, DLG_NODE);
+    string sText = GetLocalString(DIALOG, DLG_NODES + IntToString(nNode));
 
     SetLocalInt(DIALOG, DLG_NODE, nNode + 1);
+    SetCustomToken(DLG_CUSTOM_TOKEN + nNode + 1, sText);
     return (nNode < nNodes);
 }

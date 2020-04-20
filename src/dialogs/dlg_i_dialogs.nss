@@ -41,7 +41,6 @@
 #include "util_i_libraries"
 #include "dlg_c_dialogs"
 
-
 // -----------------------------------------------------------------------------
 //                                   Constants
 // -----------------------------------------------------------------------------
@@ -1380,10 +1379,11 @@ int LoadDialogPage()
 // event for the target node.
 void MapDialogNode(int nNode, int nTarget, string sText, string sPage = "")
 {
+    string sNode = IntToString(nNode);
     int nMax = DLG_MAX_RESPONSES + 5;
     if (nNode < 0 || nNode > nMax)
     {
-        Debug("Attempted to set dialog response node " + IntToString(nNode) +
+        Debug("Attempted to set dialog response node " + sNode +
               " but max is " + IntToString(nMax), DEBUG_LEVEL_ERROR);
         return;
     }
@@ -1396,10 +1396,9 @@ void MapDialogNode(int nNode, int nTarget, string sText, string sPage = "")
         sText = ColorString(sText, sColor);
     }
 
-    Debug("Setting response node " + IntToString(nNode) + " -> " +
-          IntToString(nTarget));
-    SetCustomToken(DLG_CUSTOM_TOKEN + nNode + 1, sText);
-    SetLocalInt(DIALOG, DLG_NODES + IntToString(nNode), nTarget);
+    Debug("Setting response node " + sNode + " -> " + IntToString(nTarget));
+    SetLocalInt(DIALOG, DLG_NODES + sNode, nTarget);
+    SetLocalString(DIALOG, DLG_NODES + sNode, sText);
 }
 
 void LoadDialogNodes()
