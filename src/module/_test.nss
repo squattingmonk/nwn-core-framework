@@ -1,5 +1,7 @@
-#include "util_i_color"
+
+//#include "util_i_color"
 #include "pqj_i_main"
+#include "util_i_debug"
 
 object oPC = GetLastUsedBy();
 string sText = "The quick brown fox jumps over the lazy dog";
@@ -64,10 +66,7 @@ void main()
     int nState = pqj_GetQuestState("test", oPC);
     pqj_AddJournalQuestEntry("test", nState + 1, oPC);
 
-    SendMessageToPC(oPC, "The module tag is: " + GetTag(GetModule()));
-    SendMessageToPC(oPC, "The placeable tag is: " + GetTag(OBJECT_SELF));
-    SendMessageToPC(oPC, "The placeable name is: " + GetName(OBJECT_SELF));
+    Debug("UUID for PC is: " + GetObjectUUID(oPC));
+    Debug("UUID for Lever is: " + GetObjectUUID(GetObjectByTag("floorlever1")));
 
-    //effect eDeath = EffectDamage(6, DAMAGE_TYPE_FIRE);
-    //ApplyEffectToObject(DURATION_TYPE_INSTANT, eDeath, oPC);
 }
