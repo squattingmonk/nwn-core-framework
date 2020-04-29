@@ -65,7 +65,7 @@ string GetListItem(string sList, int nNth = 0);
 // ---< util_i_csvlists >---
 // Returns the item number of sListItem in the CSV list sList. Returns -1 if
 // sListItem is not in the list.
-int FindListItem(string sList, string sListItem);
+int FindListItem(string sList, string sListItem, int nParsed = 0);
 
 // ---< HasListItem >---
 // ---< util_i_csvlists >---
@@ -201,7 +201,7 @@ string GetListItem(string sList, int nNth = 0)
     return TrimString(sList);
 }
 
-int FindListItem(string sList, string sListItem)
+int FindListItem(string sList, string sListItem, int nParsed = 0)
 {
     // Sanity check.
     if (sList == "" || sListItem == "") return -1;
@@ -215,11 +215,11 @@ int FindListItem(string sList, string sListItem)
 
     // Make sure it's not a partial match.
     if (GetListItem(sList, i) == sListItem)
-        return i;
+        return i + nParsed;
 
     // Okay, so let's slim down the list and re-execute.
     string sParsed = StringParse(sList, GetListItem(sList, ++i));
-    return FindListItem(StringRemoveParsed(sList, sParsed), sListItem);
+    return FindListItem(StringRemoveParsed(sList, sParsed), sListItem, i + nParsed);
 }
 
 int HasListItem(string sList, string sListItem)
