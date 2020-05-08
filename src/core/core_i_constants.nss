@@ -72,11 +72,9 @@ const float  EVENT_PRIORITY_LAST    =  -9999.0;         // The script is always 
 const float  EVENT_PRIORITY_ONLY    =  11111.0;         // The script will be the only one to execute
 const float  EVENT_PRIORITY_DEFAULT = -11111.0;         // The script will only execute if no other scripts do
 
-const string EVENT_DEBUG            = "EVENT_DEBUG";        //Used for setting custom event
-const string EVENT_DEBUG_SET        = "EVENT_DEBUG_SET";    // and object debug levels
-const string OBJECT_DEBUG           = "OBJECT_DEBUG";
-const string OBJECT_DEBUG_SET       = "OBJECT_DEBUG_SET";
-const string DEBUG_LEVEL_SUBVERTED  = "DEBUG_LEVEL_SUBVERTED";
+const string EVENT_DEBUG            = "EVENT_DEBUG";    
+const string EVENT_DEBUG_SET        = "EVENT_DEBUG_SET";    
+const string DEBUG_LEVEL_OLD        = "DEBUG_LEVEL_OLD";
 
 // ----- Timer Management ------------------------------------------------------
 

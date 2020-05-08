@@ -178,22 +178,6 @@ void SetEventDebugLevel(string sEvent, int nLevel);
 // Deteles the debug level set for the passed sEvent.
 void DeleteEventDebugLevel(string sEvent);
 
-// ---< GetObjectDebugLevel >---
-// ---< core_i_framework >---
-// Returns the debug level set for the passed oTarget.  Returns -1 if an object-
-// specific debug level was not set before the event ran.
-int GetObjectDebugLevel(object oTarget);
-
-// ---< GetObjectDebugLevel >---
-// ---< core_i_framework >---
-// Sets the debug level for the passed oTarget to nLevel.
-void SetObjectDebugLevel(object oTarget, int nLevel); 
-
-// ---< GetObjectDebugLevel >---
-// ---< core_i_framework >---
-// Deteles the debug level set for the passed oTarget.
-void DeleteObjectDebugLevel(object oTarget);
-
 // ---< GetEventState >---
 // ---< core_i_framework >---
 // Returns the state of the event represented by oEvent. If oEvent is invalid,
@@ -400,20 +384,6 @@ int GetIsTimerInfinite(int nTimerID);
 // -1 if nTimerID is not a valid timer ID. Returns 0 if the timer is set to run
 // indefinitely, so be sure to check for this with GetIsTimerInfinite().
 int GetTimerRemaining(int nTimerID);
-
-// ----- Miscellaneous ---------------------------------------------------------
-
-// ---< SubvertDebugLevel >---
-// ---< core_i_framework >---
-// Used to temporarily change the module debug level when specific debug levels
-// are set on events and objects.
-void SubvertDebugLevel(int nLevel);
-
-// ---< RestoreDebugLevel >---
-// ---< core_i_framework >---
-// Used to restore the module's debug level to the setting it had before
-// SubvertDebugLevel() was called.
-void RestoreDebugLevel();
 
 // -----------------------------------------------------------------------------
 //                             Function Definitions
@@ -1049,33 +1019,6 @@ void BuildPluginBlacklist(object oTarget)
     SetLocalInt(oTarget, EVENT_SOURCE_BLACKLIST, TRUE);
 }
 
-void SetDebugLevels(string sEvent, object oObject)
-{    
-    int nEventLevel = GetEventDebugLevel(sEvent);       //-1 for nothing set, else set level
-    int nObjectLevel = GetObjectDebugLevel(oObject);    //-1 for nothing set, else set level
-    int nDesiredLevel;
-
-    if (nEventLevel == -1 && nObjectLevel == -1)
-        return;
-
-    int nModuleLevel = GetDebugLevel(GetModule());
-
-    if (nEventLevel == -1)
-    {
-        if (nObjectLevel != -1)
-            nDesiredLevel = nObjectLevel;
-    }
-    else
-    {
-        if (nObjectLevel == -1)
-            nDesiredLevel = nEventLevel;
-        else
-            nDesiredLevel = (nEventLevel > nObjectLevel ? nEventLevel : nObjectLevel);
-    }
-
-    SubvertDebugLevel(nDesiredLevel);
-}
-
 int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF, int bLocalOnly = FALSE)
 {
     // Ensure the Framework has been loaded. Can't do this OnModuleLoad because
@@ -1087,8 +1030,16 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     if (!GetIsObjectValid(oInit))
         oInit = oSelf;
 
+    int nEventLevel, nObjectLevel;
+
     // Set the debugging level specific to this event, if it is defined.
-    SetDebugLevels(sEvent, oSelf);
+    // This is done by temporarily overriding the object's debug level.
+    if ((nEventLevel = GetEventDebugLevel(sEvent)) != -1 &&
+        nEventLevel > (nObjectLevel = GetDebugLevel(oSelf)))
+    {
+        SetLocalInt(oSelf, DEBUG_LEVEL_OLD, nObjectLevel);
+        SetDebugLevel(oSelf, nEventLevel);
+    }
 
     Debug("Running " + (bLocalOnly ? "local " : "") + "event " + sEvent +
           " on " + GetName(oSelf) + "; oInit: " + GetName(oInit));
@@ -1168,7 +1119,10 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     }
 
     // Clean up
-    RestoreDebugLevel();
+    // If we previously overwrote the object's debug level, reset it.
+    if (nObjectLevel = GetLocalInt(oSelf, DEBUG_LEVEL_OLD))
+        SetDebugLevel(oSelf, nObjectLevel);
+
     DeleteLocalString(oEvent, EVENT_CURRENT_PLUGIN);
     return nState;
 }
@@ -1382,22 +1336,4 @@ int GetTimerRemaining(int nTimerID)
 
     string sTimerID = IntToString(nTimerID);
     return GetLocalInt(TIMERS, TIMER_REMAINING + IntToString(nTimerID));
-}
-
-// ----- Miscellaneous ---------------------------------------------------------
-
-void SubvertDebugLevel(int nLevel)
-{
-    object oModule = GetModule();
-
-    SetLocalInt(oModule, DEBUG_LEVEL_SUBVERTED, TRUE);
-    SetDebugLevel(nLevel, oModule);
-}
-
-void RestoreDebugLevel()
-{
-    object oModule = GetModule();
-
-    SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
-    DeleteLocalInt(oModule, DEBUG_LEVEL_SUBVERTED);    
 }
