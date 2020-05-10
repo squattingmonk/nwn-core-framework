@@ -12,13 +12,22 @@
 
 void main()
 {
-    // Don't run this event if the entering object is a PC that is about to be
-    // booted.
     object oPC = GetEnteringObject();
-    WriteTimestampedLogEntry(GetName(OBJECT_SELF) + " entered by " + GetName(oPC));
 
-    if (GetIsPC(oPC) && GetLocalInt(oPC, LOGIN_BOOT))
-        return;
+    if (GetIsPC(oPC))
+    {
+        if (GetLocalInt(oPC, LOGIN_BOOT))
+            return;
+
+        if (ENABLE_ON_AREA_EMPTY_EVENT)
+        {
+            int nTimerID = GetLocalInt(OBJECT_SELF, TIMER_ON_AREA_EMPTY);
+            if (GetIsTimerValid(nTimerID))
+                KillTimer(nTimerID);
+        }
+
+        AddListObject(OBJECT_SELF, oPC, AREA_ROSTER, TRUE);
+    }
 
     RunEvent(AREA_EVENT_ON_ENTER, oPC);
     AddScriptSource(oPC);
