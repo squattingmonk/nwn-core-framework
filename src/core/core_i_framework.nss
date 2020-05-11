@@ -385,6 +385,19 @@ int GetIsTimerInfinite(int nTimerID);
 // indefinitely, so be sure to check for this with GetIsTimerInfinite().
 int GetTimerRemaining(int nTimerID);
 
+// ----- Miscellaneous ---------------------------------------------------------
+// ---< ToggleModuleDebugLevel >---
+// ---< core_i_framework >---
+// If a nLevel is passed, that level is set as the primary module level.  If not,
+// the module's debug level is reset to the configurable level set in
+// core_c_config.  The purpose of this function is to allow an event debug level
+// to take primacy over all other debug levels (module and/or object).  If an
+// event debug level is not set, this function is not called and the more verbose
+// of the object debug level or the module debug level is used.
+void ToggleModuleDebugLevel(int nLevel = -1);
+
+
+
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
