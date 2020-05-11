@@ -16,19 +16,14 @@ void main()
     // booted.
     object oPC = GetExitingObject();
 
-    if (HasListObject(OBJECT_SELF, oPC, AREA_ROSTER))
-    {
-        if (GetLocalInt(oPC, LOGIN_BOOT))
-            return;
+    if (GetIsPC(oPC) && GetLocalInt(oPC, LOGIN_BOOT))
+        return;
 
-        if (!RemoveListObject(OBJECT_SELF, oPC, AREA_ROSTER) 
-                && ENABLE_ON_AREA_EMPTY_EVENT
-                && !CountObjectList(OBJECT_SELF, AREA_ROSTER))
-        {
-            int nTimerID = CreateTimer(OBJECT_SELF, AREA_EVENT_ON_EMPTY, ON_AREA_EMPTY_EVENT_DELAY, 1);
-            StartTimer(nTimerID, FALSE);
-        }
-    }  
+    if (!RemoveListObject(OBJECT_SELF, oPC, AREA_ROSTER) && ENABLE_ON_AREA_EMPTY_EVENT)
+    {
+        int nTimerID = CreateTimer(OBJECT_SELF, AREA_EVENT_ON_EMPTY, ON_AREA_EMPTY_EVENT_DELAY, 1);
+        StartTimer(nTimerID, FALSE);
+    }
 
     RemoveScriptSource(oPC);
     RunEvent(AREA_EVENT_ON_EXIT, oPC);
