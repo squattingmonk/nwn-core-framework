@@ -47,12 +47,12 @@ int DEBUG_LOGGING = DEBUG_LOG_ALL;
 // a variable on the object called DEBUG_LEVEL within the toolset.  This method
 // will always use the most verbose setting between the object setting and the
 // module setting.  Alternately, you can set a specific debug level on an
-// object and/or an event using SetObjectDebugLevel() and SetEventDebugLevel().
-// Unlike the previous method, you cannot set these as variables in the toolset
-// and the values you set will be used regardless of the module setting chosen
-// below.  If you set a debug level on an object that runs an event which also
-// has a debug level set on it, the most verbose between the two will be used.
-// If neither is set the module setting below will be used.
+// object and/or an event using SetDebugLevel() and SetEventDebugLevel().
+// If an event debug level is set, that setting will be used, regardless of the
+// debug level set on the module or the calling object.  This allows the builder
+// to prevent excess debug logging from verbose events such as OnCreaturePerception.
+// If an object with a debug level set runs an event with a debug level set,
+// the event debug level will be used.
 // Possible values:
 // - DEBUG_LEVEL_CRITICAL: errors severe enough to stop the script
 // - DEBUG_LEVEL_ERROR: indicates the script malfunctioned in some way

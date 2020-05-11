@@ -1033,12 +1033,14 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     int nEventLevel, nObjectLevel;
 
     // Set the debugging level specific to this event, if it is defined.
-    // This is done by temporarily overriding the object's debug level.
-    if ((nEventLevel = GetEventDebugLevel(sEvent)) != -1 &&
-        nEventLevel > (nObjectLevel = GetDebugLevel(oSelf)))
+    // If an event has a debug level set, we use that debug level, no
+    //  matter what it is.  If an object has a debug level, we use the
+    //  greater of the module or the object.
+    if ((nEventLevel = GetEventDebugLevel(sEvent)) != -1)
     {
         SetLocalInt(oSelf, DEBUG_LEVEL_OLD, nObjectLevel);
         SetDebugLevel(oSelf, nEventLevel);
+        ToggleModuleDebugLevel(nEventLevel);
     }
 
     Debug("Running " + (bLocalOnly ? "local " : "") + "event " + sEvent +
@@ -1122,6 +1124,8 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // If we previously overwrote the object's debug level, reset it.
     if (nObjectLevel = GetLocalInt(oSelf, DEBUG_LEVEL_OLD))
         SetDebugLevel(oSelf, nObjectLevel);
+    
+    ToggleModuleDebugLevel();
 
     DeleteLocalString(oEvent, EVENT_CURRENT_PLUGIN);
     return nState;
@@ -1336,4 +1340,15 @@ int GetTimerRemaining(int nTimerID)
 
     string sTimerID = IntToString(nTimerID);
     return GetLocalInt(TIMERS, TIMER_REMAINING + IntToString(nTimerID));
+}
+
+// ----- Miscellaneous ------------------------------------------------------
+void ToggleModuleDebugLevel(int nLevel = -1)
+{
+    object oModule = GetModule();
+
+    if (nLevel = -1)
+        SetDebugLevel(oModule, DEFAULT_DEBUG_LEVEL);
+    else
+        SetDebugLevel(oModule, nLevel);
 }
