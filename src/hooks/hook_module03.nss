@@ -35,13 +35,13 @@ void main()
         // correctly execute for him.
         DeleteLocalInt(oPC, LOGIN_BOOT);
 
-        if (!GetIsDM(oPC))
-        {
-            // This is a running count of the number of players in the module.
-            // It will not count DMs. This is a handy utility for counting
-            // online players.
-            AddListObject(OBJECT_SELF, oPC, PLAYERS_IN_MODULE, TRUE);
-        }
+        // This is a running count of the number of players in the module.
+        // It will count DMs separately. This is a handy utility for counting
+        // online players.
+        if (GetIsDM(oPC))
+            AddListObject(OBJECT_SELF, oPC, DM_ROSTER, TRUE);
+        else if (GetIsPC(oPC))
+            AddListObject(OBJECT_SELF, oPC, PLAYER_ROSTER, TRUE);
 
         // Send the player the welcome message.
         DelayCommand(1.0, SendMessageToPC(oPC, WELCOME_MESSAGE));

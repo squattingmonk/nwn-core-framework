@@ -20,7 +20,9 @@ void main()
         RunEvent(MODULE_EVENT_ON_CLIENT_LEAVE);
 
         // Decrement the count of players in the module
-        if (!GetIsDM(oPC))
-            RemoveListObject(OBJECT_SELF, oPC, PLAYERS_IN_MODULE);
+        if (GetIsDM(oPC))
+            RemoveListObject(OBJECT_SELF, oPC, DM_ROSTER);
+        else if (GetIsPC(oPC))
+            RemoveListObject(OBJECT_SELF, oPC, PLAYER_ROSTER);
     }
 }

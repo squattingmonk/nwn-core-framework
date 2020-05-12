@@ -74,25 +74,29 @@ const float  EVENT_PRIORITY_DEFAULT = -11111.0;         // The script will only 
 
 // ----- Timer Management ------------------------------------------------------
 
-const string TIMER_EXISTS     = "TIMER_EXISTS";     // Denotes that a timer with the given ID exists
-const string TIMER_INTERVAL   = "TIMER_INTERVAL";   // The interval between execution of the timer's script
-const string TIMER_ITERATIONS = "TIMER_ITERATIONS"; // The number of times the timer will run
-const string TIMER_JITTER     = "TIMER_JITTER";     // An amount of variance on the timer's delay
-const string TIMER_NEXT_ID    = "TIMER_NEXT_ID";    // The ID for the next timer
-const string TIMER_REMAINING  = "TIMER_REMAINING";  // The number of iterations remaining
-const string TIMER_RUNNING    = "TIMER_RUNNING";    // Whether the timer is currently running
-const string TIMER_EVENT      = "TIMER_EVENT";      // The event to execute when the timer elapses
-const string TIMER_TARGET     = "TIMER_TARGET";     // The object on which the timer's script will run
-const string TIMER_TARGETS_PC = "TIMER_TARGETS_PC"; // Whether the timer's target is a PC
-const string TIMER_LAST       = "TIMER_LAST";       // The ID of the last timer to run
+const string TIMER_EXISTS        = "TIMER_EXISTS";     // Denotes that a timer with the given ID exists
+const string TIMER_INTERVAL      = "TIMER_INTERVAL";   // The interval between execution of the timer's script
+const string TIMER_ITERATIONS    = "TIMER_ITERATIONS"; // The number of times the timer will run
+const string TIMER_JITTER        = "TIMER_JITTER";     // An amount of variance on the timer's delay
+const string TIMER_NEXT_ID       = "TIMER_NEXT_ID";    // The ID for the next timer
+const string TIMER_REMAINING     = "TIMER_REMAINING";  // The number of iterations remaining
+const string TIMER_RUNNING       = "TIMER_RUNNING";    // Whether the timer is currently running
+const string TIMER_EVENT         = "TIMER_EVENT";      // The event to execute when the timer elapses
+const string TIMER_TARGET        = "TIMER_TARGET";     // The object on which the timer's script will run
+const string TIMER_TARGETS_PC    = "TIMER_TARGETS_PC"; // Whether the timer's target is a PC
+const string TIMER_LAST          = "TIMER_LAST";       // The ID of the last timer to run
+
+const string TIMER_ON_AREA_EMPTY = "TIMER_ON_AREA_EMPTY";   // Timer variable name for OnAreaExit Timer
 
 // ----- Player Management -----------------------------------------------------
 
 const string PC_CD_KEY         = "PC_CD_KEY";
 const string PC_PLAYER_NAME    = "PC_PLAYER_NAME";
-const string PLAYERS_IN_MODULE = "PLAYERS_IN_MODULE";
+const string PLAYER_ROSTER     = "PLAYER_ROSTER";
+const string DM_ROSTER         = "DM_ROSTER";
 const string LOGIN_BOOT        = "LOGIN_BOOT";
 const string LOGIN_DEATH       = "LOGIN_DEATH";
+const string AREA_ROSTER       = "AREA_ROSTER";
 
 // ----- Miscellaneous ---------------------------------------------------------
 
@@ -135,6 +139,9 @@ const string AREA_EVENT_ON_ENTER                      = "OnAreaEnter";
 const string AREA_EVENT_ON_EXIT                       = "OnAreaExit";
 const string AREA_EVENT_ON_HEARTBEAT                  = "OnAreaHeartbeat";
 const string AREA_EVENT_ON_USER_DEFINED               = "OnAreaUserDefined";
+
+// These are pseudo-events called by the Core Framework
+const string AREA_EVENT_ON_EMPTY                      = "OnAreaEmpty";
 
 // ----- Area of Effect Events -------------------------------------------------
 

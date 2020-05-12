@@ -15,8 +15,15 @@ void main()
     // Don't run this event if the exiting object is a PC that is about to be
     // booted.
     object oPC = GetExitingObject();
+
     if (GetIsPC(oPC) && GetLocalInt(oPC, LOGIN_BOOT))
         return;
+
+    if (!RemoveListObject(OBJECT_SELF, oPC, AREA_ROSTER) && ENABLE_ON_AREA_EMPTY_EVENT)
+    {
+        int nTimerID = CreateTimer(OBJECT_SELF, AREA_EVENT_ON_EMPTY, ON_AREA_EMPTY_EVENT_DELAY, 1);
+        StartTimer(nTimerID, FALSE);
+    }
 
     RemoveScriptSource(oPC);
     RunEvent(AREA_EVENT_ON_EXIT, oPC);
