@@ -1110,8 +1110,8 @@ int CreateTimer(object oTarget, string sEvent, float fInterval, int nIterations 
     }
 
     int nTimerID = GetLocalInt(TIMERS, TIMER_NEXT_ID);
-    if (!nTimer)
-        nTimer = 1;
+    if (!nTimerID)
+        nTimerID = 1;
 
     string sTimerID = IntToString(nTimerID);
 
