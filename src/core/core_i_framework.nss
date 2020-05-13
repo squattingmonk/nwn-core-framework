@@ -1110,6 +1110,9 @@ int CreateTimer(object oTarget, string sEvent, float fInterval, int nIterations 
     }
 
     int nTimerID = GetLocalInt(TIMERS, TIMER_NEXT_ID);
+    if (!nTimer)
+        nTimer = 1;
+
     string sTimerID = IntToString(nTimerID);
 
     SetLocalString(TIMERS, TIMER_EVENT       + sTimerID, sEvent);
@@ -1159,6 +1162,7 @@ void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
     {
         Debug("Cannot execute timer " + sEvent + ": " + sError, DEBUG_LEVEL_WARNING);
         KillTimer(nTimerID);
+        return;
     }
 
     // Check how many more times the timer should be run
@@ -1243,6 +1247,8 @@ void ResetTimer(int nTimerID)
 void KillTimer(int nTimerID)
 {
     string sTimerID = IntToString(nTimerID);
+
+    Debug("Killing timer with ID=" + sTimerID);
 
     // Cleanup the local variables
     DeleteLocalString(TIMERS, TIMER_EVENT       + sTimerID);
