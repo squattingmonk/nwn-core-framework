@@ -162,6 +162,22 @@ object GetCurrentEvent();
 // invalid, returns the object that triggered the currently executing event.
 object GetEventTriggeredBy(object oEvent = OBJECT_INVALID);
 
+// ---< GetEventDebugLevel >---
+// ---< core_i_framework >---
+// Returns the debug level set for the passed sEvent.  Returns -1 if an event-
+// specific debug level was not set before the event ran.
+int GetEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID);
+
+// ---< SetEventDebugLevel >---
+// ---< core_i_framework >---
+// Sets the debug level for the passed sEvent to nLevel.
+void SetEventDebugLevel(string sEvent, int nLevel, object oTarget = OBJECT_INVALID); 
+
+// ---< DeleteEventDebugLevel >---
+// ---< core_i_framework >---
+// Deteles the debug level set for the passed sEvent.
+void DeleteEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID);
+
 // ---< GetEventState >---
 // ---< core_i_framework >---
 // Returns the state of the event represented by oEvent. If oEvent is invalid,
@@ -370,12 +386,15 @@ int GetIsTimerInfinite(int nTimerID);
 int GetTimerRemaining(int nTimerID);
 
 // ----- Miscellaneous ---------------------------------------------------------
-
-// ---< SetEventDebugLevel >---
+// ---< ToggleModuleDebugLevel >---
 // ---< core_i_framework >---
-// Temporarily sets the debug level of the module to nLevel. This can be used
-// OnHeartbeat to stop excessive debug messages.
-void SetEventDebugLevel(int nLevel);
+// If a nLevel is passed, that level is set as the primary module level.  If not,
+// the module's debug level is reset to the configurable level set in
+// core_c_config.  The purpose of this function is to allow an event debug level
+// to take primacy over all other debug levels (module and/or object).  If an
+// event debug level is not set, this function is not called and the more verbose
+// of the object debug level or the module debug level is used.
+void ToggleModuleDebugLevel(int nLevel = -1);
 
 // -----------------------------------------------------------------------------
 //                             Function Definitions
@@ -611,6 +630,35 @@ object GetEventTriggeredBy(object oEvent = OBJECT_INVALID)
         oEvent = EVENT_CURRENT;
 
     return GetLocalObject(oEvent, EVENT_TRIGGERED);
+}
+
+int GetEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID)
+{
+    if (!GetIsObjectValid(oTarget) || !GetLocalInt(oTarget, EVENT_DEBUG_SET + sEvent))
+        oTarget = EVENTS;
+
+    if (GetLocalInt(oTarget, EVENT_DEBUG_SET + sEvent))
+        return GetLocalInt(oTarget, EVENT_DEBUG + sEvent);
+    else
+        return -1;
+}
+
+void SetEventDebugLevel(string sEvent, int nLevel, object oTarget = OBJECT_INVALID)
+{
+    if (!GetIsObjectValid(oTarget))
+        oTarget = EVENTS;
+
+    SetLocalInt(oTarget, EVENT_DEBUG + sEvent, nLevel);
+    SetLocalInt(oTarget, EVENT_DEBUG_SET + sEvent, TRUE);
+}
+
+void DeleteEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID)
+{
+    if (!GetIsObjectValid(oTarget))
+        oTarget = EVENTS;
+
+    DeleteLocalInt(oTarget, EVENT_DEBUG + sEvent);
+    DeleteLocalInt(oTarget, EVENT_DEBUG_SET + sEvent);
 }
 
 int GetEventState(object oEvent = OBJECT_INVALID)
@@ -983,6 +1031,19 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     if (!GetIsObjectValid(oInit))
         oInit = oSelf;
 
+    int nEventLevel, nObjectLevel = GetDebugLevel(oSelf);
+
+    // Set the debugging level specific to this event, if it is defined.
+    // If an event has a debug level set, we use that debug level, no
+    //  matter what it is.  If an object has a debug level, we use the
+    //  greater of the module or the object.
+    if ((nEventLevel = GetEventDebugLevel(sEvent)) != -1)
+    {
+        SetLocalInt(oSelf, DEBUG_LEVEL_OLD, nObjectLevel);
+        SetDebugLevel(oSelf, nEventLevel);
+        ToggleModuleDebugLevel(nEventLevel);
+    }
+
     Debug("Running " + (bLocalOnly ? "local " : "") + "event " + sEvent +
           " on " + GetName(oSelf) + "; oInit: " + GetName(oInit));
 
@@ -1061,6 +1122,12 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     }
 
     // Clean up
+    // If we previously overwrote the object's debug level, reset it.
+    if (nObjectLevel == GetLocalInt(oSelf, DEBUG_LEVEL_OLD))
+        SetDebugLevel(oSelf, nObjectLevel);
+    
+    ToggleModuleDebugLevel();
+
     DeleteLocalString(oEvent, EVENT_CURRENT_PLUGIN);
     return nState;
 }
@@ -1276,15 +1343,13 @@ int GetTimerRemaining(int nTimerID)
     return GetLocalInt(TIMERS, TIMER_REMAINING + IntToString(nTimerID));
 }
 
-// ----- Miscellaneous ---------------------------------------------------------
-
-void SetEventDebugLevel(int nLevel)
+// ----- Miscellaneous ------------------------------------------------------
+void ToggleModuleDebugLevel(int nLevel = -1)
 {
     object oModule = GetModule();
-    int nOldLevel = GetDebugLevel(oModule);
-    if (nOldLevel > nLevel)
-    {
-        SetDebugLevel(nLevel, oModule);
-        DelayCommand(0.0, SetDebugLevel(nOldLevel, oModule));
-    }
+
+    if (nLevel == -1)
+        SetDebugLevel(oModule, DEFAULT_DEBUG_LEVEL);
+    else
+        SetDebugLevel(oModule, nLevel);
 }
