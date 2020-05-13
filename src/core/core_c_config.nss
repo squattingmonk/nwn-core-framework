@@ -42,12 +42,17 @@ const string FALLBACK_DATABASE = "core_framework";
 // - DEBUG_LOG_ALL: debug messages are sent to the log files, DMs, and first PC
 int DEBUG_LOGGING = DEBUG_LOG_ALL;
 
-// This is the level of debug messages to generate. All debug messages of this
-// level or higher will be logged to DEBUG_LOGGING. This is only the default
-// level for the module. You can set a higher level on an object by calling
-// SetDebugLevel() on it. Alternatively, you may use the toolset to add a local
-// int named DEBUG_LEVEL on the object; the value should be 0-3, where a higher
-// value means higher verbosity.
+// This is the level of debug messages to generate.  You can set a higher level
+// on a specific object by calling SetDebugLevel() on that object or by setting
+// a variable on the object called DEBUG_LEVEL within the toolset.  This method
+// will always use the most verbose setting between the object setting and the
+// module setting.  Alternately, you can set a specific debug level on an
+// object and/or an event using SetDebugLevel() and SetEventDebugLevel().
+// If an event debug level is set, that setting will be used, regardless of the
+// debug level set on the module or the calling object.  This allows the builder
+// to prevent excess debug logging from verbose events such as OnCreaturePerception.
+// If an object with a debug level set runs an event with a debug level set,
+// the event debug level will be used.
 // Possible values:
 // - DEBUG_LEVEL_CRITICAL: errors severe enough to stop the script
 // - DEBUG_LEVEL_ERROR: indicates the script malfunctioned in some way

@@ -12,6 +12,6 @@
 
 void main()
 {
-    SetEventDebugLevel(HEARTBEAT_DEBUG_LEVEL);
+    SetEventDebugLevel(DOOR_EVENT_ON_HEARTBEAT, HEARTBEAT_DEBUG_LEVEL);
     RunEvent(DOOR_EVENT_ON_HEARTBEAT);
 }
