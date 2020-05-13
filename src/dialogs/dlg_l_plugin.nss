@@ -201,7 +201,7 @@ void OnLibraryLoad()
         SetName(oPlugin, "[Plugin] Dynamic Dialogs");
         SetDescription(oPlugin,
             "This plugin allows the creation and launching of script-driven dialogs.");
-        SetPluginLibraries(oPlugin, "dlg_l_plugin, dlg_l_tokens, demo_l_dialogs");
+        SetPluginLibraries(oPlugin, "dlg_l_plugin, dlg_l_tokens, dlg_l_demo");
     }
 
     // Event scripts
