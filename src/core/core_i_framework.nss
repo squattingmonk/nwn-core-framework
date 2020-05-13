@@ -325,8 +325,8 @@ int RunItemEvent(string sEvent, object oItem, object oPC);
 // - oTarget: the object sScriptName will run on.
 // - sEvent: the name of the event that will fire when the set time has elapsed
 // - fInterval: the number of seconds before sEvent executes.
-// - nIterations: the number of times to the timer can elapse. 0 means no limit.
-//   If this is 0, fInterval must be greater than 6.0.
+// - nIterations: the number of times the timer can elapse. 0 means no limit. If
+//   this is 0, fInterval must be greater than 6.0.
 // - nJitter: add a bit of randomness to how often a timer executes. A random
 //   number of seconds between 0 and nJitter will  be added to fInterval each
 //   time the event runs. Leave this at the default value of 0 for no jitter.
