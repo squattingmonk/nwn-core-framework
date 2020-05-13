@@ -65,7 +65,7 @@ string GetListItem(string sList, int nNth = 0);
 // ---< util_i_csvlists >---
 // Returns the item number of sListItem in the CSV list sList. Returns -1 if
 // sListItem is not in the list.
-int FindListItem(string sList, string sListItem, int nParsed = 0);
+int FindListItem(string sList, string sListItem);
 
 // ---< HasListItem >---
 // ---< util_i_csvlists >---
