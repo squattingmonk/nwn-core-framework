@@ -1208,6 +1208,8 @@ void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
     string sError, sTimerID = IntToString(nTimerID);
     object oTarget = GetLocalObject(TIMERS, TIMER_TARGET + sTimerID);
     string sEvent = GetLocalString(TIMERS, TIMER_EVENT + sTimerID);
+    int    bPreserve;
+    
     Debug("Timer elapsed: nTimerID=" + sTimerID + " bFirstRun=" + IntToString(bFirstRun));
 
     // Sanity checks: make sure...
@@ -1215,11 +1217,14 @@ void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
     // 2. the timer has been started
     // 3. the timer target is still valid
     // 4. the timer target is still a PC if it was originally (usually this only
-    //    changes due to a PC logging out.
+    //    changes due to a PC logging out)
     if (!GetLocalInt(TIMERS, TIMER_EXISTS + sTimerID))
         sError = "Timer no longer exists. Running cleanup...";
     else if (!GetLocalInt(TIMERS, TIMER_RUNNING + sTimerID))
+    {
         sError = "Timer has not been started";
+        bPreserve = TRUE;
+    }
     else if (!GetIsObjectValid(oTarget))
         sError = "Timer target is no longer valid. Running cleanup...";
     else if (GetLocalInt(TIMERS, TIMER_TARGETS_PC + sTimerID) && !GetIsPC(oTarget))
@@ -1227,8 +1232,11 @@ void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
 
     if (sError != "")
     {
-        Debug("Cannot execute timer " + sEvent + ": " + sError, DEBUG_LEVEL_WARNING);
-        KillTimer(nTimerID);
+        Warning("Cannot execute timer " + sEvent + ": " + sError);
+        
+        if (!bPreserve)
+            KillTimer(nTimerID);
+
         return;
     }
 
@@ -1253,7 +1261,7 @@ void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
 
             // In case one of those scripts we just called reset the timer...
             if (nIterations)
-                nRemaining = GetLocalInt(TIMERS, TIMER_REMAINING  + sTimerID);
+                nRemaining = GetLocalInt(TIMERS, TIMER_REMAINING + sTimerID);
         }
 
         // If we have runs left, call our timer's next iteration.
