@@ -42,17 +42,30 @@ const string FALLBACK_DATABASE = "core_framework";
 // - DEBUG_LOG_ALL: debug messages are sent to the log files, DMs, and first PC
 int DEBUG_LOGGING = DEBUG_LOG_ALL;
 
-// This is the level of debug messages to generate.  You can set a higher level
-// on a specific object by calling SetDebugLevel() on that object or by setting
-// a variable on the object called DEBUG_LEVEL within the toolset.  This method
-// will always use the most verbose setting between the object setting and the
-// module setting.  Alternately, you can set a specific debug level on an
-// object and/or an event using SetDebugLevel() and SetEventDebugLevel().
-// If an event debug level is set, that setting will be used, regardless of the
-// debug level set on the module or the calling object.  This allows the builder
-// to prevent excess debug logging from verbose events such as OnCreaturePerception.
-// If an object with a debug level set runs an event with a debug level set,
-// the event debug level will be used.
+// This is the level of debug messages to generate. This can be overriden to
+// debug specific objects or events (see below).
+//
+// You can override this level on all events using SetDebugLevel(), or on a
+// specific event using SetEventDebugLevel(). These functions can set the level
+// for all objects or for a specific object.
+//
+// Alternatively, you can set the value on a specific object in the toolset:
+// - To set the debug level for all events, add a local int named DEBUG_LEVEL
+// - To set the debug level for a single event, add a local int named
+//   DEBUG_LEVEL_* and a local int named DEBUG_EVENT_*, where * is the name of
+//   the event as defined in core_i_constants.nss.
+// - The value of either of these settings should be a value from 0-3
+//   representing one of the DEBUG_LEVEL_* constants below.
+//
+// The value that is used is determined as follows:
+// 1. If set, the object-specific debug level for the current event is used.
+// 2. If set, the global debug level for the current event is used. Otherwise...
+// 3. The higher of the module or the object-specific debug level is used.
+//
+// This priority system is intended to allow you to reduce the amount of debug
+// calls from verbose events such as heartbeats or OnCreaturePerception, which
+// can make it hard to scan for useful information.
+//
 // Possible values:
 // - DEBUG_LEVEL_CRITICAL: errors severe enough to stop the script
 // - DEBUG_LEVEL_ERROR: indicates the script malfunctioned in some way
