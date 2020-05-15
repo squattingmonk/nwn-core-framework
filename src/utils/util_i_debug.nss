@@ -14,15 +14,17 @@
 // -----------------------------------------------------------------------------
 
 // VarNames
-const string DEBUG_COLOR = "DEBUG_COLOR";
-const string DEBUG_LEVEL = "DEBUG_LEVEL";
-const string DEBUG_LOG   = "DEBUG_LOG";
+const string DEBUG_COLOR    = "DEBUG_COLOR";
+const string DEBUG_LEVEL    = "DEBUG_LEVEL";
+const string DEBUG_LOG      = "DEBUG_LOG";
+const string DEBUG_OVERRIDE = "DEBUG_OVERRIDE";
 
-// Debug levels
-const int DEBUG_LEVEL_CRITICAL = 0;
-const int DEBUG_LEVEL_ERROR    = 1;
-const int DEBUG_LEVEL_WARNING  = 2;
-const int DEBUG_LEVEL_NOTICE   = 3;
+const int DEBUG_LEVEL_NONE     = 0; // No debug level set
+const int DEBUG_LEVEL_CRITICAL = 1;
+const int DEBUG_LEVEL_ERROR    = 2;
+const int DEBUG_LEVEL_WARNING  = 3;
+const int DEBUG_LEVEL_NOTICE   = 4;
+const int DEBUG_LEVEL_DEBUG    = 5;
 
 // Debug logging
 const int DEBUG_LOG_NONE = 0x0;
@@ -35,16 +37,22 @@ const int DEBUG_LOG_ALL  = 0xf;
 //                              Function Prototypes
 // -----------------------------------------------------------------------------
 
+// ---< OverrideDebugLevel >---
+// ---< util_i_debug >---
+// Silence all debug messages with a verbosity higher than nLevel. Pass with
+// FALSE to stop overriding the set debug level.
+void OverrideDebugLevel(int nLevel);
+
 // ---< GetDebugLevel >---
 // ---< util_i_debug >---
 // Returns the minimum level of debug messages that will be logged for oTarget.
-// If the module is set to have more verbosity than oTarget, will return the
-// module's verbosity instead.
+// If no level has been set on oTarget, will check the module's value instead.
 int GetDebugLevel(object oTarget = OBJECT_SELF);
 
 // ---< SetDebugLevel >---
 // ---< util_i_debug >---
-// Sets the minimum level of debug messages that will be logged for oTarget.
+// Sets the minimum level of debug messages that will be logged for oTarget. If
+// set to DEBUG_LEVEL_NONE, oTarget will use the module's value instead.
 void SetDebugLevel(int nLevel, object oTarget = OBJECT_SELF);
 
 // ---< GetDebugColor >---
@@ -96,15 +104,21 @@ void SetDebugLogging(int nEnabled);
 //   - DEBUG_LEVEL_ERROR: indicates the script malfunctioned in some way
 //   - DEBUG_LEVEL_WARNING: indicates that unexpected behavior may occur
 //   - DEBUG_LEVEL_NOTICE: information to track the flow of the function
-// - oTarget: The object to debug. If invalid, defaults to GetModule().
+//   - DEBUG_LEVEL_DEBUG: data dumps used for debugging
+// - oTarget: The object to debug.
 int IsDebugging(int nLevel, object oTarget = OBJECT_SELF);
 
 // ---< Debug >---
 // ---< util_i_debug >---
 // If oTarget has a debug level of nLevel or higher, logs sMessages to all
-// destinations set with SetDebugLogging(). If the module is set to log with
-// more verbosity than oTarget, will log using the module's verbosity instead.
-void Debug(string sMessage, int nLevel = DEBUG_LEVEL_NOTICE, object oTarget = OBJECT_SELF);
+// destinations set with SetDebugLogging(). If no debug level is set on oTarget,
+// will debug using the module's debug level instead.
+void Debug(string sMessage, int nLevel = DEBUG_LEVEL_DEBUG, object oTarget = OBJECT_SELF);
+
+// ---< Notice >---
+// ---< util_i_debug >---
+// Alias for Debug() that issues a general notice.
+void Notice(string sMessage, object oTarget = OBJECT_SELF);
 
 // ---< Warning >---
 // ---< util_i_debug >---
@@ -118,25 +132,32 @@ void Error(string sMessage, object oTarget = OBJECT_SELF);
 
 // ---< CriticalError >---
 // ---< util_i_debug >---
-// Alias for Debug() tat issues a critical error.
-void CriticalError(string sMessage, object oTarget = OBJECT_SELF);
-
+// Alias for Debug() that issues a critical error.
 void CriticalError(string sMessage, object oTarget = OBJECT_SELF);
 
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
 
+void OverrideDebugLevel(int nLevel)
+{
+    nLevel = clamp(nLevel, DEBUG_LEVEL_NONE, DEBUG_LEVEL_DEBUG);
+    SetLocalInt(GetModule(), DEBUG_OVERRIDE, nLevel);
+}
+
 int GetDebugLevel(object oTarget = OBJECT_SELF)
 {
     object oModule = GetModule();
-    int    nModule = GetLocalInt(oModule, DEBUG_LEVEL);
+    int nOverride = GetLocalInt(oModule, DEBUG_OVERRIDE);
+    if (nOverride)
+        return nOverride;
 
+    int nModule = GetLocalInt(oModule, DEBUG_LEVEL);
     if (oTarget == oModule || !GetIsObjectValid(oTarget))
         return nModule;
 
-    int nTarget = GetLocalInt(oTarget, DEBUG_LEVEL);
-    return (nModule > nTarget ? nModule : nTarget);
+    int nLevel = GetLocalInt(oTarget, DEBUG_LEVEL);
+    return (nLevel ? nLevel : nModule ? nModule : DEBUG_LEVEL_CRITICAL);
 }
 
 void SetDebugLevel(int nLevel, object oTarget = OBJECT_SELF)
@@ -156,6 +177,7 @@ string GetDebugColor(int nLevel)
             case DEBUG_LEVEL_CRITICAL: nColor = COLOR_RED;          break;
             case DEBUG_LEVEL_ERROR:    nColor = COLOR_ORANGE_DARK;  break;
             case DEBUG_LEVEL_WARNING:  nColor = COLOR_ORANGE_LIGHT; break;
+            case DEBUG_LEVEL_NOTICE:   nColor = COLOR_YELLOW;       break;
             default:                   nColor = COLOR_GRAY_LIGHT;   break;
         }
 
@@ -186,7 +208,7 @@ int IsDebugging(int nLevel, object oTarget = OBJECT_SELF)
     return (nLevel <= GetDebugLevel(oTarget));
 }
 
-void Debug(string sMessage, int nLevel = DEBUG_LEVEL_NOTICE, object oTarget = OBJECT_SELF)
+void Debug(string sMessage, int nLevel = DEBUG_LEVEL_DEBUG, object oTarget = OBJECT_SELF)
 {
     if (IsDebugging(nLevel, oTarget))
     {
@@ -215,6 +237,11 @@ void Debug(string sMessage, int nLevel = DEBUG_LEVEL_NOTICE, object oTarget = OB
         if (nLogging & DEBUG_LOG_PC)
             SendMessageToPC(GetFirstPC(), sMessage);
     }
+}
+
+void Notice(string sMessage, object oTarget = OBJECT_SELF)
+{
+    Debug(sMessage, DEBUG_LEVEL_NOTICE, oTarget);
 }
 
 void Warning(string sMessage, object oTarget = OBJECT_SELF)

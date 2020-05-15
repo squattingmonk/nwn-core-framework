@@ -164,18 +164,20 @@ object GetEventTriggeredBy(object oEvent = OBJECT_INVALID);
 
 // ---< GetEventDebugLevel >---
 // ---< core_i_framework >---
-// Returns the debug level set for the passed sEvent.  Returns -1 if an event-
-// specific debug level was not set before the event ran.
+// Returns the debug level set for sEvent on oTarget (or globally, if oTarget is
+// invalid). Returns 0 if an event-specific debug level is not set.
 int GetEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID);
 
 // ---< SetEventDebugLevel >---
 // ---< core_i_framework >---
-// Sets the debug level for the passed sEvent to nLevel.
+// Sets the debug level for sEvent to nLevel. If oTarget is invalid, will set
+// the global debug level for the event.
 void SetEventDebugLevel(string sEvent, int nLevel, object oTarget = OBJECT_INVALID);
 
 // ---< DeleteEventDebugLevel >---
 // ---< core_i_framework >---
-// Deteles the debug level set for the passed sEvent.
+// Deletes the debug level set for sEvent. If oTarget is invalid, will delete
+// the global debug level for the event.
 void DeleteEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID);
 
 // ---< GetEventState >---
@@ -385,17 +387,6 @@ int GetIsTimerInfinite(int nTimerID);
 // indefinitely, so be sure to check for this with GetIsTimerInfinite().
 int GetTimerRemaining(int nTimerID);
 
-// ----- Miscellaneous ---------------------------------------------------------
-// ---< ToggleModuleDebugLevel >---
-// ---< core_i_framework >---
-// If a nLevel is passed, that level is set as the primary module level.  If not,
-// the module's debug level is reset to the configurable level set in
-// core_c_config.  The purpose of this function is to allow an event debug level
-// to take primacy over all other debug levels (module and/or object).  If an
-// event debug level is not set, this function is not called and the more verbose
-// of the object debug level or the module debug level is used.
-void ToggleModuleDebugLevel(int nLevel = -1);
-
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
@@ -411,6 +402,22 @@ void InitializeCoreFramework()
     // Start debugging
     SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
     SetDebugLogging(DEBUG_LOGGING);
+
+    // Set specific event debug levels
+    if (HEARTBEAT_DEBUG_LEVEL)
+    {
+        SetEventDebugLevel(MODULE_EVENT_ON_HEARTBEAT,    HEARTBEAT_DEBUG_LEVEL);
+        SetEventDebugLevel(AREA_EVENT_ON_HEARTBEAT,      HEARTBEAT_DEBUG_LEVEL);
+        SetEventDebugLevel(AOE_EVENT_ON_HEARTBEAT,       HEARTBEAT_DEBUG_LEVEL);
+        SetEventDebugLevel(CREATURE_EVENT_ON_HEARTBEAT,  HEARTBEAT_DEBUG_LEVEL);
+        SetEventDebugLevel(DOOR_EVENT_ON_HEARTBEAT,      HEARTBEAT_DEBUG_LEVEL);
+        SetEventDebugLevel(ENCOUNTER_EVENT_ON_HEARTBEAT, HEARTBEAT_DEBUG_LEVEL);
+        SetEventDebugLevel(PLACEABLE_EVENT_ON_HEARTBEAT, HEARTBEAT_DEBUG_LEVEL);
+        SetEventDebugLevel(TRIGGER_EVENT_ON_HEARTBEAT,   HEARTBEAT_DEBUG_LEVEL);
+    }
+
+    if (PERCEPTION_DEBUG_LEVEL)
+        SetEventDebugLevel(CREATURE_EVENT_ON_PERCEPTION, PERCEPTION_DEBUG_LEVEL);
 
     Debug("Initializing Core Framework...");
 
@@ -634,13 +641,11 @@ object GetEventTriggeredBy(object oEvent = OBJECT_INVALID)
 
 int GetEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID)
 {
-    if (!GetIsObjectValid(oTarget) || !GetLocalInt(oTarget, EVENT_DEBUG_SET + sEvent))
-        oTarget = EVENTS;
+    int nLevel = GetLocalInt(oTarget, EVENT_DEBUG + sEvent);
+    if (!nLevel)
+        nLevel = GetLocalInt(EVENTS, EVENT_DEBUG + sEvent);
 
-    if (GetLocalInt(oTarget, EVENT_DEBUG_SET + sEvent))
-        return GetLocalInt(oTarget, EVENT_DEBUG + sEvent);
-    else
-        return -1;
+    return clamp(nLevel, DEBUG_LEVEL_NONE, DEBUG_LEVEL_DEBUG);
 }
 
 void SetEventDebugLevel(string sEvent, int nLevel, object oTarget = OBJECT_INVALID)
@@ -649,7 +654,6 @@ void SetEventDebugLevel(string sEvent, int nLevel, object oTarget = OBJECT_INVAL
         oTarget = EVENTS;
 
     SetLocalInt(oTarget, EVENT_DEBUG + sEvent, nLevel);
-    SetLocalInt(oTarget, EVENT_DEBUG_SET + sEvent, TRUE);
 }
 
 void DeleteEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID)
@@ -658,7 +662,6 @@ void DeleteEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID)
         oTarget = EVENTS;
 
     DeleteLocalInt(oTarget, EVENT_DEBUG + sEvent);
-    DeleteLocalInt(oTarget, EVENT_DEBUG_SET + sEvent);
 }
 
 int GetEventState(object oEvent = OBJECT_INVALID)
@@ -1031,18 +1034,13 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     if (!GetIsObjectValid(oInit))
         oInit = oSelf;
 
-    int nEventLevel, nObjectLevel = GetDebugLevel(oSelf);
-
-    // Set the debugging level specific to this event, if it is defined.
-    // If an event has a debug level set, we use that debug level, no
-    //  matter what it is.  If an object has a debug level, we use the
-    //  greater of the module or the object.
-    if ((nEventLevel = GetEventDebugLevel(sEvent)) != -1)
-    {
-        SetLocalInt(oSelf, DEBUG_LEVEL_OLD, nObjectLevel);
-        SetDebugLevel(nEventLevel, oSelf);
-        ToggleModuleDebugLevel(nEventLevel);
-    }
+    // Set the debugging level specific to this event, if it is defined. If an
+    // event has a debug level set, we use that debug level, no matter what it
+    // is. Otherwise, we use the object's debug level (or the module's debug
+    // level if no level was set for the object).
+    int nEventLevel = GetEventDebugLevel(sEvent, oSelf);
+    if (nEventLevel)
+        OverrideDebugLevel(nEventLevel);
 
     Debug("Running " + (bLocalOnly ? "local " : "") + "event " + sEvent +
           " on " + GetName(oSelf) + "; oInit: " + GetName(oInit));
@@ -1122,12 +1120,8 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     }
 
     // Clean up
-    // If we previously overwrote the object's debug level, reset it.
-    if (nObjectLevel == GetLocalInt(oSelf, DEBUG_LEVEL_OLD))
-        SetDebugLevel(nObjectLevel, oSelf);
-
-    ToggleModuleDebugLevel();
-
+    if (nEventLevel)
+        OverrideDebugLevel(FALSE);
     DeleteLocalString(oEvent, EVENT_CURRENT_PLUGIN);
     return nState;
 }
@@ -1209,7 +1203,7 @@ void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
     object oTarget = GetLocalObject(TIMERS, TIMER_TARGET + sTimerID);
     string sEvent = GetLocalString(TIMERS, TIMER_EVENT + sTimerID);
     int    bPreserve;
-    
+
     Debug("Timer elapsed: nTimerID=" + sTimerID + " bFirstRun=" + IntToString(bFirstRun));
 
     // Sanity checks: make sure...
@@ -1233,7 +1227,7 @@ void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
     if (sError != "")
     {
         Warning("Cannot execute timer " + sEvent + ": " + sError);
-        
+
         if (!bPreserve)
             KillTimer(nTimerID);
 
@@ -1355,15 +1349,4 @@ int GetTimerRemaining(int nTimerID)
 
     string sTimerID = IntToString(nTimerID);
     return GetLocalInt(TIMERS, TIMER_REMAINING + IntToString(nTimerID));
-}
-
-// ----- Miscellaneous ------------------------------------------------------
-void ToggleModuleDebugLevel(int nLevel = -1)
-{
-    object oModule = GetModule();
-
-    if (nLevel == -1)
-        SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
-    else
-        SetDebugLevel(nLevel, oModule);
 }

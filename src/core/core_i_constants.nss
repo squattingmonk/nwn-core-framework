@@ -60,6 +60,7 @@ const string EVENT_CURRENT_PLUGIN   = "EVENT_CURRENT_PLUGIN";   // Name of the p
 const string EVENT_SOURCE_BLACKLIST = "EVENT_SOURCE_BLACKLIST"; // List of blacklisted plugins or objects
 const string EVENT_TRIGGERED        = "EVENT_TRIGGERED";        // The object triggering the event
 const string EVENT_LAST             = "EVENT_LAST";             // The last event to run
+const string EVENT_DEBUG            = "EVENT_DEBUG";            // The event's debug level
 
 const string EVENT_STATE            = "EVENT_STATE";    // State of the event queue
 const int    EVENT_STATE_OK         = 0x00;             // normal (default)
@@ -71,10 +72,6 @@ const float  EVENT_PRIORITY_FIRST   =   9999.0;         // The script is always 
 const float  EVENT_PRIORITY_LAST    =  -9999.0;         // The script is always last
 const float  EVENT_PRIORITY_ONLY    =  11111.0;         // The script will be the only one to execute
 const float  EVENT_PRIORITY_DEFAULT = -11111.0;         // The script will only execute if no other scripts do
-
-const string EVENT_DEBUG            = "EVENT_DEBUG";    
-const string EVENT_DEBUG_SET        = "EVENT_DEBUG_SET";    
-const string DEBUG_LEVEL_OLD        = "DEBUG_LEVEL_OLD";
 
 // ----- Timer Management ------------------------------------------------------
 

@@ -54,13 +54,13 @@ int DEBUG_LOGGING = DEBUG_LOG_ALL;
 // - To set the debug level for a single event, add a local int named
 //   DEBUG_LEVEL_* and a local int named DEBUG_EVENT_*, where * is the name of
 //   the event as defined in core_i_constants.nss.
-// - The value of either of these settings should be a value from 0-3
+// - The value of either of these settings should be a value from 1-5
 //   representing one of the DEBUG_LEVEL_* constants below.
 //
 // The value that is used is determined as follows:
 // 1. If set, the object-specific debug level for the current event is used.
 // 2. If set, the global debug level for the current event is used. Otherwise...
-// 3. The higher of the module or the object-specific debug level is used.
+// 3. The higher of the global or the object-specific debug level is used.
 //
 // This priority system is intended to allow you to reduce the amount of debug
 // calls from verbose events such as heartbeats or OnCreaturePerception, which
@@ -71,17 +71,34 @@ int DEBUG_LOGGING = DEBUG_LOG_ALL;
 // - DEBUG_LEVEL_ERROR: indicates the script malfunctioned in some way
 // - DEBUG_LEVEL_WARNING: indicates unexpected behavior may occur
 // - DEBUG_LEVEL_NOTICE: information to track the flow of functions
-const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_NOTICE;
+// - DEBUG_LEVEL_DEBUG: data dumps used for debugging
+const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
 
 // This controls the level of debug messages to generate on heartbeat events.
 // This can be used to prevent the excessive generation of debug messages that
-// may clutter the log.
+// may clutter the log. You may override this on an event-by-event basis using
+// SetEventDebugLevel().
 // Possible values:
+// - DEBUG_LEVEL_NONE: use the object or module default level
 // - DEBUG_LEVEL_CRITICAL: errors severe enough to stop the script
 // - DEBUG_LEVEL_ERROR: indicates the script malfunctioned in some way
 // - DEBUG_LEVEL_WARNING: indicates unexpected behavior may occur
 // - DEBUG_LEVEL_NOTICE: information to track the flow of functions
+// - DEBUG_LEVEL_DEBUG: data dumps used for debugging
 const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
+
+// This is the level of debug messages to generate when OnCreaturePerception
+// fires. This can be used to prevent the excessive generation of debug messages
+// that may clutter the log. You may override this on an object-by-object basis
+// using SetEventDebugLevel().
+// Possible values:
+// - DEBUG_LEVEL_NONE: use the object or module default level
+// - DEBUG_LEVEL_CRITICAL: errors severe enough to stop the script
+// - DEBUG_LEVEL_ERROR: indicates the script malfunctioned in some way
+// - DEBUG_LEVEL_WARNING: indicates unexpected behavior may occur
+// - DEBUG_LEVEL_NOTICE: information to track the flow of functions
+// - DEBUG_LEVEL_DEBUG: data dumps used for debugging
+const int PERCEPTION_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
 // -----------------------------------------------------------------------------
 //                         Library and Plugin Management

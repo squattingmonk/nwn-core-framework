@@ -12,6 +12,5 @@
 
 void main()
 {
-    SetEventDebugLevel(PLACEABLE_EVENT_ON_HEARTBEAT, HEARTBEAT_DEBUG_LEVEL);
     RunEvent(PLACEABLE_EVENT_ON_HEARTBEAT);
 }

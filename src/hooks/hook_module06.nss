@@ -12,7 +12,6 @@
 
 void main()
 {
-    SetEventDebugLevel(MODULE_EVENT_ON_HEARTBEAT, HEARTBEAT_DEBUG_LEVEL);
     RunEvent(MODULE_EVENT_ON_HEARTBEAT);
 
     if (ENABLE_ON_HOUR_EVENT)
