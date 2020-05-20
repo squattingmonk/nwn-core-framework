@@ -840,6 +840,18 @@ void DumpEventScripts(object oTarget, string sEvent)
     }
 }
 
+int HasEventScripts(string sEvent, object oSelf = OBJECT_SELF)
+{
+    object oEvent;
+
+    if (GetLocalInt(oSelf, sEvent))
+        oEvent = GetDataItem(EVENTS, sEvent);
+    else
+        oEvent = InitializeEvent(sEvent, oSelf, oSelf);
+
+    return CountStringList(oEvent, sEvent);
+}
+
 object GetEvent(string sEvent)
 {
     object oEvent = GetDataItem(EVENTS, sEvent);
