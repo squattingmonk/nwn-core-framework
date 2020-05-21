@@ -248,9 +248,11 @@ void DumpEventScripts(object oTarget, string sEvent);
 
 // ---< CountEventScripts >---
 // ---< core_i_framework >---
-// Returns the number of event scripts assigned to sEvent on oSelf.  The
-// event will be initialized if required.
-int CountEventScripts(string sEvent, object oSelf = OBJECT_SELF);
+// Returns the number of event scripts assigned to sEvent on oSelf. The event
+// will be initialized if required. oInit is the object that would trigger the
+// event (e.g., the PC OnAreaEmpty); this is included to check for additional
+// script sources.
+int CountEventScripts(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF);
 
 // ---< GetEvent >---
 // ---< core_i_framework >---
@@ -846,16 +848,12 @@ void DumpEventScripts(object oTarget, string sEvent)
     }
 }
 
-int CountEventScripts(string sEvent, object oSelf = OBJECT_SELF)
+int CountEventScripts(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF)
 {
-    object oEvent;
+    if (!GetLocalInt(oSelf, sEvent))
+        InitializeEvent(sEvent, oSelf, oInit);
 
-    if (GetLocalInt(oSelf, sEvent))
-        oEvent = GetDataItem(EVENTS, sEvent);
-    else
-        oEvent = InitializeEvent(sEvent, oSelf, oSelf);
-
-    return CountStringList(oEvent, sEvent);
+    return CountStringList(oSelf, sEvent);
 }
 
 object GetEvent(string sEvent)
