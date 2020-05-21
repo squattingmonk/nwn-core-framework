@@ -21,7 +21,7 @@ void main()
 
     if (!RemoveListObject(OBJECT_SELF, oPC, AREA_ROSTER) && ENABLE_ON_AREA_EMPTY_EVENT)
     {
-        if (HasEventScripts(AREA_EVENT_ON_EMPTY))
+        if (CountEventScripts(AREA_EVENT_ON_EMPTY))
         {
             int nTimerID = CreateTimer(OBJECT_SELF, AREA_EVENT_ON_EMPTY, ON_AREA_EMPTY_EVENT_DELAY, 1);
             StartTimer(nTimerID, FALSE);

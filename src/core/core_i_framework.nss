@@ -246,6 +246,12 @@ void SortEventScripts(object oTarget, string sEvent);
 // Prints all scripts registered to oTarget for sEvent as debug output.
 void DumpEventScripts(object oTarget, string sEvent);
 
+// ---< CountEventScripts >---
+// ---< core_i_framework >---
+// Returns the number of event scripts assigned to sEvent on oSelf.  The
+// event will be initialized if required.
+int CountEventScripts(string sEvent, object oSelf = OBJECT_SELF);
+
 // ---< GetEvent >---
 // ---< core_i_framework >---
 // Returns an object representing sEvent, creating it if it does not already
@@ -840,7 +846,7 @@ void DumpEventScripts(object oTarget, string sEvent)
     }
 }
 
-int HasEventScripts(string sEvent, object oSelf = OBJECT_SELF)
+int CountEventScripts(string sEvent, object oSelf = OBJECT_SELF)
 {
     object oEvent;
 
