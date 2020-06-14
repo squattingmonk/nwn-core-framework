@@ -39,9 +39,15 @@ void main()
         // It will count DMs separately. This is a handy utility for counting
         // online players.
         if (GetIsDM(oPC))
+        {    
             AddListObject(OBJECT_SELF, oPC, DM_ROSTER, TRUE);
+            SetLocalInt(oPC, IS_DM, TRUE);
+        }
         else if (GetIsPC(oPC))
+        {
             AddListObject(OBJECT_SELF, oPC, PLAYER_ROSTER, TRUE);
+            SetLocalInt(oPC, IS_PC, TRUE);
+        }
 
         // Send the player the welcome message.
         DelayCommand(1.0, SendMessageToPC(oPC, WELCOME_MESSAGE));
