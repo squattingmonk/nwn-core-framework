@@ -395,6 +395,15 @@ int GetIsTimerInfinite(int nTimerID);
 // indefinitely, so be sure to check for this with GetIsTimerInfinite().
 int GetTimerRemaining(int nTimerID);
 
+// ----- Miscellaneous ---------------------------------------------------------
+
+// ---< GetWasPC >---
+// ---< core_i_framework >---
+// Returns whether oTarget was a PC at login. This is useful because area and
+// trigger OnExit events for a PC that is leaving the module run after
+// OnClientLeave, so GetIsPC() returns FALSE.
+int GetWasPC(object oTarget);
+
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
@@ -1365,4 +1374,11 @@ int GetTimerRemaining(int nTimerID)
 
     string sTimerID = IntToString(nTimerID);
     return GetLocalInt(TIMERS, TIMER_REMAINING + IntToString(nTimerID));
+}
+
+// ----- Miscellaneous ---------------------------------------------------------
+
+int GetWasPC(object oTarget)
+{
+    return GetLocalInt(oTarget, IS_PC);
 }

@@ -16,7 +16,7 @@ void main()
     // booted.
     object oPC = GetExitingObject();
 
-    if (GetIsPC(oPC) && GetLocalInt(oPC, LOGIN_BOOT))
+    if (GetWasPC(oPC) && GetLocalInt(oPC, LOGIN_BOOT))
         return;
 
     if (!RemoveListObject(OBJECT_SELF, oPC, AREA_ROSTER) && ENABLE_ON_AREA_EMPTY_EVENT)
