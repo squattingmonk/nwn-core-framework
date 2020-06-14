@@ -98,6 +98,8 @@ const string DM_ROSTER         = "DM_ROSTER";
 const string LOGIN_BOOT        = "LOGIN_BOOT";
 const string LOGIN_DEATH       = "LOGIN_DEATH";
 const string AREA_ROSTER       = "AREA_ROSTER";
+const string IS_PC             = "IS_PC";
+const string IS_DM             = "IS_DM";
 
 // ----- Miscellaneous ---------------------------------------------------------
 
