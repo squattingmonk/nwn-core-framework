@@ -103,7 +103,10 @@ const string IS_DM             = "IS_DM";
 
 // ----- Miscellaneous ---------------------------------------------------------
 
-const string CURRENT_HOUR = "CURRENT_HOUR";
+const string CURRENT_HOUR            = "CURRENT_HOUR";
+const string DISPATCH_EXCEPTION      = "DISPATCH_EXCEPTION";
+const string DISPATCH_EXCEPTION_ALL  = "DISPATCH_EXCEPTION_ALL";
+const string DISPATCH_MODE_ALLOW     = "DISPATCH_MODE_ALLOW";
 
 // -----------------------------------------------------------------------------
 //                                  Event Names

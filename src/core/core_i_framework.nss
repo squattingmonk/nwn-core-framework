@@ -203,6 +203,37 @@ void SetEventState(int nState, object oEvent = OBJECT_INVALID);
 // clearsa the state of the currently executing event.
 void ClearEventState(object oEvent = OBJECT_INVALID);
 
+// Dispatch exceptions will prevent all event processing from occuring for
+// a specified event when triggered by a specified target.  Dispatch
+// exceptions are checked at the beginning of RunEvent() and a positive
+// dispatch exception indication will halt event execution and set
+// the EVENT_STATE_DENIED flag.  This flag may have unintended consequences, so
+// a thorough knowledge of the framework system is required before dispatch
+// exceptions can be used.
+
+// ---< GetDispatchException >---
+// ---< core_i_framework >---
+// Gets the dispatch exception status for sEvent on oTarget.  An empty string
+// passed for sEvent assumes a negative exception status and allows the event
+// to run.  sEvent must be a single event constant.
+int GetDispatchException(object oTarget, string sEvent);
+
+// ---< SetDispatchExceptions >---
+// ---< core_i_framework >---
+// Sets a dispatch exception for sEvents on oTarget.  If sEvents is not passed,
+// oTarget will be excepted from all events.  bAllow toggles the exception status
+// from excepting to allowing: if bAllow is TRUE, all sEvents will be allowed, if
+// bAllowed is FALSE, all sEvents will be excepted. sEvents can be an empty string,
+// a single event constant, or a comma separated list of event constants.
+void SetDispatchExceptions(object oTarget, string sEvents = "", int bAllow = FALSE);
+
+// ---< ClearDispatchExceptions >---
+// ---< core_i_framework >---
+// Clears a dispatch exception for sEvents from oTarget.  If sEvent is not
+// passed, all dispatch exceptions are cleared.  sEvents can be an empty string,
+// a single event constant, or a comma separated list of event constants.
+int ClearDispatchExceptions(object oTarget, string sEvents = "");
+
 // ---< RegisterEventScripts >---
 // ---< core_i_framework >---
 // Registers all scripts in sScripts to sEvent on oTarget with a priority of
@@ -706,6 +737,68 @@ void ClearEventState(object oEvent = OBJECT_INVALID)
     DeleteLocalInt(oEvent, EVENT_STATE);
 }
 
+int GetDispatchException(object oTarget, string sEvent)
+{
+    if (sEvent == "")
+        return FALSE;
+
+    if (GetLocalInt(oTarget, DISPATCH_EXCEPTION_ALL))
+        return TRUE;
+
+    if (GetLocalInt(oTarget, DISPATCH_MODE_ALLOW))
+        return !HasListString(oTarget, sEvent, DISPATCH_EXCEPTION);
+    else
+        return HasListString(oTarget, sEvent, DISPATCH_EXCEPTION);
+}
+
+void SetDispatchExceptions(object oTarget, string sEvents = "", int bAllow = FALSE)
+{
+    if (GetLocalInt(oTarget, DISPATCH_MODE_ALLOW) != bAllow)
+        DeleteStringList(oTarget, DISPATCH_EXCEPTION);
+
+    if (sEvents == "")
+    {
+        SetLocalInt(oTarget, DISPATCH_EXCEPTION_ALL, !bAllow);
+        DeleteLocalInt(oTarget, DISPATCH_MODE_ALLOW);
+        DeleteStringList(oTarget, DISPATCH_EXCEPTION);    
+        return;
+    }
+
+    DeleteLocalInt(oTarget, DISPATCH_EXCEPTION_ALL);
+    SetLocalInt(oTarget, DISPATCH_MODE_ALLOW, bAllow);
+    
+    int i, nCount = CountList(sEvents);
+    string sEvent;
+
+    for (i = 0; i < nCount; i++)
+    {
+        sEvent = GetListItem(sEvents, i);
+        AddListString(oTarget, sEvent, DISPATCH_EXCEPTION, TRUE);
+    }
+}
+
+int ClearDispatchExceptions(object oTarget, string sEvents = "")
+{
+    if (sEvents == "")
+    {
+        DeleteLocalInt(oTarget, DISPATCH_EXCEPTION_ALL);
+        DeleteLocalString(oTarget, DISPATCH_MODE_ALLOW);
+        DeleteStringList(oTarget, DISPATCH_EXCEPTION);
+        return FALSE;
+    }
+
+    int i, nExceptions, nCount = CountList(sEvents);
+    string sEvent;
+
+    for (i = 0; i < nCount; i++)
+    {
+        sEvent = GetListItem(sEvents, i);
+        nExceptions = RemoveListString(oTarget, sEvent, DISPATCH_EXCEPTION);
+    }
+
+    return nExceptions;
+}
+
 string PriorityToString(float fPriority)
 {
     if (fPriority == EVENT_PRIORITY_FIRST)   return "first";
@@ -1058,6 +1151,9 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // Which object initiated the event?
     if (!GetIsObjectValid(oInit))
         oInit = oSelf;
+
+    if (GetDispatchException(oInit, sEvent))
+        return EVENT_STATE_DENIED;
 
     // Set the debugging level specific to this event, if it is defined. If an
     // event has a debug level set, we use that debug level, no matter what it
