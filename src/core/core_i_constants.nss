@@ -73,6 +73,13 @@ const float  EVENT_PRIORITY_LAST    =  -9999.0;         // The script is always 
 const float  EVENT_PRIORITY_ONLY    =  11111.0;         // The script will be the only one to execute
 const float  EVENT_PRIORITY_DEFAULT = -11111.0;         // The script will only execute if no other scripts do
 
+const string EVENT_DISPATCH_EVENTS         = "DISPATCH_EVENTS";
+const string EVENT_DISPATCH_ALL_EVENTS     = "DISPATCH_ALL_EVENTS";
+const string EVENT_DISPATCH_MODE_ALLOW     = "DISPATCH_MODE_ALLOW";
+const int    EVENT_DISPATCH_LEVEL_DISPATCH = 1;
+const int    EVENT_DISPATCH_LEVEL_PC_ONLY  = 2;
+const int    EVENT_DISPATCH_LEVEL_CUSTOM   = 3;
+
 // ----- Timer Management ------------------------------------------------------
 
 const string TIMER_EXISTS        = "TIMER_EXISTS";     // Denotes that a timer with the given ID exists
@@ -104,9 +111,6 @@ const string IS_DM             = "IS_DM";
 // ----- Miscellaneous ---------------------------------------------------------
 
 const string CURRENT_HOUR            = "CURRENT_HOUR";
-const string DISPATCH_EXCEPTION      = "DISPATCH_EXCEPTION";
-const string DISPATCH_EXCEPTION_ALL  = "DISPATCH_EXCEPTION_ALL";
-const string DISPATCH_MODE_ALLOW     = "DISPATCH_MODE_ALLOW";
 
 // -----------------------------------------------------------------------------
 //                                  Event Names

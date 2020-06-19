@@ -181,6 +181,35 @@ const int ENABLE_ON_AREA_EMPTY_EVENT = TRUE;
 // Default value: 180.0 (3 real-life minutes)
 const float ON_AREA_EMPTY_EVENT_DELAY = 180.0;
 
+// An event is dispatched when two objects interact, an event initiator and an
+// event receiver.  The following settings determine whether specific events
+// will be handled by the event management system based on which objects are
+// party to the event.
+//
+// NOTE:  Dispatch settings cannot override lack of event hook inclusion.  If
+//      an event hook script is not set on the object's scripts/events tab,
+//      the event will not be handled by the framework's event management
+//      system, regardless of dispatch settings.
+//
+// Possible values:
+// - DISPATCH_LEVEL_DISPATCH (default): events are handled per object design 
+//          settings on the object's scripts/events tab or as set by other event
+//          event management options.  This setting emulates normal NWN behavior.
+// - DISPATCH_LEVEL_PC_ONLY: events are handled only if a PC is party to the
+//          event, regardless of custom object dispatch settings.  In this case,
+//          PCs include DMs.
+// - DISPATCH_LEVEL_CUSTOM: events are handled per object design settings unless
+//          a custom dispatch setting is set on the *intitiating* object using
+//          SetEventsDispatchBlacklist() or SetEventsDispatchWhitelist().
+const int MODULE_DISPATCH_LEVEL = EVENT_DISPATCH_LEVEL_DISPATCH;
+
+// Setting custom object dispatch levels can result in undesired behavior when
+// objects are interacting with PCs.  To ensure object events will always fire
+// when interacting with a PC, set this to TRUE (default).  If you want custom
+// event dispatch levels to take precedence, set this to FALSE.  This setting is
+// only checked when DISPATCH_LEVEL_CUSTOM is specified above.  PCs include DMs.
+const int MODULE_DISPATCH_PC_ALWAYS = TRUE;
+
 // -----------------------------------------------------------------------------
 //                                 Miscellaneous
 // -----------------------------------------------------------------------------
