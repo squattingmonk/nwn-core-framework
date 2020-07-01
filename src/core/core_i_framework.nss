@@ -203,6 +203,41 @@ void SetEventState(int nState, object oEvent = OBJECT_INVALID);
 // clearsa the state of the currently executing event.
 void ClearEventState(object oEvent = OBJECT_INVALID);
 
+// ---< GetDispatchException >---
+// ---< core_i_framework >---
+// Gets the dispatch exception status for sEvent on oTarget.  An empty string
+// passed for sEvent assumes a negative exception status and allows the event
+// to run.  sEvent must be a single event constant.
+int GetDispatchException(object oInti, object oSelf, string sEvent);
+
+// ---< SetDispatchExceptions >---
+// ---< core_i_framework >---
+// Sets a dispatch exception for sEvents on oTarget.  If sEvents is not passed,
+// oTarget will be excepted from all events.  bAllow toggles the exception status
+// from excepting to allowing: if bAllow is TRUE, all sEvents will be allowed, if
+// bAllowed is FALSE, all sEvents will be excepted. sEvents can be an empty string,
+// a single event constant, or a comma separated list of event constants.
+void SetEventDispatchState(object oTarget, string sEvents = "", int bMode = FALSE);
+
+// ---< SetEventsDispatchWhitelist >---
+// ---< core_i_framework >---
+// Wrapper function for SetDispatchExceptions to place passed events, or all events,
+// on oTarget's dispatch whitelist.
+void SetEventsDispatchWhitelist(object oTarget, string sEvents = "");
+
+// ---< SetEventsDispatchBlacklist >---
+// ---< core_i_framework >---
+// Wrapper function for SetDispatchExceptions to place passed events, or all events,
+// on oTarget's dispatch blacklist.
+void SetEventsDispatchBlacklist(object oTarget, string sEvents = "");
+
+// ---< ClearEventsDispatchState >---
+// ---< core_i_framework >---
+// Clears a dispatch exception for sEvents from oTarget.  If sEvent is not
+// passed, all dispatch exceptions are cleared.  sEvents can be an empty string,
+// a single event constant, or a comma separated list of event constants.
+int ClearEventsDispatchState(object oTarget, string sEvents = "");
+
 // ---< RegisterEventScripts >---
 // ---< core_i_framework >---
 // Registers all scripts in sScripts to sEvent on oTarget with a priority of
@@ -706,6 +741,114 @@ void ClearEventState(object oEvent = OBJECT_INVALID)
     DeleteLocalInt(oEvent, EVENT_STATE);
 }
 
+//const int MODULE_DISPATCH_LEVEL = DISPATCH_LEVEL_DISPATCH;
+// - DISPATCH_LEVEL_DISPATCH (default)
+// - DISPATCH_LEVEL_PC_ONLY
+// - DISPATCH_LEVEL_CUSTOM
+//const int MODULE_DISPATCH_PC_ALWAYS = TRUE;
+//Internal
+int GetDispatchException(object oInit, object oSelf, string sEvent)
+{
+    // Return FALSE to allow the event to proceed
+    // Return TRUE to cancel the event
+    // oInit/oSelf object validity assumed because of checks in calling procedure RunEvent()
+    if (sEvent == "")
+        return FALSE;
+
+    switch (MODULE_DISPATCH_LEVEL)
+    {
+        case DISPATCH_LEVEL_DISPATCH:
+            return FALSE;                               //Act like vanilla NWN
+        case DISPATCH_LEVEL_PC_ONLY:
+            if (GetIsPC(oInit) || GetIsPC(oSelf))       //Allows DMs
+                return FALSE;
+            else
+                return TRUE;                            //Deny if a PC is not part of this event
+        case DISPATCH_LEVEL_CUSTOM:
+            if (MODULE_DISPATCH_PC_ALWAYS)
+            {
+                if (GetIsPC(oInit) || GetIsPC(oSelf))   //Allows DMs
+                    return FALSE;
+            }
+            else
+            {
+                string sEvents = GetLocalString(oInit, EVENT_DISPATCH_EVENTS);
+                if (GetLocalInt(oInit, EVENT_DISPATCH_ALL_EVENTS) || HasListItem(sEvents, sEvent))
+                    return !GetLocalInt(oInit, EVENT_DISPATCH_MODE_ALLOW);
+                else
+                    return FALSE;
+            }
+            break;
+        default:
+            return FALSE;
+    }
+
+    return FALSE;  //Default to allowing the event, but should never be here.
+}
+
+//Internal
+//bMode = TRUE is an allowance mode - any events on EVENT_DISPATCH_EVENTS or all
+//  events if EVENT_DISPATCH_ALL_EVENTS will deny the exception and all the event
+//  to run.  If bMode and !EVENT_DISPATCH_ALL_EVENTS, only events on EVENT_DISPATCH_EVENTS
+//  will run
+void SetEventDispatchState(object oTarget, string sEvents = "", int bMode = FALSE)
+{                                                                  // ^-- TRUE = Allow/Whitelist
+                                                                   //     FALSE = Deny/Blacklist
+    if (GetLocalInt(oTarget, EVENT_DISPATCH_MODE_ALLOW) != bMode)
+        DeleteLocalString(oTarget, EVENT_DISPATCH_EVENTS);      // Only whitelist or blacklist, not both
+
+    if (sEvents == "")
+    {
+        SetLocalInt(oTarget, EVENT_DISPATCH_ALL_EVENTS, !bMode);
+        DeleteLocalInt(oTarget, EVENT_DISPATCH_MODE_ALLOW);
+        DeleteLocalString(oTarget, EVENT_DISPATCH_EVENTS);    
+        return;
+    }
+
+    DeleteLocalInt(oTarget, EVENT_DISPATCH_ALL_EVENTS);
+    SetLocalInt(oTarget, EVENT_DISPATCH_MODE_ALLOW, bMode);
+    MergeLocalList(oTarget, EVENT_DISPATCH_EVENTS, sEvents, TRUE);
+}
+
+//Wrapper for whitelisting events
+void SetEventsDispatchWhitelist(object oTarget, string sEvents = "")
+{
+    SetEventDispatchState(oTarget, sEvents, TRUE);
+}
+
+//Wrapper for blacklisting events
+void SetEventsDispatchBlacklist(object oTarget, string sEvents = "")
+{
+    SetEventDispatchState(oTarget, sEvents, FALSE);
+}
+
+//Clear individual event or entire list, allow/deny doesn't matter here
+//  since we only run one list at a time.
+void ClearsEventDispatchState(object oTarget, string sEvents = "")
+{
+    if (sEvents == "")
+    {   //We're just resetting everything, so clean up
+        DeleteLocalString(oTarget, EVENT_DISPATCH_EVENTS);
+        DeleteLocalInt(oTarget, EVENT_DISPATCH_MODE_ALLOW);
+        DeleteLocalInt(oTarget, EVENT_DISPATCH_ALL_EVENTS);
+    }
+    else
+    {   //Loop through sEvents and remove each item from the current list
+        int i, nCount = CountList(sEvents);
+        string sEvent, sExceptions = GetLocalString(oTarget, EVENT_DISPATCH_EVENTS);
+
+        for (i = 0; i < nCount; i++)
+        {
+            sEvent = GetListItem(sEvents, i);
+            sExceptions = RemoveListItem(EVENT_DISPATCH_EVENTS, sEvent);
+                        // ^--- RemoveListItem selected over RemoveLocalListItem
+                        //      to reduce read/write cycles for longer lists
+        }
+
+        SetLocalString(oTarget, EVENT_DISPATCH_EVENTS, sExceptions);
+    }
+}
+
 string PriorityToString(float fPriority)
 {
     if (fPriority == EVENT_PRIORITY_FIRST)   return "first";
@@ -1058,6 +1201,9 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // Which object initiated the event?
     if (!GetIsObjectValid(oInit))
         oInit = oSelf;
+
+    if (GetDispatchException(oInit, oSelf, sEvent))
+        return EVENT_STATE_DENIED;
 
     // Set the debugging level specific to this event, if it is defined. If an
     // event has a debug level set, we use that debug level, no matter what it
