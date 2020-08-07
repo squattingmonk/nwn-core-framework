@@ -61,8 +61,8 @@ int HasListItem(string sList, string sListItem);
 
 // ---< DeleteListItem >---
 // ---< util_i_csvlists >---
-// Returns the CSV list sList with the nNth item removed.
-string DeleteListItem(string sList, int nNth = 0);
+// Returns the CSV list sList with the item at nIndex removed.
+string DeleteListItem(string sList, int nIndex = 0);
 
 // ---< RemoveListItem >---
 // ---< util_i_csvlists >---
@@ -186,29 +186,27 @@ int HasListItem(string sList, string sListItem)
     return (FindListItem(sList, sListItem) > -1);
 }
 
-string DeleteListItem(string sList, int nNth = 0)
+string DeleteListItem(string sList, int nIndex = 0)
 {
-    // Sanity check.
-    if (sList == "" || nNth < 0) return "";
+    if (nIndex < 0 || sList == "")
+        return sList;
 
-    // Are there enough items in the list?
-    int nItems = CountList(sList);
-    if (nNth > nItems) return "";
-
-    // Count the commas until they equal the item number.
-    int i;
-    string sListItem, sNewList;
-    for (i = 0; i < nItems; i++)
+    int nPos = FindSubStringN(sList, ",", nIndex);
+    if (nPos < 0)
     {
-        // Look for the item and remove it from the list
-        sListItem = StringParse(sList, ", ");
-        sList     = StringRemoveParsed(sList, sListItem, ", ");
+        if (nIndex)
+        {
+            nPos = FindSubStringN(sList, ",", nIndex - 1);
+            return TrimStringRight(GetStringSlice(sList, 0, nPos));
+        }
 
-        if (i != nNth - 1)
-            sNewList = (sNewList == "" ? sListItem : sNewList + ", " + sListItem);
+        return "";
     }
 
-    return sNewList;
+    string sRight = GetStringSlice(sList, nPos + 1);
+    nPos = FindSubStringN(sList, ",", nIndex - 1);
+    sRight = nPos < 0 ? TrimStringLeft(sRight) : sRight;
+    return GetStringSlice(sList, 0, nPos + 1) + sRight;
 }
 
 string RemoveListItem(string sList, string sListItem)
