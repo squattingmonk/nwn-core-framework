@@ -45,8 +45,8 @@ int CountList(string sList);
 
 // ---< GetListItem >---
 // ---< util_i_csvlists >---
-// Returns the nNth item in the CSV list sList.
-string GetListItem(string sList, int nNth = 0);
+// Returns the item at nNdex in the CSV list sList.
+string GetListItem(string sList, int nIndex = 0);
 
 // ---< FindListItem >---
 // ---< util_i_csvlists >---
@@ -131,14 +131,14 @@ string AddListItem(string sList, string sListItem, int bAddUnique = FALSE)
     return sListItem;
 }
 
-string GetListItem(string sList, int nNth = 0)
+string GetListItem(string sList, int nIndex = 0)
 {
-    // Sanity check.
-    if (sList == "" || nNth < 0) return "";
+    if (nIndex < 0 || sList == "")
+        return "";
 
     // Loop through the elements until we find the one we want.
     int nCount, nLeft, nRight = FindSubString(sList, ",");
-    while (nRight != -1 && nCount < nNth)
+    while (nRight != -1 && nCount < nIndex)
     {
         nCount++;
         nLeft = nRight + 1;
@@ -146,13 +146,11 @@ string GetListItem(string sList, int nNth = 0)
     }
 
     // If there were not enough elements, return a null string.
-    if (nCount < nNth) return "";
+    if (nCount < nIndex)
+        return "";
 
     // Get the element
-    if (nRight >= 0)
-        sList = GetStringLeft(sList, nRight);
-    sList = GetStringRight(sList, GetStringLength(sList) - nLeft);
-    return TrimString(sList);
+    return TrimString(GetStringSlice(sList, nLeft, nRight));
 }
 
 // Private implementation of FindListItem. nParsed is used to preserve the index
