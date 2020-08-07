@@ -16,6 +16,7 @@
 //   FC: Float Count
 //   IC: Int Count
 //   LC: Location Count
+//   VC: Vector Count
 //   OC: Object Count
 //   SC: String Count
 // You should not manipulate these variables directly. Rather, use the *List*()
@@ -24,15 +25,19 @@
 // Acknowledgements: these functions are adapted from those in Memetic AI.
 // -----------------------------------------------------------------------------
 
+#include "util_i_math"
+
 // -----------------------------------------------------------------------------
 //                                   Constants
 // -----------------------------------------------------------------------------
 
 // Prefixes used to keep list variables from colliding with other locals.
 const string LIST_REF            = "Ref:";
+const string LIST_REF_VECTOR     = "RefV:";
 const string LIST_COUNT_FLOAT    = "FC:";
 const string LIST_COUNT_INT      = "IC:";
 const string LIST_COUNT_LOCATION = "LC:";
+const string LIST_COUNT_VECTOR   = "VC:";
 const string LIST_COUNT_OBJECT   = "OC:";
 const string LIST_COUNT_STRING   = "SC:";
 
@@ -61,6 +66,13 @@ int AddListInt(object oTarget, int nValue, string sListName = "", int bAddUnique
 // Returns whether the addition was successful.
 int AddListLocation(object oTarget, location lValue, string sListName = "", int bAddUnique = FALSE);
 
+// ---< AddListVector >---
+// ---< util_i_varlists >---
+// Adds vValue to a vector list on oTarget given the list name sListName. If
+// bAddUnique is TRUE, this only adds to the list if it is not already there.
+// Returns whether the addition was successful.
+int AddListVector(object oTarget, vector vValue, string sListName = "", int bAddUnique = FALSE);
+
 // ---< AddListObject >---
 // ---< util_i_varlists >---
 // Adds oValue to a object list on oTarget given the list name sListName. If
@@ -74,41 +86,6 @@ int AddListObject(object oTarget, object oValue, string sListName = "", int bAdd
 // bAddUnique is TRUE, this only adds to the list if it is not already there.
 // Returns whether the addition was successful.
 int AddListString(object oTarget, string sValue, string sListName = "", int bAddUnique = FALSE);
-
-// ---< SetListFloat >---
-// ---< util_i_varlists >---
-// Sets item nIndex in the float list of sListName on oTarget to fValue. If the
-// index is at the end of the list, it will be added. If it exceeds the length
-// of the list, nothing is added.
-void SetListFloat(object oTarget, int nIndex, float fValue, string sListName = "");
-
-// ---< SetListInt >---
-// ---< util_i_varlists >---
-// Sets item nIndex in the int list of sListName on oTarget to nValue. If the
-// index is at the end of the list, it will be added. If it exceeds the length
-// of the list, nothing is added.
-void SetListInt(object oTarget, int nIndex, int nValue, string sListName = "");
-
-// ---< SetListLocation >---
-// ---< util_i_varlists >---
-// Sets item nIndex in the location list of sListName on oTarget to lValue. If
-// the index is at the end of the list, it will be added. If it exceeds the
-// length of the list, nothing is added.
-void SetListLocation(object oTarget, int nIndex, location lValue, string sListName = "");
-
-// ---< SetListObject >---
-// ---< util_i_varlists >---
-// Sets item nIndex in the object list of sListName on oTarget to oValue. If the
-// index is at the end of the list, it will be added. If it exceeds the length
-// of the list, nothing is added.
-void SetListObject(object oTarget, int nIndex, object oValue, string sListName = "");
-
-// ---< SetListString >---
-// ---< util_i_varlists >---
-// Sets item nIndex in the string list of sListName on oTarget to sValue. If the
-// index is at the end of the list, it will be added. If it exceeds the length
-// of the list, nothing is added.
-void SetListString(object oTarget, int nIndex, string sValue, string sListName = "");
 
 // ---< GetListFloat >---
 // ---< util_i_varlists >---
@@ -127,6 +104,12 @@ int GetListInt(object oTarget, int nIndex = 0, string sListName = "");
 // Returns the location at nIndex in oTarget's location list sListName. If no
 // location is found at that index, an invalid location is returned.
 location GetListLocation(object oTarget, int nIndex = 0, string sListName = "");
+
+// ---< GetListVector >---
+// ---< util_i_varlists >---
+// Returns the vector at nIndex in oTarget's vector list sListName. If no string
+// is found at that index, an origin vector is returned (0, 0, 0).
+vector GetListVector(object oTarget, int nIndex = 0, string sListName = "");
 
 // ---< GetListObject >---
 // ---< util_i_varlists >---
@@ -159,12 +142,22 @@ int DeleteListFloat(object oTarget, int nIndex, string sListName = "", int bMain
 int DeleteListInt(object oTarget, int nIndex, string sListName = "", int bMaintainOrder = FALSE);
 
 // ---< DeleteListLocation >---
+// ---< util_i_varlists >---
 // Removes the location at nIndex on oTarget's location list sListName and
 // returns the number of items remaining in the list. If bMaintainOrder is TRUE,
 // this will shift up all entries after nIndex in the list. If FALSE, it will
 // replace the removed item with the last entry in the list. If the order of
 // items in the list doesn't matter, this will save a lot of cycles.
 int DeleteListLocation(object oTarget, int nIndex, string sListName = "", int bMaintainOrder = FALSE);
+
+// ---< DeleteListVector >---
+// ---< util_i_varlists >---
+// Removes the vector at nIndex on oTarget's vector list sListName and
+// returns the number of items remaining in the list. If bMaintainOrder is TRUE,
+// this will shift up all entries after nIndex in the list. If FALSE, it will
+// replace the removed item with the last entry in the list. If the order of
+// items in the list doesn't matter, this will save a lot of cycles.
+int DeleteListVector(object oTarget, int nIndex, string sListName = "", int bMaintainOrder = FALSE);
 
 // ---< DeleteListObject >---
 // ---< util_i_varlists >---
@@ -214,6 +207,16 @@ int RemoveListInt(object oTarget, int nValue, string sListName = "", int bMainta
 // order of items in the list doesn't matter, this will save a lot of cycles.
 int RemoveListLocation(object oTarget, location lValue, string sListName = "", int bMaintainOrder = FALSE);
 
+// ---< RemoveListVector >---
+// ---< util_i_varlists >---
+// Removes a vector of vValue from the vector list sListName on oTarget and
+// returns the number of items remaining in the list. If this float was added
+// more than once, only the first reference is removed. If bMaintainOrder is
+// TRUE, this will his shift up all entries after nIndex in the list. If FALSE,
+// it will replace the removed item with the last entry in the list. If the
+// order of items in the list doesn't matter, this will save a lot of cycles.
+int RemoveListVector(object oTarget, vector vValue, string sListName = "", int bMaintainOrder = FALSE);
+
 // ---< RemoveListObject >---
 // ---< util_i_varlists >---
 // Removes an object of oValue from the object list sListName on oTarget and
@@ -252,6 +255,12 @@ int FindListInt(object oTarget, int nValue, string sListName = "");
 // location list sListName on oTarget. If it is not in the list, returns -1.
 int FindListLocation(object oTarget, location lValue, string sListName = "");
 
+// ---< FindListVector >---
+// ---< util_i_varlists >---
+// Returns the index of the first reference of the vector vValue in the
+// location list sListName on oTarget. If it is not in the list, returns -1.
+int FindListVector(object oTarget, vector vValue, string sListName = "");
+
 // ---< FindListObject >---
 // ---< util_i_varlists >---
 // Returns the index of the first reference of the obejct oValue in the object
@@ -282,6 +291,12 @@ int HasListInt(object oTarget, int nValue, string sListName = "");
 // list sListName.
 int HasListLocation(object oTarget, location lValue, string sListName = "");
 
+// ---< HasListVector >---
+// ---< util_i_varlists >---
+// Returns whether oTarget has a vector with the value vValue in its vector
+// list sListName.
+int HasListVector(object oTarget, vector vValue, string sListName = "");
+
 // ---< HasListObject >---
 // ---< util_i_varlists >---
 // Returns whether oTarget has an object with the value oValue in its object
@@ -293,6 +308,90 @@ int HasListObject(object oTarget, object oValue, string sListName = "");
 // Returns whether oTarget has a string with the value sValue in its string list
 // sListName.
 int HasListString(object oTarget, string sValue, string sListName = "");
+
+// ---< SetListFloat >---
+// ---< util_i_varlists >---
+// Sets item nIndex in the float list of sListName on oTarget to fValue. If the
+// index is at the end of the list, it will be added. If it exceeds the length
+// of the list, nothing is added.
+void SetListFloat(object oTarget, int nIndex, float fValue, string sListName = "");
+
+// ---< SetListInt >---
+// ---< util_i_varlists >---
+// Sets item nIndex in the int list of sListName on oTarget to nValue. If the
+// index is at the end of the list, it will be added. If it exceeds the length
+// of the list, nothing is added.
+void SetListInt(object oTarget, int nIndex, int nValue, string sListName = "");
+
+// ---< SetListLocation >---
+// ---< util_i_varlists >---
+// Sets item nIndex in the location list of sListName on oTarget to lValue. If
+// the index is at the end of the list, it will be added. If it exceeds the
+// length of the list, nothing is added.
+void SetListLocation(object oTarget, int nIndex, location lValue, string sListName = "");
+
+// ---< SetListVector >---
+// ---< util_i_varlists >---
+// Sets item nIndex in the vector list of sListName on oTarget to vValue. If the
+// index is at the end of the list, it will be added. If it exceeds the length
+// of the list, nothing is added.
+void SetListVector(object oTarget, int nIndex, vector vValue, string sListName = "");
+
+// ---< SetListObject >---
+// ---< util_i_varlists >---
+// Sets item nIndex in the object list of sListName on oTarget to oValue. If the
+// index is at the end of the list, it will be added. If it exceeds the length
+// of the list, nothing is added.
+void SetListObject(object oTarget, int nIndex, object oValue, string sListName = "");
+
+// ---< SetListString >---
+// ---< util_i_varlists >---
+// Sets item nIndex in the string list of sListName on oTarget to sValue. If the
+// index is at the end of the list, it will be added. If it exceeds the length
+// of the list, nothing is added.
+void SetListString(object oTarget, int nIndex, string sValue, string sListName = "");
+
+// ---< CopyListFloat >---
+// ---< util_i_varlists >---
+// Starting at nIndex, copies nRange items from float list sSourceName on oSource
+// and adds them to list sTargetName on oTarget.  Returns the number of list items
+// copied to the target list.
+int CopyListFloat(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE);
+
+// ---< CopyListInt >---
+// ---< util_i_varlists >---
+// Starting at nIndex, copies nRange items from int list sSourceName on oSource
+// and adds them to list sTargetName on oTarget.  Returns the number of list items
+// copied to the target list.
+int CopyListInt(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE);
+
+// ---< CopyListLocation >---
+// ---< util_i_varlists >---
+// Starting at nIndex, copies nRange items from location list sSourceName on oSource
+// and adds them to list sTargetName on oTarget.  Returns the number of list items
+// copied to the target list.
+int CopyListLocation(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE);
+
+// ---< CopyListVector >---
+// ---< util_i_varlists >---
+// Starting at nIndex, copies nRange items from vector list sSourceName on oSource
+// and adds them to list sTargetName on oTarget.  Returns the number of list items
+// copied to the target list.
+int CopyListVector(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE);
+
+// ---< CopyListObject >---
+// ---< util_i_varlists >---
+// Starting at nIndex, copies nRange items from object list sSourceName on oSource
+// and adds them to list sTargetName on oTarget.  Returns the number of list items
+// copied to the target list.
+int CopyListObject(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE);
+
+// ---< CopyListString >---
+// ---< util_i_varlists >---
+// Starting at nIndex, copies nRange items from string list sSourceName on oSource
+// and adds them to list sTargetName on oTarget.  Returns the number of list items
+// copied to the target list.
+int CopyListString(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE);
 
 // ---< DeleteFloatList >---
 // ---< util_i_varlists >---
@@ -308,6 +407,11 @@ void DeleteIntList(object oTarget, string sListName = "");
 // ---< util_i_varlists >---
 // Deletes the location list sListName from oTarget.
 void DeleteLocationList(object oTarget, string sListName = "");
+
+// ---< DeleteVectorList >---
+// ---< util_i_varlists >---
+// Deletes the vector list sListName from oTarget.
+void DeleteVectorList(object oTarget, string sListName = "");
 
 // ---< DeleteObjectList >---
 // ---< util_i_varlists >---
@@ -339,6 +443,13 @@ void DeclareIntList(object oTarget, int nCount, string sListName = "");
 // oTarget already had a list with this name, that list is deleted before the
 // new one is created.
 void DeclareLocationList(object oTarget, int nCount, string sListName = "");
+
+// ---< DeclareVectorList >---
+// ---< util_i_varlists >---
+// Creates a vector list of sListName on oTarget with nCount null items. If
+// oTarget already had a list with this name, that list is deleted before the
+// new one is created.
+void DeclareVectorList(object oTarget, int nCount, string sListName = "");
 
 // ---< DeclareObjectList >---
 // ---< util_i_varlists >---
@@ -375,6 +486,13 @@ void CopyIntList(object oSource, object oTarget, string sSourceName, string sTar
 // that are not already present in the target list.
 void CopyLocationList(object oSource, object oTarget, string sSourceName, string sTargetName, int bAddUnique = FALSE);
 
+// ---< CopyVectorList >---
+// ---< util_i_varlists >---
+// Copies the vector list sSourceName from oSource to oTarget, renamed
+// sTargetName. If bAddUnique is TRUE, will only copy items from the source list
+// that are not already present in the target list.
+void CopyVectorList(object oSource, object oTarget, string sSourceName, string sTargetName, int bAddUnique = FALSE);
+
 // ---< CopyObjectList >---
 // ---< util_i_varlists >---
 // Copies the object list sSourceName from oSource to oTarget, renamed
@@ -404,6 +522,11 @@ int CountIntList(object oTarget, string sListName = "");
 // Returns the number of items in oTarget's location list sListName.
 int CountLocationList(object oTarget, string sListName = "");
 
+// ---< CountVectorList >---
+// ---< util_i_varlists >---
+// Returns the number of items in oTarget's vector list sListName.
+int CountVectorList(object oTarget, string sListName = "");
+
 // ---< CountObjectList >---
 // ---< util_i_varlists >---
 // Returns the number of items in oTarget's object list sListName.
@@ -418,6 +541,13 @@ int CountStringList(object oTarget, string sListName = "");
 //                           Function Implementations
 // -----------------------------------------------------------------------------
 
+// Internal function to convert a vector to a pseudo-location by adding an
+// OBJECT_INVALID area and 0.0f facing. Vectors are stored as pseudo-locations.
+location _VectorToLocation(vector vVector)
+{
+    return Location(OBJECT_INVALID, vVector, 0.0f);
+}
+
 int AddListFloat(object oTarget, float fValue, string sListName = "", int bAddUnique = FALSE)
 {
     int nCount = CountFloatList(oTarget, sListName);
@@ -426,7 +556,7 @@ int AddListFloat(object oTarget, float fValue, string sListName = "", int bAddUn
     if (bAddUnique)
     {
         int i;
-        for (i = nCount-1; i >= 0; i--)
+        for (i = 0; i < nCount; i++)
         {
             if (GetLocalFloat(oTarget, LIST_REF + sListName + IntToString(i)) == fValue)
                 return FALSE;
@@ -446,7 +576,7 @@ int AddListInt(object oTarget, int nValue, string sListName = "", int bAddUnique
     if (bAddUnique)
     {
         int i;
-        for (i = nCount-1; i >= 0; i--)
+        for (i = 0; i < nCount; i++)
         {
             if (GetLocalInt(oTarget, LIST_REF + sListName + IntToString(i)) == nValue)
                 return FALSE;
@@ -466,7 +596,7 @@ int AddListLocation(object oTarget, location lValue, string sListName = "", int 
     if (bAddUnique)
     {
         int i;
-        for (i = nCount-1; i >= 0; i--)
+        for (i = 0; i < nCount; i++)
         {
             if (GetLocalLocation(oTarget, LIST_REF + sListName + IntToString(i)) == lValue)
                 return FALSE;
@@ -478,6 +608,27 @@ int AddListLocation(object oTarget, location lValue, string sListName = "", int 
     return TRUE;
 }
 
+int AddListVector(object oTarget, vector vValue, string sListName = "", int bAddUnique = FALSE)
+{
+    location lValue = _VectorToLocation(vValue);
+    int nCount = CountVectorList(oTarget, sListName);
+
+    // If we're adding unique we should check to see if this entry already exists
+    if (bAddUnique)
+    {
+        int i;
+        for (i = 0; i < nCount; i++)
+        {
+            if (GetLocalLocation(oTarget, LIST_REF_VECTOR + sListName + IntToString(i)) == lValue)
+                return FALSE;
+        }
+    }
+
+    SetLocalLocation(oTarget, LIST_REF_VECTOR   + sListName + IntToString(nCount), lValue);
+    SetLocalInt     (oTarget, LIST_COUNT_VECTOR + sListName, nCount + 1);
+    return TRUE;
+}
+
 int AddListObject(object oTarget, object oObject, string sListName = "", int bAddUnique = FALSE)
 {
     int nCount = CountObjectList(oTarget, sListName);
@@ -486,7 +637,7 @@ int AddListObject(object oTarget, object oObject, string sListName = "", int bAd
     if (bAddUnique)
     {
         int i;
-        for (i = nCount-1; i >= 0; i--)
+        for (i = 0; i < nCount; i++)
         {
             if (GetLocalObject(oTarget, LIST_REF + sListName + IntToString(i)) == oObject)
                 return FALSE;
@@ -506,7 +657,7 @@ int AddListString(object oTarget, string sString, string sListName = "", int bAd
     if (bAddUnique)
     {
         int i;
-        for (i = nCount-1; i >= 0; i--)
+        for (i = 0; i < nCount; i++)
         {
             if (GetLocalString(oTarget, LIST_REF + sListName + IntToString(i)) == sString)
                 return FALSE;
@@ -537,6 +688,13 @@ location GetListLocation(object oTarget, int nIndex = 0, string sListName = "")
     int nCount = CountLocationList(oTarget, sListName);
     if (nIndex >= nCount) return Location(OBJECT_INVALID, Vector(), 0.0);
     return GetLocalLocation(oTarget, LIST_REF + sListName + IntToString(nIndex));
+}
+
+vector GetListVector(object oTarget, int nIndex = 0, string sListName = "")
+{
+    int nCount = CountVectorList(oTarget, sListName);
+    if (nIndex >= nCount) return Vector();
+    return GetPositionFromLocation(GetLocalLocation(oTarget, LIST_REF_VECTOR + sListName + IntToString(nIndex)));
 }
 
 object GetListObject(object oTarget, int nIndex = 0, string sListName = "")
@@ -646,6 +804,37 @@ int DeleteListLocation(object oTarget, int nIndex, string sListName = "", int bM
     return nCount;
 }
 
+int DeleteListVector(object oTarget, int nIndex, string sListName = "", int bMaintainOrder = FALSE)
+{
+    int nCount = CountVectorList(oTarget, sListName);
+
+    // Sanity check
+    if (nCount == 0 || nIndex >= nCount || nIndex < 0) return nCount;
+
+    location lRef;
+    if (bMaintainOrder)
+    {
+        // Shift all entries up
+        for (nIndex; nIndex < nCount; nIndex++)
+        {
+            lRef = GetLocalLocation(oTarget, LIST_REF_VECTOR + sListName + IntToString(nIndex + 1));
+                   SetLocalLocation(oTarget, LIST_REF_VECTOR + sListName + IntToString(nIndex), lRef);
+        }
+    }
+    else
+    {
+        // Replace this item with the last one in the list
+        lRef = GetLocalLocation(oTarget, LIST_REF_VECTOR + sListName + IntToString(nCount - 1));
+               SetLocalLocation(oTarget, LIST_REF_VECTOR + sListName + IntToString(nIndex), lRef);
+    }
+
+    // Delete the last item in the list and set the new count
+    DeleteLocalLocation(oTarget, LIST_REF_VECTOR   + sListName + IntToString(--nCount));
+    SetLocalInt        (oTarget, LIST_COUNT_VECTOR + sListName, nCount);
+
+    return nCount;
+}
+
 int DeleteListObject(object oTarget, int nIndex, string sListName = "", int bMaintainOrder = FALSE)
 {
     int nCount = CountObjectList(oTarget, sListName);
@@ -726,6 +915,12 @@ int RemoveListLocation(object oTarget, location lValue, string sListName = "", i
     return DeleteListLocation(oTarget, nIndex, sListName, bMaintainOrder);
 }
 
+int RemoveListVector(object oTarget, vector vValue, string sListName = "", int bMaintainOrder = FALSE)
+{
+    int nIndex = FindListVector(oTarget, vValue, sListName);
+    return DeleteListVector(oTarget, nIndex, sListName, bMaintainOrder);
+}
+
 int RemoveListObject(object oTarget, object oValue, string sListName = "", int bMaintainOrder = FALSE)
 {
     int nIndex = FindListObject(oTarget, oValue, sListName);
@@ -771,6 +966,18 @@ int FindListLocation(object oTarget, location lValue, string sListName = "")
     return -1;
 }
 
+int FindListVector(object oTarget, vector vValue, string sListName = "")
+{
+    location lValue = _VectorToLocation(vValue);
+    int i, nCount = CountVectorList(oTarget, sListName);
+
+    for (i = 0; i < nCount; i++)
+        if (GetLocalLocation(oTarget, LIST_REF_VECTOR + sListName + IntToString(i)) == lValue)
+            return i;
+
+    return -1;
+}
+
 int FindListObject(object oTarget, object oValue, string sListName = "")
 {
     int i, nCount = CountObjectList(oTarget, sListName);
@@ -809,6 +1016,12 @@ int HasListLocation(object oTarget, location lValue, string sListName = "")
 {
     if (FindListLocation(oTarget, lValue, sListName) != -1) return TRUE;
     else                                                    return FALSE;
+}
+
+int HasListVector(object oTarget, vector vValue, string sListName = "")
+{
+    if (FindListVector(oTarget, vValue, sListName) != -1) return TRUE;
+    else                                                  return FALSE;
 }
 
 int HasListObject(object oTarget, object oValue, string sListName = "")
@@ -859,6 +1072,20 @@ void SetListLocation(object oTarget, int nIndex, location lValue, string sListNa
         SetLocalLocation(oTarget, LIST_REF + sListName + IntToString(nIndex), lValue);
 }
 
+void SetListVector(object oTarget, int nIndex, vector vValue, string sListName = "")
+{
+    location lValue = _VectorToLocation(vValue);
+    int nCount = CountVectorList(oTarget, sListName);
+
+    if (nIndex > nCount) return;
+
+    if (nIndex == nCount)
+        AddListVector(oTarget, vValue, sListName);
+    else
+        SetLocalLocation(oTarget, LIST_REF_VECTOR + sListName + IntToString(nIndex), lValue);
+
+}
+
 void SetListObject(object oTarget, int nIndex, object oValue, string sListName = "")
 {
     int nCount = CountObjectList(oTarget, sListName);
@@ -881,6 +1108,127 @@ void SetListString(object oTarget, int nIndex, string sValue, string sListName =
         AddListString(oTarget, sValue, sListName);
     else
         SetLocalString(oTarget, LIST_REF + sListName + IntToString(nIndex), sValue);
+}
+
+int CopyListFloat(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE)
+{
+    float fValue;
+    int  i, nCopied, nCount = CountFloatList(oSource, sSourceName);
+
+    if (nIndex < 0 || nIndex >= nCount || !nCount)
+        return FALSE;
+
+    if (nRange > nCount - nIndex)
+        nRange = clamp(nRange, 1, nCount - nIndex);
+
+    for (i = 0; i < nRange; i++)
+    {
+        fValue = GetListFloat(oSource, nIndex + i, sSourceName);
+        if (AddListFloat(oTarget, fValue, sTargetName, bAddUnique))
+            nCopied++;
+    }
+
+    return nCopied;
+}
+
+int CopyListInt(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE)
+{
+    int nValue;
+    int  i, nCopied, nCount = CountIntList(oSource, sSourceName);
+
+    if (nIndex < 0 || nIndex >= nCount || !nCount)
+        return FALSE;
+
+    nRange = clamp(nRange, 1, nCount - nIndex);
+
+    for (i = 0; i < nRange; i++)
+    {
+        nValue = GetListInt(oSource, nIndex + i, sSourceName);
+        if (AddListInt(oTarget, nValue, sTargetName, bAddUnique))
+            nCopied++;
+    }
+
+    return nCopied;
+}
+
+int CopyListLocation(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE)
+{
+    location lValue;
+    int  i, nCopied, nCount = CountLocationList(oSource, sSourceName);
+
+    if (nIndex < 0 || nIndex >= nCount || !nCount)
+        return FALSE;
+
+    nRange = clamp(nRange, 1, nCount - nIndex);
+
+    for (i = 0; i < nRange; i++)
+    {
+        lValue = GetListLocation(oSource, nIndex + i, sSourceName);
+        if (AddListLocation(oTarget, lValue, sTargetName, bAddUnique))
+            nCopied++;
+    }
+
+    return nCopied;
+}
+
+int CopyListVector(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE)
+{
+    vector vValue;
+    int  i, nCopied, nCount = CountVectorList(oSource, sSourceName);
+
+    if (nIndex < 0 || nIndex >= nCount || !nCount)
+        return FALSE;
+
+    nRange = clamp(nRange, 1, nCount - nIndex);
+
+    for (i = 0; i < nRange; i++)
+    {
+        vValue = GetListVector(oSource, nIndex + i, sSourceName);
+        if (AddListVector(oTarget, vValue, sTargetName, bAddUnique))
+            nCopied++;
+    }
+
+    return nCopied;
+}
+
+int CopyListObject(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE)
+{
+    object oValue;
+    int  i, nCopied, nCount = CountObjectList(oSource, sSourceName);
+
+    if (nIndex < 0 || nIndex >= nCount || !nCount)
+        return FALSE;
+
+    nRange = clamp(nRange, 1, nCount - nIndex);
+
+    for (i = 0; i < nRange; i++)
+    {
+        oValue = GetListObject(oSource, nIndex + i, sSourceName);
+        if (AddListObject(oTarget, oValue, sTargetName, bAddUnique))
+            nCopied++;
+    }
+
+    return nCopied;
+}
+
+int CopyListString(object oSource, object oTarget, string sSourceName, string sTargetName, int nIndex, int nRange = 1, int bAddUnique = FALSE)
+{
+    string sValue;
+    int  i, nCopied, nCount = CountStringList(oSource, sSourceName);
+
+    if (nIndex < 0 || nIndex >= nCount || !nCount)
+        return FALSE;
+
+    nRange = clamp(nRange, 1, nCount - nIndex);
+
+    for (i = 0; i < nRange; i++)
+    {
+        sValue = GetListString(oSource, nIndex + i, sSourceName);
+        if (AddListString(oTarget, sValue, sTargetName, bAddUnique))
+            nCopied++;
+    }
+
+    return nCopied;
 }
 
 void DeleteFloatList(object oTarget, string sListName = "")
@@ -908,6 +1256,15 @@ void DeleteLocationList(object oTarget, string sListName = "")
         DeleteLocalLocation(oTarget, LIST_REF + sListName + IntToString(i));
 
     DeleteLocalInt(oTarget, LIST_COUNT_LOCATION + sListName);
+}
+
+void DeleteVectorList(object oTarget, string sListName = "")
+{
+    int i, nCount = CountVectorList(oTarget, sListName);
+    for (i = 0; i < nCount; i++)
+        DeleteLocalLocation(oTarget, LIST_REF_VECTOR + sListName + IntToString(i));
+
+    DeleteLocalInt(oTarget, LIST_COUNT_VECTOR + sListName);
 }
 
 void DeleteObjectList(object oTarget, string sListName = "")
@@ -944,6 +1301,12 @@ void DeclareLocationList(object oTarget, int nCount, string sListName = "")
 {
     DeleteLocationList(oTarget, sListName);
     SetLocalInt(oTarget, LIST_COUNT_LOCATION + sListName, nCount);
+}
+
+void DeclareVectorList(object oTarget, int nCount, string sListName = "")
+{
+    DeleteVectorList(oTarget, sListName);
+    SetLocalInt(oTarget, LIST_COUNT_VECTOR + sListName, nCount);
 }
 
 void DeclareObjectList(object oTarget, int nCount, string sListName = "")
@@ -996,6 +1359,18 @@ void CopyLocationList(object oSource, object oTarget, string sSourceName, string
     }
 }
 
+void CopyVectorList(object oSource, object oTarget, string sSourceName, string sTargetName, int bAddUnique = FALSE)
+{
+    vector vValue;
+    int  i, nCount = CountVectorList(oSource, sSourceName);
+
+    for (i = 0; i < nCount; i++)
+    {
+        vValue = GetListVector(oSource, i, sSourceName);
+        AddListVector(oTarget, vValue, sTargetName, bAddUnique);
+    }
+}
+
 void CopyObjectList(object oSource, object oTarget, string sSourceName, string sTargetName, int bAddUnique = FALSE)
 {
     object oValue;
@@ -1033,6 +1408,11 @@ int CountIntList(object oTarget, string sListName = "")
 int CountLocationList(object oTarget, string sListName = "")
 {
     return GetLocalInt(oTarget, LIST_COUNT_LOCATION + sListName);
+}
+
+int CountVectorList(object oTarget, string sListName = "")
+{
+    return GetLocalInt(oTarget, LIST_COUNT_VECTOR + sListName);
 }
 
 int CountObjectList(object oTarget, string sListName = "")

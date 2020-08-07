@@ -33,6 +33,7 @@
 
 // 1.69 string manipulation functions
 #include "x3_inc_string"
+#include "util_i_math"
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
@@ -42,6 +43,12 @@
 // ---< util_i_csvlists >---
 // Returns the number of items in the CSV list sList.
 int CountList(string sList);
+
+// ---< AddListItem >---
+// ---< util_i_csvlists >---
+// Returns the CSV list sList with sListItem added. If bAddUnique is TRUE, will
+// only add items to the list if they are not already there.
+string AddListItem(string sList, string sListItem, int bAddUnique = FALSE);
 
 // ---< GetListItem >---
 // ---< util_i_csvlists >---
@@ -69,11 +76,11 @@ string DeleteListItem(string sList, int nIndex = 0);
 // Returns the CSV list sList with the first occurrence of sListItem removed.
 string RemoveListItem(string sList, string sListItem);
 
-// ---< AddListItem >---
+// ---< CopyListItem >---
 // ---< util_i_csvlists >---
-// Returns the CSV list sList with sListItem added. If bAddUnique is TRUE, will
-// only add items to the list if they are not already there.
-string AddListItem(string sList, string sListItem, int bAddUnique = FALSE);
+// Starting at nIndex, copies nRange list items from sSource to sTarget.  Returns
+// number of list items copied to target list.
+string CopyListItem(string sSource, string sTarget, int nIndex, int nRange = 1, int bAddUnique = FALSE);
 
 // ---< MergeLists >---
 // ---< util_i_csvlists >---
@@ -212,6 +219,25 @@ string DeleteListItem(string sList, int nIndex = 0)
 string RemoveListItem(string sList, string sListItem)
 {
     return DeleteListItem(sList, FindListItem(sList, sListItem));
+}
+
+string CopyListItem(string sSource, string sTarget, int nIndex, int nRange = 1, int bAddUnique = FALSE)
+{
+    string sValue;
+    int i, nCount = CountList(sSource);
+
+    if (nIndex < 0 || nIndex >= nCount || !nCount)
+        return sSource;
+
+    nRange = clamp(nRange, 1, nCount - nIndex);
+
+    for (i = 0; i < nRange; i++)
+    {
+        sValue = GetListItem(sSource, nIndex + i);
+        sTarget = AddListItem(sTarget, sValue, bAddUnique);
+    }
+
+    return sTarget;
 }
 
 string MergeLists(string sList1, string sList2, int bAddUnique = FALSE)
