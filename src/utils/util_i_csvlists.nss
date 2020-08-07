@@ -29,27 +29,14 @@
 // SpeakString("Robin is knight " + IntToString(nRobin) + " in the party.");
 // -----------------------------------------------------------------------------
 
+#include "util_i_strings"
+
 // 1.69 string manipulation functions
 #include "x3_inc_string"
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
 // -----------------------------------------------------------------------------
-
-// ----- String Utilities ------------------------------------------------------
-
-// ---< GetSubStringCount >---
-// ---< util_i_csvlists >---
-// Returns the number of occurrences of sSubString within sString.
-int GetSubStringCount(string sString, string sSubString);
-
-// ---< TrimString >---
-// ---< util_i_csvlists >---
-// Trims all leading and trailing whitespace from sString.
-string TrimString(string sString);
-
-
-// ----- CSV Lists -------------------------------------------------------------
 
 // ---< CountList >---
 // ---< util_i_csvlists >---
@@ -124,39 +111,6 @@ string MergeLocalList(object oObject, string sListName, string sListToMerge, int
 // -----------------------------------------------------------------------------
 //                           Function Implementations
 // -----------------------------------------------------------------------------
-
-// ----- String Utilities ------------------------------------------------------
-
-int GetSubStringCount(string sString, string sSubString)
-{
-    // Sanity Check
-    if (sSubString == "") return 0;
-
-    int nLength = GetStringLength(sSubString);
-    int nCount, nPos = FindSubString(sString, sSubString);
-
-    while (nPos != -1)
-    {
-        nCount++;
-        nPos = FindSubString(sString, sSubString, nPos + nLength);
-    }
-
-    return nCount;
-}
-
-string TrimString(string sString)
-{
-    while (GetStringLeft(sString, 1) == " ")
-        sString = GetStringRight(sString, GetStringLength(sString) - 1);
-
-    while (GetStringRight(sString, 1) == " ")
-        sString = GetStringLeft(sString, GetStringLength(sString) - 1);
-
-    return sString;
-}
-
-
-// ----- CSV Lists -------------------------------------------------------------
 
 int CountList(string sList)
 {
