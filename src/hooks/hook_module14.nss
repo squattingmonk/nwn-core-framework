@@ -17,7 +17,7 @@ void main()
 
     // Aborting from the base rest event will abort the other rest events. This
     // allows an OnPlayerRest script to decide if sub-events can fire at all.
-    if (nState = EVENT_STATE_OK)
+    if (nState == EVENT_STATE_OK)
     {
         string sEvent;
 
