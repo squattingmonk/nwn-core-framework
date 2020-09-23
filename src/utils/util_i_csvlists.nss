@@ -10,7 +10,7 @@
 // -----------------------------------------------------------------------------
 // Example usage:
 //
-// string string sKnight, sKnights = "Lancelot, Galahad, Robin";
+// string sKnight, sKnights = "Lancelot, Galahad, Robin";
 // int i, nCount = CountList(sKnights);
 // for (i = 0; i < nCount; i++)
 // {
