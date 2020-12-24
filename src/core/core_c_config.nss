@@ -185,6 +185,11 @@ const float ON_AREA_EMPTY_EVENT_DELAY = 180.0;
 //                                 Miscellaneous
 // -----------------------------------------------------------------------------
 
+// When using AOE hook scripts, NPCs can be added to the AOE roster for easier
+// access during scripting.  To only allow PC objects on the AOE rosters, set
+// this to FALSE.
+const int INCLUDE_NPC_IN_AOE_ROSTER = TRUE;
+
 // This is the welcome message that will be sent to all players and DMs that log
 // into the module.
 const string WELCOME_MESSAGE = "Welcome to the Core Framework.";
