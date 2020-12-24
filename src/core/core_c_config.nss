@@ -185,6 +185,10 @@ const float ON_AREA_EMPTY_EVENT_DELAY = 180.0;
 //                                 Miscellaneous
 // -----------------------------------------------------------------------------
 
+// This is the script that will run before the framework initializes the first
+// time.  An empty string means no script will run.
+const string ON_MODULE_PRELOAD = "";
+
 // This is the welcome message that will be sent to all players and DMs that log
 // into the module.
 const string WELCOME_MESSAGE = "Welcome to the Core Framework.";
