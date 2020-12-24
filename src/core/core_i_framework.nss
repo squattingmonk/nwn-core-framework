@@ -982,7 +982,11 @@ object InitializeEvent(string sEvent, object oSelf, object oInit)
     // Check if we've added new event sources since the last time we executed
     // this event on oSelf.
     if (GetEventSourcesChanged(oSelf, oSources, sEvent))
+    {
         CacheEventSources(oSelf, oSources, sEvent);
+        DeleteLocalInt(oSelf, sEvent);
+        Debug("Event sources for " + sEvent + " on " + GetName(oSelf) + " have changed; re-initializing event");
+    }
 
     // Do initial setup if it hasn't been done or if the script list has
     // been changed.
