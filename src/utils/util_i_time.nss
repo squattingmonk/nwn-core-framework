@@ -1241,5 +1241,3 @@ string GetFormattedTimeSinceEpoch(int nSeconds, string sFormat = DEFAULT_FORMAT,
 
     return sFormattedTime;
 }
-
-void main() {}
