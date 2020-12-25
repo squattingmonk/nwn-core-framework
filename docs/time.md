@@ -66,7 +66,7 @@ Examples of function usage are shown in the Examples section.  Any function that
 
 `Get[System|Game]TimeDifferenceIn()` - returns a float representing the difference bewteen two passed time vectors in units equivalent to the passed time element.
 
-`Format[System|Game]Time()` - returns a string with the passed time formatted in the passed date/time format.
+`Format[System|Game]Time()` - returns a string with the passed time formatted in the passed date/time format.  If you are not using default weekday and month names, you can pass in a set of weekday and month names.  Weekday names must be a comma-delimited list of 7 words and months names must be a comma-delimited list of 12 words.
 
 `GetPrecision[System|Game]Time()` - returns a time vector representing the passed time vector with passed precision.  This function serves to remove specific time elements from the time vector, starting with the seconds element.
 
