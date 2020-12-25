@@ -17,6 +17,7 @@
 #include "core_i_constants"
 #include "core_i_database"
 #include "core_c_config"
+#include "nwnx_i_constants"
 
 // -----------------------------------------------------------------------------
 //                               Global Variables
@@ -741,6 +742,17 @@ void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float 
     string sScript, sList, sName = GetName(oTarget);
     string sPriority = PriorityToString(fPriority);
     int i, nCount = CountList(sScripts);
+
+    // Handle NWNX hook script subscription.  The NWNX_Events plugin handles multiple
+    // subscription errors, so don't use CountEventScripts here.
+    if (GetStringLeft(sEvent, 4) == "NWNX")
+    {
+        if (!RegisterNWNXEvent(sEvent))
+            Warning("Script Hook registration failed for event " + sEvent +
+                    "; NWNX Events plug-in is not active");
+        else
+            Debug("Registered NWNX event hook for " + sEvent);
+    }
 
     for (i = 0; i < nCount; i++)
     {
