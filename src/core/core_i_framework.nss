@@ -209,7 +209,7 @@ void ClearEventState(object oEvent = OBJECT_INVALID);
 // ---< core_i_framework >---
 // Registers the nwnx hook script to NWNX event sEvent.  Returns FALSE if the NWNX_Events plugin is not
 // available, otherwise returns TRUE.
-int RegisterNWNXEventScripts(string oEvent);
+int RegisterNWNXEventScripts(string sEvent);
 
 // ---< RegisterEventScripts >---
 // ---< core_i_framework >---
@@ -738,7 +738,7 @@ float StringToPriority(string sPriority, float fDefaultPriority)
         return fPriority;
 }
 
-int RegisterNWNXEvent(string sEvent)
+int RegisterNWNXEventScripts(string sEvent)
 {
     if (NWNX_Util_PluginExists("NWNX_Events"))
     {
@@ -765,7 +765,7 @@ void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float 
     // subscription errors, so don't use CountEventScripts here.
     if (GetStringLeft(sEvent, 4) == "NWNX")
     {
-        if (!RegisterNWNXEvent(sEvent))
+        if (!RegisterNWNXEventScripts(sEvent))
         {
             Warning("Script Hook registration failed for event " + sEvent +
                     "; NWNX Events plug-in is not active");
