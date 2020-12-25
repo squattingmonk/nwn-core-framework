@@ -280,7 +280,6 @@ Adding Prefix Flags:
         SendChatResult("Here's some info!", oPC, FLAG_INFO)
 */
 
-#include "util_i_data"
 #include "util_i_datapoint"
 #include "util_i_varlists"
 
@@ -574,12 +573,12 @@ void _SaveParsedChatLine(object oPC, struct COMMAND_LINE cl)
 {
     object oChat = GetChatItem(oPC);
 
-    _SetLocalString(oChat, LINE, cl.chatLine);
-    _SetLocalString(oChat, DESIGNATOR, cl.cmdChar);
-    _SetLocalString(oChat, COMMAND, cl.cmd);
-    _SetLocalString(oChat, OPTIONS, cl.options);
-    _SetLocalString(oChat, PAIRS, cl.pairs);
-    _SetLocalString(oChat, ARGUMENTS, cl.args);
+    SetLocalString(oChat, LINE, cl.chatLine);
+    SetLocalString(oChat, DESIGNATOR, cl.cmdChar);
+    SetLocalString(oChat, COMMAND, cl.cmd);
+    SetLocalString(oChat, OPTIONS, cl.options);
+    SetLocalString(oChat, PAIRS, cl.pairs);
+    SetLocalString(oChat, ARGUMENTS, cl.args);
 }
 
 // private
@@ -588,12 +587,12 @@ struct COMMAND_LINE _GetParsedChatLine(object oPC)
     object oChat = GetChatItem(oPC);
 
     struct COMMAND_LINE cl;
-    cl.chatLine = _GetLocalString(oChat, LINE);
-    cl.cmdChar = _GetLocalString(oChat, DESIGNATOR);
-    cl.cmd = _GetLocalString(oChat, COMMAND);
-    cl.options = _GetLocalString(oChat, OPTIONS);
-    cl.pairs = _GetLocalString(oChat, PAIRS);
-    cl.args = _GetLocalString(oChat, ARGUMENTS);
+    cl.chatLine = GetLocalString(oChat, LINE);
+    cl.cmdChar = GetLocalString(oChat, DESIGNATOR);
+    cl.cmd = GetLocalString(oChat, COMMAND);
+    cl.options = GetLocalString(oChat, OPTIONS);
+    cl.pairs = GetLocalString(oChat, PAIRS);
+    cl.args = GetLocalString(oChat, ARGUMENTS);
 
     return cl;
 }
@@ -1202,7 +1201,7 @@ object GetChatTarget(object oPC, int nRevert = TARGET_NO_REVERT, object oDefault
     if (oTarget == OBJECT_INVALID)
         SendChatResult("Unable to determine chat target or target is invalid", oPC, FLAG_ERROR);
     else       
-        SendChatResult("Chat target is " + (_GetIsPC(oTarget) ? GetName(oTarget) : GetTag(oTarget)), oPC, FLAG_INFO);
+        SendChatResult("Chat target is " + (GetIsPC(oTarget) ? GetName(oTarget) : GetTag(oTarget)), oPC, FLAG_INFO);
     
     return oTarget;
 }
