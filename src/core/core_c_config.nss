@@ -100,6 +100,13 @@ const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 // - DEBUG_LEVEL_DEBUG: data dumps used for debugging
 const int PERCEPTION_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
+// This is the level of debug messages to generate when the framework is
+// initializing.  To prevent excessive logging during initialization, set
+// this to a lower level than DEFAULT_DEBUG_LEVEL above.  Once framework
+// initialization is complete, module debug level will revert to
+// DEFAULT_DEBUG_LEVEL
+const int INITIALIZATION_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
+
 // -----------------------------------------------------------------------------
 //                         Library and Plugin Management
 // -----------------------------------------------------------------------------
