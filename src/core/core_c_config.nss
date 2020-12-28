@@ -100,6 +100,13 @@ const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 // - DEBUG_LEVEL_DEBUG: data dumps used for debugging
 const int PERCEPTION_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
+// This is the level of debug messages to generate when the framework is
+// initializing.  To prevent excessive logging during initialization, set
+// this to a lower level than DEFAULT_DEBUG_LEVEL above.  Once framework
+// initialization is complete, module debug level will revert to
+// DEFAULT_DEBUG_LEVEL
+const int INITIALIZATION_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
+
 // -----------------------------------------------------------------------------
 //                         Library and Plugin Management
 // -----------------------------------------------------------------------------
@@ -188,6 +195,11 @@ const float ON_AREA_EMPTY_EVENT_DELAY = 180.0;
 // This is the script that will run before the framework initializes the first
 // time.  An empty string means no script will run.
 const string ON_MODULE_PRELOAD = "";
+
+// When using AOE hook scripts, NPCs can be added to the AOE roster for easier
+// access during scripting.  To only allow PC objects on the AOE rosters, set
+// this to FALSE.
+const int INCLUDE_NPC_IN_AOE_ROSTER = TRUE;
 
 // This is the welcome message that will be sent to all players and DMs that log
 // into the module.

@@ -419,7 +419,7 @@ void InitializeCoreFramework()
     if (ON_MODULE_PRELOAD != "")
         ExecuteScript(ON_MODULE_PRELOAD, GetModule());
     // Start debugging
-    SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
+    SetDebugLevel(INITIALIZATION_DEBUG_LEVEL, oModule);
     SetDebugLogging(DEBUG_LOGGING);
 
     // Set specific event debug levels
@@ -447,6 +447,7 @@ void InitializeCoreFramework()
     LoadLibraries(INSTALLED_LIBRARIES);
     LoadPlugins(INSTALLED_PLUGINS);
 
+    SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
     Debug("Successfully initialized Core Framework");
 }
 
