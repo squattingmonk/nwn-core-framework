@@ -416,6 +416,8 @@ void InitializeCoreFramework()
 
     SetLocalInt(oModule, CORE_INITIALIZED, TRUE);
 
+    if (ON_MODULE_PRELOAD != "")
+        ExecuteScript(ON_MODULE_PRELOAD, GetModule());
     // Start debugging
     SetDebugLevel(INITIALIZATION_DEBUG_LEVEL, oModule);
     SetDebugLogging(DEBUG_LOGGING);

@@ -192,6 +192,10 @@ const float ON_AREA_EMPTY_EVENT_DELAY = 180.0;
 //                                 Miscellaneous
 // -----------------------------------------------------------------------------
 
+// This is the script that will run before the framework initializes the first
+// time.  An empty string means no script will run.
+const string ON_MODULE_PRELOAD = "";
+
 // When using AOE hook scripts, NPCs can be added to the AOE roster for easier
 // access during scripting.  To only allow PC objects on the AOE rosters, set
 // this to FALSE.
