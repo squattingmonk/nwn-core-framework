@@ -1150,11 +1150,9 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     }
 
     // Run tag-based scripts for any object, items are already handled
-    if (oSelf != GetModule())
+    if (oSelf != GetModule() && GetObjectType(oSelf) != OBJECT_TYPE_ITEM)
     {
-        int nObjectType = GetObjectType(oSelf);
-        if (ENABLE_TAGBASED_SCRIPTS && !(nState & EVENT_STATE_ABORT) &&
-            nObjectType < OBJECT_TYPE_INVALID)
+        if (ENABLE_TAGBASED_SCRIPTS && !(nState & EVENT_STATE_ABORT) && GetIsObjectValid(oSelf))
             RunLibraryScript(GetTag(oSelf));
     }
     
