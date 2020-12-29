@@ -984,8 +984,7 @@ object InitializeEvent(string sEvent, object oSelf, object oInit)
     if (GetEventSourcesChanged(oSelf, oSources, sEvent))
     {
         CacheEventSources(oSelf, oSources, sEvent);
-        DeleteLocalInt(oSelf, sEvent);
-        Debug("Event sources for " + sEvent + " on " + GetName(oSelf) + " have changed; re-initializing event");
+        Debug("Event sources for " + sEvent + " on " + GetName(oSelf) + " have changed; re-initializing");
     }
 
     // Do initial setup if it hasn't been done or if the script list has
