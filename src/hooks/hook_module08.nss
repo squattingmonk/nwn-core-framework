@@ -20,7 +20,7 @@ void main()
         SetPCChatMessage();
     else
     {
-        int nState = RunEvent(MODULE_EVENT_ON_PLAYER_CHAT);
+        int nState = RunEvent(MODULE_EVENT_ON_PLAYER_CHAT, oPC);
         if (nState & EVENT_STATE_DENIED)
             SetPCChatMessage();
     }
