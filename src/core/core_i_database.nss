@@ -523,13 +523,13 @@ void SetDatabaseString(string sVarName, string sValue, object oObject = OBJECT_I
         SetCampaignString(FALLBACK_DATABASE, sVarName, sValue, oObject);
 }
 
-void IncrementDatabaseInt(string sVarName, object oObject = OBJECT_INVALID);
+void IncrementDatabaseInt(string sVarName, object oObject = OBJECT_INVALID)
 {
     int nValue = GetDatabaseInt(sVarName, oObject);
     SetDatabaseInt(sVarName, ++nValue, oObject);
 }
 
-void DecrementDatabaseInt(string sVarName, object oObject = OBJECT_INVALID);
+void DecrementDatabaseInt(string sVarName, object oObject = OBJECT_INVALID)
 {
     int nValue = GetDatabaseInt(sVarName, oObject);
     SetDatabaseInt(sVarName, --nValue, oObject);
