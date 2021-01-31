@@ -42,7 +42,6 @@ void OnLibraryLoad()
         SetName(oPlugin, "[Plugin] Chat Command System");
         SetDescription(oPlugin,
             "Allows players and DMs to run commands via the chat bar");
-        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_CHAT, "VerifyEvent", EVENT_PRIORITY_FIRST);
         RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_CHAT,
             "chat_OnPlayerChat", EVENT_PRIORITY_FIRST);
     }
