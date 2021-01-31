@@ -72,7 +72,7 @@ int DEBUG_LOGGING = DEBUG_LOG_ALL;
 // - DEBUG_LEVEL_WARNING: indicates unexpected behavior may occur
 // - DEBUG_LEVEL_NOTICE: information to track the flow of functions
 // - DEBUG_LEVEL_DEBUG: data dumps used for debugging
-const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
+const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
 // This controls the level of debug messages to generate on heartbeat events.
 // This can be used to prevent the excessive generation of debug messages that
