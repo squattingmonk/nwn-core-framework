@@ -282,47 +282,9 @@
 //         SendChatResult("Here's some info!", oPC, FLAG_INFO)
 // -----------------------------------------------------------------------------
 
-
 #include "util_i_datapoint"
 #include "util_i_varlists"
-
-// -----------------------------------------------------------------------------
-//                          Configuration/Defaults
-// -----------------------------------------------------------------------------
-
-// Note:  Change these defaults to suit the needs or your module
-
-// Delimiters must be single characters, multiple consecutive delimiters will be
-// ignored If a delimiter is passed that is greater than one character, the
-// first character will be used.
-const string DELIMITER = " ";
-
-// These are the command designators for chat commands, if one of the characters
-// in this string isn't the first character in the chat line recieved by
-// ParseCommandLine(), the function will fail and return FALSE. Do not use "-",
-// "=", ":", any characters in GROUPS below, or any normal alphabetic
-// characters.
-const string DESIGNATORS = "!@#$%^&*;,./?`~|\\";
-
-// Grouping characters must be paired and, if necessary, escaped. Unpaired
-// grouping characters will result in grouping functions being lost and error
-// provided in log. Do not use "-", "=", ":", any charcters in DESIGNATORS
-// above, or any normal alphabetic characters.
-const string GROUPS = "``{}[]()<>";
-
-// To keep grouping symbols as part of the returned data, set this to FALSE.
-const int REMOVE_GROUPING_SYMBOLS = TRUE;
-
-// To force logging of all chat commands, set this to true.
-const int LOG_ALL_CHAT_COMMANDS = TRUE;
-
-// To force logging of all chat command results that are not errors, set this to
-// TRUE.
-const int LOG_ALL_CHAT_RESULTS = TRUE;
-
-// -----------------------------------------------------------------------------
-//                      LEAVE EVERYTHING BELOW HERE ALONE!
-// -----------------------------------------------------------------------------
+#include "chat_c_config"
 
 // Used by calling scripts for various functions
 const string CHAT_PREFIX = "CHAT_";
