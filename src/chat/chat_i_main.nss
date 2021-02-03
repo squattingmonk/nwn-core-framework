@@ -103,7 +103,7 @@
 // Example:  Usage with special designators
 //     if (GetIsDM(oPC))
 //     {
-//         if (ParseCommandLine(oPC, sChat, DESIGNATORS + "%^"))
+//         if (ParseCommandLine(oPC, sChat, CHAT_DESIGNATORS + "%^"))
 //             ...
 //     }
 //
@@ -227,9 +227,9 @@
 // - oPC (required) -> the PC that send the chat.
 // - nFlag (optional) -> bitmasked integer that will add a prefix for special
 //   feedback. Currently only implemented as single options, so | is not usable.
-//   - FLAG_ERROR -> Adds a red [Error] prefix
-//   - FLAG_HELP -> Adds an orange [Help] prefix
-//   - FLAG_INFO -> Adds a cyan [Info] prefix
+//   - CHAT_FLAG_ERROR -> Adds a red [Error] prefix
+//   - CHAT_FLAG_HELP -> Adds an orange [Help] prefix
+//   - CHAT_FLAG_INFO -> Adds a cyan [Info] prefix
 //   Note: Using any nFlag will cause the returned message to go only to the PC
 //   and any other recipients specified by nRecipients or by chat options are
 //   ignored
@@ -271,15 +271,15 @@
 //
 //     To send an error message:
 //
-//         SendChatResult("Could not run script", oPC, FLAG_ERROR);
+//         SendChatResult("Could not run script", oPC, CHAT_FLAG_ERROR);
 //
 //     To send help with your command:
 //
-//         SendChatResult(GetScriptHelp(), oPC, FLAG_HELP);
+//         SendChatResult(GetScriptHelp(), oPC, CHAT_FLAG_HELP);
 //
 //     To send random information:
 //
-//         SendChatResult("Here's some info!", oPC, FLAG_INFO)
+//         SendChatResult("Here's some info!", oPC, CHAT_FLAG_INFO)
 // -----------------------------------------------------------------------------
 
 #include "util_i_datapoint"
@@ -293,30 +293,30 @@ const string CHAT_PREFIX = "CHAT_";
 const string TOKEN_INVALID = "TOKEN_INVALID";
 
 // Variables names for saving chat struct to dataobject
-const string LINE = "CHAT_LINE";
-const string DESIGNATOR = "CHAT_DESIGNATOR";
-const string COMMAND = "CHAT_COMMAND";
-const string ARGUMENTS = "CHAT_ARGUMENTS";
-const string OPTIONS = "CHAT_OPTIONS";
-const string PAIRS = "CHAT_PAIRS";
+const string CHAT_LINE = "CHAT_LINE";
+const string CHAT_DESIGNATOR = "CHAT_DESIGNATOR";
+const string CHAT_COMMAND = "CHAT_COMMAND";
+const string CHAT_ARGUMENTS = "CHAT_ARGUMENTS";
+const string CHAT_OPTIONS = "CHAT_OPTIONS";
+const string CHAT_PAIRS = "CHAT_PAIRS";
 
 // Bitwise integers for chat struct components
-const int CHAT_ARGUMENTS = 0x01;
-const int CHAT_OPTIONS   = 0x02;
-const int CHAT_PAIRS     = 0x04;
+const int CHAT_ARGUMENT = 0x01;
+const int CHAT_OPTION   = 0x02;
+const int CHAT_PAIR     = 0x04;
 
 const int CHAT_PC = 0x00;
 const int CHAT_DMS = 0x01;
 const int CHAT_PARTY = 0x02;
 const int CHAT_LOG = 0x04;
 
-const int FLAG_NONE = 0x00;
-const int FLAG_ERROR = 0x01;
-const int FLAG_HELP = 0x02;
-const int FLAG_INFO = 0x04;
+const int CHAT_FLAG_NONE = 0x00;
+const int CHAT_FLAG_ERROR = 0x01;
+const int CHAT_FLAG_HELP = 0x02;
+const int CHAT_FLAG_INFO = 0x04;
 
-const int TARGET_REVERT = 0x01;
-const int TARGET_NO_REVERT = 0x02;
+const int CHAT_TARGET_REVERT = 0x01;
+const int CHAT_TARGET_NO_REVERT = 0x02;
 
 struct COMMAND_LINE
 {
@@ -346,7 +346,7 @@ string RemoveCharacters(string sSource, string sChar = " ");
 // Returns TOKEN_INVALID if it can't tokenize sLine. Defaults set in the
 // configuration settings above can be overriden on a per-call basis by passing
 // the appropriate arguments into this function.
-string Tokenize(string sLine, string sDelimiter = DELIMITER, string sGroups = GROUPS, int nRemoveGroups = REMOVE_GROUPING_SYMBOLS);
+string Tokenize(string sLine, string sDelimiter = CHAT_DELIMITER, string sGroups = CHAT_GROUPS, int nRemoveGroups = REMOVE_GROUPING_SYMBOLS);
 
 // ---< ParseCommandLine >---
 // Parses chat line sLine, keeps character groups together as defined by sGroup
@@ -355,8 +355,8 @@ string Tokenize(string sLine, string sDelimiter = DELIMITER, string sGroups = GR
 // parsing was successful. Passing Defaults set in the configuration settings
 // above can be overriden on a per-call basis by passing the appropriate
 // arguments into this function.
-int ParseCommandLine(object oPC = OBJECT_INVALID, string sLine = "", string sDesignators = DESIGNATORS,
-                     string sGroups = GROUPS, int nRemoveGroups = TRUE, string sDelimiter = DELIMITER);
+int ParseCommandLine(object oPC = OBJECT_INVALID, string sLine = "", string sDesignators = CHAT_DESIGNATORS,
+                     string sGroups = CHAT_GROUPS, int nRemoveGroups = TRUE, string sDelimiter = CHAT_DELIMITER);
 
 // ---< GetKey >---
 // Given a key[:|=]value sPair, returns the key portion.
@@ -437,9 +437,9 @@ float GetChatKeyValueFloat(object oPC, string sKey);
 // - oPC -> object of the PC initiating the chat command
 // - nFlag -> bitmasked integer that determines a specified prefix for the
 //   message:
-//   - FLAG_ERROR -> prefixes the message with [Error]
-//   - FLAG_HELP -> prefixes the message with [Help]
-//   - FLAG_INFO -> prefixes the message with [Info]
+//   - CHAT_FLAG_ERROR -> prefixes the message with [Error]
+//   - CHAT_FLAG_HELP -> prefixes the message with [Help]
+//   - CHAT_FLAG_INFO -> prefixes the message with [Info]
 // - nRecipients -> bitmasked integers that determines the destination of
 //   sMessage
 //   - CHAT_DMS -> sends message to all DMs
@@ -458,9 +458,9 @@ void SendChatResult(string sMessage, object oPC, int nFlag = FALSE, int nRecipie
 // - Chat does not have target pair -> oPC is returned
 // - Chat has target pair and target is valid -> target object is returned
 // - Chat has target pair and target is invalid:
-//   - nRevert == TARGET_NO_REVERT -> OBJECT_INVALID is returned
-//   - nRevert == TARGET_REVERT -> oPC or oDefault (if passed) returned
-object GetChatTarget(object oPC, int nRevert = TARGET_NO_REVERT, object oDefault = OBJECT_INVALID);
+//   - nRevert == CHAT_TARGET_NO_REVERT -> OBJECT_INVALID is returned
+//   - nRevert == CHAT_TARGET_REVERT -> oPC or oDefault (if passed) returned
+object GetChatTarget(object oPC, int nRevert = CHAT_TARGET_NO_REVERT, object oDefault = OBJECT_INVALID);
 
 // -----------------------------------------------------------------------------
 //                             Function Definitions
@@ -551,12 +551,12 @@ void _SaveParsedChatLine(object oPC, struct COMMAND_LINE cl)
 {
     object oChat = GetChatItem(oPC);
 
-    SetLocalString(oChat, LINE, cl.chatLine);
-    SetLocalString(oChat, DESIGNATOR, cl.cmdChar);
-    SetLocalString(oChat, COMMAND, cl.cmd);
-    SetLocalString(oChat, OPTIONS, cl.options);
-    SetLocalString(oChat, PAIRS, cl.pairs);
-    SetLocalString(oChat, ARGUMENTS, cl.args);
+    SetLocalString(oChat, CHAT_LINE, cl.chatLine);
+    SetLocalString(oChat, CHAT_DESIGNATOR, cl.cmdChar);
+    SetLocalString(oChat, CHAT_COMMAND, cl.cmd);
+    SetLocalString(oChat, CHAT_OPTIONS, cl.options);
+    SetLocalString(oChat, CHAT_PAIRS, cl.pairs);
+    SetLocalString(oChat, CHAT_ARGUMENTS, cl.args);
 }
 
 // private
@@ -565,12 +565,12 @@ struct COMMAND_LINE _GetParsedChatLine(object oPC)
     object oChat = GetChatItem(oPC);
 
     struct COMMAND_LINE cl;
-    cl.chatLine = GetLocalString(oChat, LINE);
-    cl.cmdChar = GetLocalString(oChat, DESIGNATOR);
-    cl.cmd = GetLocalString(oChat, COMMAND);
-    cl.options = GetLocalString(oChat, OPTIONS);
-    cl.pairs = GetLocalString(oChat, PAIRS);
-    cl.args = GetLocalString(oChat, ARGUMENTS);
+    cl.chatLine = GetLocalString(oChat, CHAT_LINE);
+    cl.cmdChar = GetLocalString(oChat, CHAT_DESIGNATOR);
+    cl.cmd = GetLocalString(oChat, CHAT_COMMAND);
+    cl.options = GetLocalString(oChat, CHAT_OPTIONS);
+    cl.pairs = GetLocalString(oChat, CHAT_PAIRS);
+    cl.args = GetLocalString(oChat, CHAT_ARGUMENTS);
 
     return cl;
 }
@@ -581,13 +581,13 @@ int _CountChatComponent(object oPC, int nComponents)
     int nResult;
     struct COMMAND_LINE cl = _GetParsedChatLine(oPC);
 
-    if (nComponents & CHAT_ARGUMENTS)
+    if (nComponents & CHAT_ARGUMENT)
         nResult += CountList(cl.args);
 
-    if (nComponents & CHAT_OPTIONS)
+    if (nComponents & CHAT_OPTION)
         nResult += CountList(cl.options);
 
-    if (nComponents & CHAT_PAIRS)
+    if (nComponents & CHAT_PAIR)
         nResult += CountList(cl.pairs);
 
     return nResult;
@@ -599,13 +599,13 @@ int _FindChatComponent(object oPC, int nComponents, string sKey)
     struct COMMAND_LINE cl = _GetParsedChatLine(oPC);
     sKey = TrimStringLeft(sKey, "-");
 
-    if (nComponents & CHAT_ARGUMENTS)
+    if (nComponents & CHAT_ARGUMENT)
         return FindListItem(cl.args, sKey);
 
-    if (nComponents & CHAT_OPTIONS)
+    if (nComponents & CHAT_OPTION)
         return FindListItem(cl.options, sKey);
 
-    if (nComponents & CHAT_PAIRS)
+    if (nComponents & CHAT_PAIR)
         return FindKey(cl.pairs, sKey);
 
     return -1;
@@ -616,13 +616,13 @@ string _GetChatComponent(object oPC, int nComponents, int nIndex = 0)
 {
     struct COMMAND_LINE cl = _GetParsedChatLine(oPC);
 
-    if (nComponents & CHAT_ARGUMENTS)
+    if (nComponents & CHAT_ARGUMENT)
         return GetListItem(cl.args, nIndex);
 
-    if (nComponents & CHAT_OPTIONS)
+    if (nComponents & CHAT_OPTION)
         return GetListItem(cl.options, nIndex);
 
-    if (nComponents & CHAT_PAIRS)
+    if (nComponents & CHAT_PAIR)
         return GetListItem(cl.pairs, nIndex);
 
     return "";
@@ -633,13 +633,13 @@ string _GetChatComponents(object oPC, int nComponents)
 {
     struct COMMAND_LINE cl = _GetParsedChatLine(oPC);
 
-    if (nComponents & CHAT_ARGUMENTS)
+    if (nComponents & CHAT_ARGUMENT)
         return cl.args;
 
-    if (nComponents & CHAT_OPTIONS)
+    if (nComponents & CHAT_OPTION)
         return cl.options;
 
-    if (nComponents & CHAT_PAIRS)
+    if (nComponents & CHAT_PAIR)
         return cl.pairs;
 
     return "";
@@ -670,7 +670,7 @@ string RemoveCharacters(string sSource, string sChar = " ")
 }
 
 // requires util_i_strings, util_i_csvlists, util_i_debug
-string Tokenize(string sLine, string sDelimiter = DELIMITER, string sGroups = GROUPS,
+string Tokenize(string sLine, string sDelimiter = CHAT_DELIMITER, string sGroups = CHAT_GROUPS,
                 int nRemoveGroups = REMOVE_GROUPING_SYMBOLS)
 {
     int n, nGroup, nOpen, nCount;
@@ -754,8 +754,8 @@ string Tokenize(string sLine, string sDelimiter = DELIMITER, string sGroups = GR
 }
 
 // requires util_i_debug, util_i_strings, util_i_csvlists
-int ParseCommandLine(object oPC = OBJECT_INVALID, string sLine = "", string sDesignators = DESIGNATORS,
-                     string sGroups = GROUPS, int nRemoveGroups = TRUE, string sDelimiter = DELIMITER)
+int ParseCommandLine(object oPC = OBJECT_INVALID, string sLine = "", string sDesignators = CHAT_DESIGNATORS,
+                     string sGroups = CHAT_GROUPS, int nRemoveGroups = TRUE, string sDelimiter = CHAT_DELIMITER)
 {
     // Check for valid inputs
     int nLen;
@@ -976,22 +976,22 @@ string GetChatCommand(object oPC)
 
 int CountChatArguments(object oPC)
 {
-    return _CountChatComponent(oPC, CHAT_ARGUMENTS);
+    return _CountChatComponent(oPC, CHAT_ARGUMENT);
 }
 
 int CountChatOptions(object oPC)
 {
-    return _CountChatComponent(oPC, CHAT_OPTIONS);
+    return _CountChatComponent(oPC, CHAT_OPTION);
 }
 
 int CountChatPairs(object oPC)
 {
-    return _CountChatComponent(oPC, CHAT_PAIRS);
+    return _CountChatComponent(oPC, CHAT_PAIR);
 }
 
 int HasChatArgument(object oPC, string sKey)
 {
-    return _FindChatComponent(oPC, CHAT_ARGUMENTS, sKey) > -1;
+    return _FindChatComponent(oPC, CHAT_ARGUMENT, sKey) > -1;
 }
 
 int HasChatOption(object oPC, string sKeys)
@@ -1001,7 +1001,7 @@ int HasChatOption(object oPC, string sKeys)
     for (n = 0; n < nCount; n++)
     {
         sKey = GetListItem(sKeys, n);
-        if (_FindChatComponent(oPC, CHAT_OPTIONS, sKey) > -1)
+        if (_FindChatComponent(oPC, CHAT_OPTION, sKey) > -1)
             return TRUE;
     }
 
@@ -1015,7 +1015,7 @@ int HasChatKey(object oPC, string sKeys)
     for (n = 0; n < nCount; n++)
     {
         sKey = GetListItem(sKeys, n);
-        if (_FindChatComponent(oPC, CHAT_PAIRS, sKey) > -1)
+        if (_FindChatComponent(oPC, CHAT_PAIR, sKey) > -1)
             return TRUE;
     }
 
@@ -1024,57 +1024,57 @@ int HasChatKey(object oPC, string sKeys)
 
 int FindChatArgument(object oPC, string sKey)
 {
-    return _FindChatComponent(oPC, CHAT_ARGUMENTS, sKey);
+    return _FindChatComponent(oPC, CHAT_ARGUMENT, sKey);
 }
 
 int FindChatOption(object oPC, string sKey)
 {
-    return _FindChatComponent(oPC, CHAT_OPTIONS, sKey);
+    return _FindChatComponent(oPC, CHAT_OPTION, sKey);
 }
 
 int FindChatKey(object oPC, string sKey)
 {
-    return _FindChatComponent(oPC, CHAT_PAIRS, sKey);
+    return _FindChatComponent(oPC, CHAT_PAIR, sKey);
 }
 
 string GetChatArgument(object oPC, int nIndex = 0)
 {
-    return _GetChatComponent(oPC, CHAT_ARGUMENTS, nIndex);
+    return _GetChatComponent(oPC, CHAT_ARGUMENT, nIndex);
 }
 
 string GetChatOption(object oPC, int nIndex = 0)
 {
-    return _GetChatComponent(oPC, CHAT_OPTIONS, nIndex);
+    return _GetChatComponent(oPC, CHAT_OPTION, nIndex);
 }
 
 string GetChatPair(object oPC, int nIndex = 0)
 {
-    return _GetChatComponent(oPC, CHAT_PAIRS, nIndex);
+    return _GetChatComponent(oPC, CHAT_PAIR, nIndex);
 }
 
 string GetChatKey(object oPC, int nIndex = 0)
 {
-    return GetKey(_GetChatComponent(oPC, CHAT_PAIRS, nIndex));
+    return GetKey(_GetChatComponent(oPC, CHAT_PAIR, nIndex));
 }
 
 string GetChatValue(object oPC, int nIndex = 0)
 {
-    return GetValue(_GetChatComponent(oPC, CHAT_PAIRS, nIndex));
+    return GetValue(_GetChatComponent(oPC, CHAT_PAIR, nIndex));
 }
 
 string GetChatArguments(object oPC)
 {
-    return _GetChatComponents(oPC, CHAT_ARGUMENTS);
+    return _GetChatComponents(oPC, CHAT_ARGUMENT);
 }
 
 string GetChatOptions(object oPC)
 {
-    return _GetChatComponents(oPC, CHAT_OPTIONS);
+    return _GetChatComponents(oPC, CHAT_OPTION);
 }
 
 string GetChatPairs(object oPC)
 {
-    return _GetChatComponents(oPC, CHAT_PAIRS);
+    return _GetChatComponents(oPC, CHAT_PAIR);
 }
 
 string GetChatKeyValue(object oPC, string sKeys)
@@ -1109,11 +1109,11 @@ void SendChatResult(string sMessage, object oPC, int nFlag = FALSE, int nRecipie
 {
     string sPrefix;
 
-    if (nFlag & FLAG_ERROR)
+    if (nFlag & CHAT_FLAG_ERROR)
         sPrefix = HexColorString("[Error] ", COLOR_RED);
-    else if (nFlag & FLAG_HELP)
+    else if (nFlag & CHAT_FLAG_HELP)
         sPrefix = HexColorString("[Help] ", COLOR_ORANGE);
-    else if (nFlag & FLAG_INFO)
+    else if (nFlag & CHAT_FLAG_INFO)
         sPrefix = HexColorString("[Info] ", COLOR_CYAN);
 
     SendMessageToPC(oPC, (nFlag ? sPrefix : "") + sMessage);
@@ -1152,7 +1152,7 @@ void SendChatResult(string sMessage, object oPC, int nFlag = FALSE, int nRecipie
                                  "\n  Result -> " + sMessage);
 }
 
-object GetChatTarget(object oPC, int nRevert = TARGET_NO_REVERT, object oDefault = OBJECT_INVALID)
+object GetChatTarget(object oPC, int nRevert = CHAT_TARGET_NO_REVERT, object oDefault = OBJECT_INVALID)
 {
     object oTarget;
     if (oDefault == OBJECT_INVALID)
@@ -1163,10 +1163,10 @@ object GetChatTarget(object oPC, int nRevert = TARGET_NO_REVERT, object oDefault
         oTarget = GetObjectByTag(GetChatKeyValue(oPC, "target"));
         if (!GetIsObjectValid(oTarget))
         {
-            if (nRevert & TARGET_REVERT)
+            if (nRevert & CHAT_TARGET_REVERT)
             {
                 SendChatResult("Cannot find object passed by user; reverting to default" +
-                            "\n  Tag received -> " + GetChatKeyValue(oPC, "target"), oPC, FLAG_ERROR);
+                            "\n  Tag received -> " + GetChatKeyValue(oPC, "target"), oPC, CHAT_FLAG_ERROR);
                 oTarget = oDefault;
             }
             else
@@ -1177,9 +1177,9 @@ object GetChatTarget(object oPC, int nRevert = TARGET_NO_REVERT, object oDefault
         oTarget = oDefault;
 
     if (oTarget == OBJECT_INVALID)
-        SendChatResult("Unable to determine chat target or target is invalid", oPC, FLAG_ERROR);
+        SendChatResult("Unable to determine chat target or target is invalid", oPC, CHAT_FLAG_ERROR);
     else
-        SendChatResult("Chat target is " + (GetIsPC(oTarget) ? GetName(oTarget) : GetTag(oTarget)), oPC, FLAG_INFO);
+        SendChatResult("Chat target is " + (GetIsPC(oTarget) ? GetName(oTarget) : GetTag(oTarget)), oPC, CHAT_FLAG_INFO);
 
     return oTarget;
 }
