@@ -17,6 +17,8 @@
 #include "core_i_constants"
 #include "core_i_database"
 #include "core_c_config"
+#include "nwnx_events"
+#include "nwnx_util"
 
 // -----------------------------------------------------------------------------
 //                               Global Variables
@@ -202,6 +204,12 @@ void SetEventState(int nState, object oEvent = OBJECT_INVALID);
 // Clear the state of the event represented by oEvent. If oEvent is invalid,
 // clearsa the state of the currently executing event.
 void ClearEventState(object oEvent = OBJECT_INVALID);
+
+// ---< RegisterNWNXEvent >---
+// ---< core_i_framework >---
+// Registers the nwnx hook script to NWNX event sEvent.  Returns FALSE if the NWNX_Events plugin is not
+// available, otherwise returns TRUE.
+int RegisterNWNXEventScripts(string sEvent);
 
 // ---< RegisterEventScripts >---
 // ---< core_i_framework >---
@@ -733,6 +741,17 @@ float StringToPriority(string sPriority, float fDefaultPriority)
         return fPriority;
 }
 
+int RegisterNWNXEventScripts(string sEvent)
+{
+    if (NWNX_Util_PluginExists("NWNX_Events"))
+    {
+        NWNX_Events_SubscribeEvent(sEvent, "hook_nwnx");
+        return TRUE;
+    }    
+    
+    return FALSE;
+}
+
 void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0)
 {
     if (!GetIsObjectValid(oTarget))
@@ -744,6 +763,20 @@ void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float 
     string sScript, sList, sName = GetName(oTarget);
     string sPriority = PriorityToString(fPriority);
     int i, nCount = CountList(sScripts);
+
+    // Handle NWNX hook script subscription.  The NWNX_Events plugin handles multiple
+    // subscription errors, so don't use CountEventScripts here.
+    if (GetStringLeft(sEvent, 4) == "NWNX")
+    {
+        if (!RegisterNWNXEventScripts(sEvent))
+        {
+            Warning("Script Hook registration failed for event " + sEvent +
+                    "; NWNX Events plug-in is not active");
+            return;
+        }
+        else
+            Debug("Registered NWNX event hook for " + sEvent);
+    }
 
     for (i = 0; i < nCount; i++)
     {
