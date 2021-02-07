@@ -179,6 +179,18 @@ void SetDatabaseObject(string sVarName, object oValue, object oObject = OBJECT_I
 // is invalid, will use the module instead.
 void SetDatabaseString(string sVarName, string sValue, object oObject = OBJECT_INVALID);
 
+// ---< IncrementDatabaseInt >--
+// ---< core_i_database >---
+// Sets the int value named sVarName for oObject in the database to 1 larger than
+// the saved value.  If the saved value is 0 or non-existent, the value is set to 1.
+void IncrementDatabaseInt(string sVarName, object oObject = OBJECT_INVALID);
+
+// ---< IncrementDatabaseInt >--
+// ---< core_i_database >---
+// Sets the int value named sVarName for oObject in the database to 1 less than
+// the saved value.  If the saved value is 0 or non-existent, the value is set to -1.
+void DecrementDatabaseInt(string sVarName, object oObject = OBJECT_INVALID);
+
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
@@ -509,4 +521,16 @@ void SetDatabaseString(string sVarName, string sValue, object oObject = OBJECT_I
     }
     else
         SetCampaignString(FALLBACK_DATABASE, sVarName, sValue, oObject);
+}
+
+void IncrementDatabaseInt(string sVarName, object oObject = OBJECT_INVALID)
+{
+    int nValue = GetDatabaseInt(sVarName, oObject);
+    SetDatabaseInt(sVarName, ++nValue, oObject);
+}
+
+void DecrementDatabaseInt(string sVarName, object oObject = OBJECT_INVALID)
+{
+    int nValue = GetDatabaseInt(sVarName, oObject);
+    SetDatabaseInt(sVarName, --nValue, oObject);
 }

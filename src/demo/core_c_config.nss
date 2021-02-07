@@ -72,7 +72,7 @@ int DEBUG_LOGGING = DEBUG_LOG_ALL;
 // - DEBUG_LEVEL_WARNING: indicates unexpected behavior may occur
 // - DEBUG_LEVEL_NOTICE: information to track the flow of functions
 // - DEBUG_LEVEL_DEBUG: data dumps used for debugging
-const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
+const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
 // This controls the level of debug messages to generate on heartbeat events.
 // This can be used to prevent the excessive generation of debug messages that
@@ -100,6 +100,13 @@ const int HEARTBEAT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 // - DEBUG_LEVEL_DEBUG: data dumps used for debugging
 const int PERCEPTION_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
+// This is the level of debug messages to generate when the framework is
+// initializing.  To prevent excessive logging during initialization, set
+// this to a lower level than DEFAULT_DEBUG_LEVEL above.  Once framework
+// initialization is complete, module debug level will revert to
+// DEFAULT_DEBUG_LEVEL
+const int INITIALIZATION_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
+
 // -----------------------------------------------------------------------------
 //                         Library and Plugin Management
 // -----------------------------------------------------------------------------
@@ -107,12 +114,12 @@ const int PERCEPTION_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 // This is a comma-separated list of libraries that should be loaded
 // OnModuleLoad. These libraries are loaded before plugins are installed, so
 // they can programatically generate plugins to be installed.
-const string INSTALLED_LIBRARIES = "pqj_l_plugin, dlg_l_plugin, demo_l_plugin";
+const string INSTALLED_LIBRARIES = "pqj_l_plugin, dlg_l_plugin, demo_l_plugin, chat_l_plugin";
 
 // This is a comma-separated list of plugins that should be loaded OnModuleLoad.
 // Plugins can define libraries to install. If the IDs for those libraries are
 // in this list, they will be loaded.
-const string INSTALLED_PLUGINS = "bw_defaultevents, dlg, pqj";
+const string INSTALLED_PLUGINS = "bw_defaultevents, dlg, pqj, chat";
 
 // -----------------------------------------------------------------------------
 //                               Event Management
@@ -184,6 +191,15 @@ const float ON_AREA_EMPTY_EVENT_DELAY = 180.0;
 // -----------------------------------------------------------------------------
 //                                 Miscellaneous
 // -----------------------------------------------------------------------------
+
+// This is the script that will run before the framework initializes the first
+// time.  An empty string means no script will run.
+const string ON_MODULE_PRELOAD = "";
+
+// When using AOE hook scripts, NPCs can be added to the AOE roster for easier
+// access during scripting.  To only allow PC objects on the AOE rosters, set
+// this to FALSE.
+const int INCLUDE_NPC_IN_AOE_ROSTER = TRUE;
 
 // This is the welcome message that will be sent to all players and DMs that log
 // into the module.

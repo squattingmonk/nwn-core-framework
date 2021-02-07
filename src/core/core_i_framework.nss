@@ -17,6 +17,8 @@
 #include "core_i_constants"
 #include "core_i_database"
 #include "core_c_config"
+#include "nwnx_events"
+#include "nwnx_util"
 
 // -----------------------------------------------------------------------------
 //                               Global Variables
@@ -202,6 +204,12 @@ void SetEventState(int nState, object oEvent = OBJECT_INVALID);
 // Clear the state of the event represented by oEvent. If oEvent is invalid,
 // clearsa the state of the currently executing event.
 void ClearEventState(object oEvent = OBJECT_INVALID);
+
+// ---< RegisterNWNXEvent >---
+// ---< core_i_framework >---
+// Registers the nwnx hook script to NWNX event sEvent.  Returns FALSE if the NWNX_Events plugin is not
+// available, otherwise returns TRUE.
+int RegisterNWNXEventScripts(string sEvent);
 
 // ---< RegisterEventScripts >---
 // ---< core_i_framework >---
@@ -416,8 +424,10 @@ void InitializeCoreFramework()
 
     SetLocalInt(oModule, CORE_INITIALIZED, TRUE);
 
+    if (ON_MODULE_PRELOAD != "")
+        ExecuteScript(ON_MODULE_PRELOAD, GetModule());
     // Start debugging
-    SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
+    SetDebugLevel(INITIALIZATION_DEBUG_LEVEL, oModule);
     SetDebugLogging(DEBUG_LOGGING);
 
     // Set specific event debug levels
@@ -445,6 +455,7 @@ void InitializeCoreFramework()
     LoadLibraries(INSTALLED_LIBRARIES);
     LoadPlugins(INSTALLED_PLUGINS);
 
+    SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
     Debug("Successfully initialized Core Framework");
 }
 
@@ -730,6 +741,17 @@ float StringToPriority(string sPriority, float fDefaultPriority)
         return fPriority;
 }
 
+int RegisterNWNXEventScripts(string sEvent)
+{
+    if (NWNX_Util_PluginExists("NWNX_Events"))
+    {
+        NWNX_Events_SubscribeEvent(sEvent, "hook_nwnx");
+        return TRUE;
+    }    
+    
+    return FALSE;
+}
+
 void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0)
 {
     if (!GetIsObjectValid(oTarget))
@@ -741,6 +763,20 @@ void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float 
     string sScript, sList, sName = GetName(oTarget);
     string sPriority = PriorityToString(fPriority);
     int i, nCount = CountList(sScripts);
+
+    // Handle NWNX hook script subscription.  The NWNX_Events plugin handles multiple
+    // subscription errors, so don't use CountEventScripts here.
+    if (GetStringLeft(sEvent, 4) == "NWNX")
+    {
+        if (!RegisterNWNXEventScripts(sEvent))
+        {
+            Warning("Script Hook registration failed for event " + sEvent +
+                    "; NWNX Events plug-in is not active");
+            return;
+        }
+        else
+            Debug("Registered NWNX event hook for " + sEvent);
+    }
 
     for (i = 0; i < nCount; i++)
     {
@@ -1073,6 +1109,11 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // Initialize the script list for this event
     object oEvent = InitializeEvent(sEvent, oSelf, oInit);
 
+    // Tag-based scripting requires the current event be set, even if there are
+    // not scripts attached to the specified event.  This will be overwritten
+    // if there are scripts attached to this event.
+    SetLocalObject(EVENTS, EVENT_LAST, oEvent);
+
     // Ensure the blacklist is built
     if (!bLocalOnly)
         BuildPluginBlacklist(oSelf);
@@ -1144,6 +1185,13 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
             break;
     }
 
+    // Run tag-based scripts for any object, items are already handled
+    if (oSelf != GetModule() && GetObjectType(oSelf) != OBJECT_TYPE_ITEM)
+    {
+        if (ENABLE_TAGBASED_SCRIPTS && !(nState & EVENT_STATE_ABORT) && GetIsObjectValid(oSelf))
+            RunLibraryScript(GetTag(oSelf));
+    }
+    
     // Clean up
     if (nEventLevel)
         OverrideDebugLevel(FALSE);

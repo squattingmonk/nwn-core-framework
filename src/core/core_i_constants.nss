@@ -98,6 +98,7 @@ const string DM_ROSTER         = "DM_ROSTER";
 const string LOGIN_BOOT        = "LOGIN_BOOT";
 const string LOGIN_DEATH       = "LOGIN_DEATH";
 const string AREA_ROSTER       = "AREA_ROSTER";
+const string AOE_ROSTER        = "AOE_ROSTER";
 const string IS_PC             = "IS_PC";
 const string IS_DM             = "IS_DM";
 
@@ -151,6 +152,9 @@ const string AREA_EVENT_ON_EMPTY                      = "OnAreaEmpty";
 const string AOE_EVENT_ON_ENTER                       = "OnAoEEnter";
 const string AOE_EVENT_ON_EXIT                        = "OnAoEExit";
 const string AOE_EVENT_ON_HEARTBEAT                   = "OnAoEHeartbeat";
+
+// These are pseudo-events called by the Core Framework
+const string AOE_EVENT_ON_EMPTY                       = "OnAoEEmpty";
 
 // ----- Creature Events -------------------------------------------------------
 
