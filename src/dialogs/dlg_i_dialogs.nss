@@ -316,6 +316,17 @@ void ClearDialogHistory();
 // Returns the current dialog page.
 string GetDialogPage();
 
+// ---< GetDialogPageNumber >---
+// ---< dlg_i_dialogs >---
+// Returns the child page number if the current dialog page is a child page, otherwise
+// returns 0.  Returns 1 if the current page is a parent page.
+int GetDialogPageNumber();
+
+// ---< GetDialogPageParent >---
+// ---< dlg_i_dialogs >---
+// Returns the parent of the current dialog page, if it exists, otherwise returns "".
+string GetDialogPageParent();
+
 // ---< SetDialogPage >---
 // ---< dlg_i_dialogs >---
 // Sets the current dialog page to sPage.
@@ -877,6 +888,34 @@ void ClearDialogHistory()
 string GetDialogPage()
 {
     return GetLocalString(DIALOG, DLG_CURRENT_PAGE);
+}
+
+int GetDialogPageNumber()
+{
+    string sPage = GetDialogPage();
+    string sPageNumber = StringParse(sPage, "#", TRUE);
+
+    if (TestStringAgainstPattern("*n", sPageNumber))
+    {
+        if (HasDialogPage(StringRemoveParsed(sPage, sPageNumber, "#", TRUE)))
+            return sPageNumber == "" ? 1 : StringToInt(sPageNumber);
+    }
+
+    return 0;
+}
+
+string GetDialogPageParent()
+{
+    string sPage = GetDialogPage();
+
+    if (GetDialogPageNumber() >= 2)
+    {
+        // Check right to left in case user used `#` in their page name
+        string sPageNumber = StringParse(sPage, "#", TRUE);
+        return StringRemoveParsed(sPage, sPageNumber, "#", TRUE);
+    }
+
+    return "";    
 }
 
 void SetDialogPage(string sPage)
