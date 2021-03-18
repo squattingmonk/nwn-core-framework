@@ -17,11 +17,9 @@
 // We instantiate these here so they are automatically set when a library is
 // executed. If the library itself calls another library script, these variables
 // will remain valid in the scope of the parent library.
-int    LIB_LOADING         = (LIBRARIES == OBJECT_SELF);
-int    LIB_CURRENT_ENTRY   = GetLocalInt   (LIBRARIES, LIB_LAST_ENTRY);
-string LIB_CURRENT_LIBRARY = GetLocalString(LIBRARIES, LIB_LAST_LIBRARY);
-string LIB_CURRENT_SCRIPT  = GetLocalString(LIBRARIES, LIB_LAST_SCRIPT);
-
+string LIB_CURRENT_LIBRARY = GetLocalString(GetModule(), LIB_LAST_LIBRARY);
+string LIB_CURRENT_SCRIPT  = GetLocalString(GetModule(), LIB_LAST_SCRIPT);
+int    LIB_CURRENT_ENTRY   = GetLocalInt   (GetModule(), LIB_LAST_ENTRY);
 
 // -----------------------------------------------------------------------------
 //                              Function Protoypes
@@ -99,24 +97,22 @@ void OnLibraryScript(string sScript, int nEntry);
 void RegisterLibraryScript(string sScript, int nEntry = 0)
 {
     string sLibrary = LIB_CURRENT_LIBRARY;
-    string sExist   = GetLocalString(LIBRARIES, LIB_SCRIPT + sScript);
+    string sExist = GetScriptLibrary(sScript);
 
     if (sLibrary != sExist)
     {
         if (sExist != "")
-            Debug(sLibrary + " is overriding " + sLibrary + "'s implementation of " +
-                sScript, DEBUG_LEVEL_WARNING);
-
-        SetLocalString(LIBRARIES, LIB_SCRIPT + sScript, sLibrary);
+            Warning(sLibrary + " is overriding " + sExist + "'s implementation of " +
+                sScript);
     }
 
-    int nOldEntry = GetLocalInt(LIBRARIES, LIB_ENTRY + sLibrary + sScript);
+    int nOldEntry = GetScriptEntry(sScript);
     if (nOldEntry)
-        Debug(sLibrary + " already declared " + sScript + ". " +
+        Warning(sLibrary + " already declared " + sScript + 
             " Old Entry: " + IntToString(nOldEntry) +
-            " New Entry: " + IntToString(nEntry), DEBUG_LEVEL_WARNING);
+            " New Entry: " + IntToString(nEntry));
 
-    SetLocalInt(LIBRARIES, LIB_ENTRY + sLibrary + sScript, nEntry);
+    AddLibraryScript(sLibrary, sScript, nEntry);
 }
 
 void LibraryReturn(int nValue)
@@ -130,15 +126,17 @@ void LibraryReturn(int nValue)
 //#pragma default_function(OnLibraryLoad)
 //#pragma default_function(OnLibraryScript)
 
-
 // -----------------------------------------------------------------------------
 //                                 Main Routine
 // -----------------------------------------------------------------------------
 
 void main()
 {
-    if (LIB_LOADING)
+    if (GetLocalInt(GetModule(), LIB_LOADING))
+    {
+        DeleteLocalInt(GetModule(), LIB_LOADING);
         OnLibraryLoad();
+    }
     else
         OnLibraryScript(LIB_CURRENT_SCRIPT, LIB_CURRENT_ENTRY);
 }
