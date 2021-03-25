@@ -16,10 +16,6 @@
       }
     ]
   },
-  "Mod_CacheNSSList": {
-    "type": "list",
-    "value": []
-  },
   "Mod_Creator_ID": {
     "type": "int",
     "value": 2
@@ -86,7 +82,7 @@
   },
   "Mod_MinGameVer": {
     "type": "cexostring",
-    "value": "1.79"
+    "value": "1.82"
   },
   "Mod_MinPerHour": {
     "type": "byte",
