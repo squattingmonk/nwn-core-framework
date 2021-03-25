@@ -21,6 +21,10 @@
     "value": [
       {
         "__struct_id": 0,
+        "ActionParams": {
+          "type": "list",
+          "value": []
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -50,6 +54,10 @@
                 "type": "resref",
                 "value": "dlg_dialogcheck"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 14
@@ -64,6 +72,10 @@
               "Active": {
                 "type": "resref",
                 "value": "dlg_dialogcheck"
+              },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
               },
               "Index": {
                 "type": "dword",
@@ -80,6 +92,10 @@
                 "type": "resref",
                 "value": "dlg_dialogcheck"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 12
@@ -94,6 +110,10 @@
               "Active": {
                 "type": "resref",
                 "value": "dlg_dialogcheck"
+              },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
               },
               "Index": {
                 "type": "dword",
@@ -110,6 +130,10 @@
                 "type": "resref",
                 "value": "dlg_dialogcheck"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 10
@@ -124,6 +148,10 @@
               "Active": {
                 "type": "resref",
                 "value": "dlg_dialogcheck"
+              },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
               },
               "Index": {
                 "type": "dword",
@@ -140,6 +168,10 @@
                 "type": "resref",
                 "value": "dlg_dialogcheck"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 8
@@ -154,6 +186,10 @@
               "Active": {
                 "type": "resref",
                 "value": "dlg_dialogcheck"
+              },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
               },
               "Index": {
                 "type": "dword",
@@ -170,6 +206,10 @@
                 "type": "resref",
                 "value": "dlg_dialogcheck"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 6
@@ -184,6 +224,10 @@
               "Active": {
                 "type": "resref",
                 "value": "dlg_dialogcheck"
+              },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
               },
               "Index": {
                 "type": "dword",
@@ -200,6 +244,10 @@
                 "type": "resref",
                 "value": "dlg_dialogcheck"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 4
@@ -214,6 +262,10 @@
               "Active": {
                 "type": "resref",
                 "value": "dlg_dialogcheck"
+              },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
               },
               "Index": {
                 "type": "dword",
@@ -230,6 +282,10 @@
                 "type": "resref",
                 "value": "dlg_dialogcheck"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 2
@@ -245,6 +301,10 @@
                 "type": "resref",
                 "value": "dlg_dialogcheck"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 1
@@ -259,6 +319,10 @@
               "Active": {
                 "type": "resref",
                 "value": "dlg_dialogcheck"
+              },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
               },
               "Index": {
                 "type": "dword",
@@ -305,6 +369,22 @@
     "value": [
       {
         "__struct_id": 0,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "14"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -330,6 +410,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -351,7 +435,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode15"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -366,6 +450,22 @@
       },
       {
         "__struct_id": 1,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "13"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -391,6 +491,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -412,7 +516,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode14"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -427,6 +531,22 @@
       },
       {
         "__struct_id": 2,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "12"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -452,6 +572,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -473,7 +597,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode13"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -488,6 +612,22 @@
       },
       {
         "__struct_id": 3,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "11"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -513,6 +653,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -534,7 +678,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode12"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -549,6 +693,22 @@
       },
       {
         "__struct_id": 4,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "10"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -574,6 +734,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -595,7 +759,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode11"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -610,6 +774,22 @@
       },
       {
         "__struct_id": 5,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "9"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -635,6 +815,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -656,7 +840,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode10"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -671,6 +855,22 @@
       },
       {
         "__struct_id": 6,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "8"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -696,6 +896,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -717,7 +921,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode09"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -732,6 +936,22 @@
       },
       {
         "__struct_id": 7,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "7"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -757,6 +977,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -778,7 +1002,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode08"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -793,6 +1017,22 @@
       },
       {
         "__struct_id": 8,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "6"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -818,6 +1058,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -839,7 +1083,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode07"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -854,6 +1098,22 @@
       },
       {
         "__struct_id": 9,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "5"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -879,6 +1139,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -900,7 +1164,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode06"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -915,6 +1179,22 @@
       },
       {
         "__struct_id": 10,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "4"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -940,6 +1220,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -961,7 +1245,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode05"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -976,6 +1260,22 @@
       },
       {
         "__struct_id": 11,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "3"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -1001,6 +1301,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -1022,7 +1326,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode04"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -1037,6 +1341,22 @@
       },
       {
         "__struct_id": 12,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "2"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -1062,6 +1382,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -1083,7 +1407,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode03"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -1098,6 +1422,22 @@
       },
       {
         "__struct_id": 13,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "1"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -1123,6 +1463,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -1144,7 +1488,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode02"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -1159,6 +1503,22 @@
       },
       {
         "__struct_id": 14,
+        "ActionParams": {
+          "type": "list",
+          "value": [
+            {
+              "__struct_id": 0,
+              "Key": {
+                "type": "cexostring",
+                "value": "*Node"
+              },
+              "Value": {
+                "type": "cexostring",
+                "value": "0"
+              }
+            }
+          ]
+        },
         "Animation": {
           "type": "dword",
           "value": 0
@@ -1184,6 +1544,10 @@
                 "type": "resref",
                 "value": "dlg_dialogpage"
               },
+              "ConditionParams": {
+                "type": "list",
+                "value": []
+              },
               "Index": {
                 "type": "dword",
                 "value": 0
@@ -1205,7 +1569,7 @@
         },
         "Script": {
           "type": "resref",
-          "value": "dlg_dialognode01"
+          "value": "dlg_dialognode"
         },
         "Sound": {
           "type": "resref",
@@ -1228,6 +1592,10 @@
         "Active": {
           "type": "resref",
           "value": "dlg_dialogpage"
+        },
+        "ConditionParams": {
+          "type": "list",
+          "value": []
         },
         "Index": {
           "type": "dword",
