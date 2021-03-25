@@ -108,7 +108,7 @@ void RegisterLibraryScript(string sScript, int nEntry = 0)
 
     int nOldEntry = GetScriptEntry(sScript);
     if (nOldEntry)
-        Warning(sLibrary + " already declared " + sScript + 
+        Warning(sLibrary + " already declared " + sScript +
             " Old Entry: " + IntToString(nOldEntry) +
             " New Entry: " + IntToString(nEntry));
 
@@ -123,8 +123,8 @@ void LibraryReturn(int nValue)
 // These are dummy implementations to prevent nwnsc from complaining that they
 // do not exist. If you want to compile in the toolset rather than using nwnsc,
 // comment these lines out.
-//#pragma default_function(OnLibraryLoad)
-//#pragma default_function(OnLibraryScript)
+#pragma default_function(OnLibraryLoad)
+#pragma default_function(OnLibraryScript)
 
 // -----------------------------------------------------------------------------
 //                                 Main Routine
