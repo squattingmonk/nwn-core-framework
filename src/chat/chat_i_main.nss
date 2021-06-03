@@ -282,7 +282,9 @@
 //         SendChatResult("Here's some info!", oPC, CHAT_FLAG_INFO)
 // -----------------------------------------------------------------------------
 
+#include "util_i_csvlists"
 #include "util_i_datapoint"
+#include "util_i_debug"
 #include "util_i_varlists"
 #include "chat_c_config"
 

@@ -129,6 +129,7 @@ const string MODULE_EVENT_ON_PLAYER_REST              = "OnPlayerRest";
 const string MODULE_EVENT_ON_PLAYER_REST_STARTED      = "OnPlayerRestStarted";
 const string MODULE_EVENT_ON_PLAYER_REST_CANCELLED    = "OnPlayerRestCancelled";
 const string MODULE_EVENT_ON_PLAYER_REST_FINISHED     = "OnPlayerRestFinished";
+const string MODULE_EVENT_ON_PLAYER_TARGET            = "OnPlayerTarget";
 const string MODULE_EVENT_ON_PLAYER_UNEQUIP_ITEM      = "OnPlayerUnEquipItem";
 const string MODULE_EVENT_ON_UNACQUIRE_ITEM           = "OnUnAcquireItem";
 const string MODULE_EVENT_ON_USER_DEFINED             = "OnUserDefined";
@@ -152,6 +153,7 @@ const string AREA_EVENT_ON_EMPTY                      = "OnAreaEmpty";
 const string AOE_EVENT_ON_ENTER                       = "OnAoEEnter";
 const string AOE_EVENT_ON_EXIT                        = "OnAoEExit";
 const string AOE_EVENT_ON_HEARTBEAT                   = "OnAoEHeartbeat";
+const string AOE_EVENT_ON_USER_DEFINED                = "OnAoEUserDefined";
 
 // These are pseudo-events called by the Core Framework
 const string AOE_EVENT_ON_EMPTY                       = "OnAoEEmpty";
@@ -176,6 +178,7 @@ const string CREATURE_EVENT_ON_USER_DEFINED           = "OnCreatureUserDefined";
 
 const string DOOR_EVENT_ON_AREA_TRANSITION_CLICK      = "OnDoorAreaTransitionClick";
 const string DOOR_EVENT_ON_CLOSE                      = "OnDoorClose";
+const string DOOR_EVENT_ON_CONVERSATION               = "OnDoorConversation";
 const string DOOR_EVENT_ON_DAMAGED                    = "OnDoorDamaged";
 const string DOOR_EVENT_ON_DEATH                      = "OnDoorDeath";
 const string DOOR_EVENT_ON_FAIL_TO_OPEN               = "OnDoorFailToOpen";
@@ -199,6 +202,7 @@ const string ENCOUNTER_EVENT_ON_USER_DEFINED          = "OnEncounterUserDefined"
 
 const string PLACEABLE_EVENT_ON_CLICK                 = "OnPlaceableClick";
 const string PLACEABLE_EVENT_ON_CLOSE                 = "OnPlaceableClose";
+const string PLACEABLE_EVENT_ON_CONVERSATION          = "OnPlaceableConversation";
 const string PLACEABLE_EVENT_ON_DAMAGED               = "OnPlaceableDamaged";
 const string PLACEABLE_EVENT_ON_DEATH                 = "OnPlaceableDeath";
 const string PLACEABLE_EVENT_ON_DISTURBED             = "OnPlaceableDisturbed";

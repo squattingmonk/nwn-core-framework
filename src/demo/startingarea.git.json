@@ -230,55 +230,55 @@
         },
         "ScriptAttacked": {
           "type": "resref",
-          "value": "hook_creature09"
+          "value": "hook_nwn"
         },
         "ScriptDamaged": {
           "type": "resref",
-          "value": "hook_creature04"
+          "value": "hook_nwn"
         },
         "ScriptDeath": {
           "type": "resref",
-          "value": "hook_creature05"
+          "value": "hook_nwn"
         },
         "ScriptDialogue": {
           "type": "resref",
-          "value": "hook_creature03"
+          "value": "hook_nwn"
         },
         "ScriptDisturbed": {
           "type": "resref",
-          "value": "hook_creature06"
+          "value": "hook_nwn"
         },
         "ScriptEndRound": {
           "type": "resref",
-          "value": "hook_creature02"
+          "value": "hook_nwn"
         },
         "ScriptHeartbeat": {
           "type": "resref",
-          "value": "hook_creature07"
+          "value": "hook_nwn"
         },
         "ScriptOnBlocked": {
           "type": "resref",
-          "value": "hook_creature01"
+          "value": "hook_nwn"
         },
         "ScriptOnNotice": {
           "type": "resref",
-          "value": "hook_creature08"
+          "value": "hook_nwn"
         },
         "ScriptRested": {
           "type": "resref",
-          "value": "hook_creature10"
+          "value": "hook_nwn"
         },
         "ScriptSpawn": {
           "type": "resref",
-          "value": "hook_creature11"
+          "value": "hook_nwn"
         },
         "ScriptSpellAt": {
           "type": "resref",
-          "value": "hook_creature12"
+          "value": "hook_nwn"
         },
         "ScriptUserDefine": {
           "type": "resref",
-          "value": "hook_creature13"
+          "value": "hook_nwn"
         },
         "SkillList": {
           "type": "list",
@@ -555,23 +555,23 @@
         },
         "XOrientation": {
           "type": "float",
-          "value": 0.7071084380149841
+          "value": 0.7071
         },
         "XPosition": {
           "type": "float",
-          "value": 8.830633163452148
+          "value": 8.8306
         },
         "YOrientation": {
           "type": "float",
-          "value": -0.7071051001548767
+          "value": -0.7071
         },
         "YPosition": {
           "type": "float",
-          "value": 11.7609224319458
+          "value": 11.7609
         },
         "ZPosition": {
           "type": "float",
-          "value": 4.999999987376214e-07
+          "value": 0.0
         }
       },
       {
@@ -1159,55 +1159,55 @@
         },
         "ScriptAttacked": {
           "type": "resref",
-          "value": "hook_creature09"
+          "value": "hook_nwn"
         },
         "ScriptDamaged": {
           "type": "resref",
-          "value": "hook_creature04"
+          "value": "hook_nwn"
         },
         "ScriptDeath": {
           "type": "resref",
-          "value": "hook_creature05"
+          "value": "hook_nwn"
         },
         "ScriptDialogue": {
           "type": "resref",
-          "value": "hook_creature03"
+          "value": "hook_nwn"
         },
         "ScriptDisturbed": {
           "type": "resref",
-          "value": "hook_creature06"
+          "value": "hook_nwn"
         },
         "ScriptEndRound": {
           "type": "resref",
-          "value": "hook_creature02"
+          "value": "hook_nwn"
         },
         "ScriptHeartbeat": {
           "type": "resref",
-          "value": "hook_creature07"
+          "value": "hook_nwn"
         },
         "ScriptOnBlocked": {
           "type": "resref",
-          "value": "hook_creature01"
+          "value": "hook_nwn"
         },
         "ScriptOnNotice": {
           "type": "resref",
-          "value": "hook_creature08"
+          "value": "hook_nwn"
         },
         "ScriptRested": {
           "type": "resref",
-          "value": "hook_creature10"
+          "value": "hook_nwn"
         },
         "ScriptSpawn": {
           "type": "resref",
-          "value": "hook_creature11"
+          "value": "hook_nwn"
         },
         "ScriptSpellAt": {
           "type": "resref",
-          "value": "hook_creature12"
+          "value": "hook_nwn"
         },
         "ScriptUserDefine": {
           "type": "resref",
-          "value": "hook_creature13"
+          "value": "hook_nwn"
         },
         "SkillList": {
           "type": "list",
@@ -1484,23 +1484,23 @@
         },
         "XOrientation": {
           "type": "float",
-          "value": 0.5555701851844788
+          "value": 0.5556
         },
         "XPosition": {
           "type": "float",
-          "value": 4.87669849395752
+          "value": 4.8767
         },
         "YOrientation": {
           "type": "float",
-          "value": 0.8314696550369263
+          "value": 0.8315
         },
         "YPosition": {
           "type": "float",
-          "value": 3.965186595916748
+          "value": 3.9652
         },
         "ZPosition": {
           "type": "float",
-          "value": -5.222045729169622e-06
+          "value": -0.0
         }
       }
     ]
@@ -1536,7 +1536,7 @@
         },
         "Bearing": {
           "type": "float",
-          "value": -0.7853981852531433
+          "value": -0.7854
         },
         "BodyBag": {
           "type": "byte",
@@ -1610,19 +1610,19 @@
         },
         "OnClick": {
           "type": "resref",
-          "value": "hook_placeable01"
+          "value": "hook_nwn"
         },
         "OnClosed": {
           "type": "resref",
-          "value": "hook_placeable02"
+          "value": "hook_nwn"
         },
         "OnDamaged": {
           "type": "resref",
-          "value": "hook_placeable03"
+          "value": "hook_nwn"
         },
         "OnDeath": {
           "type": "resref",
-          "value": "hook_placeable04"
+          "value": "hook_nwn"
         },
         "OnDisarm": {
           "type": "resref",
@@ -1634,23 +1634,23 @@
         },
         "OnInvDisturbed": {
           "type": "resref",
-          "value": "hook_placeable06"
+          "value": "hook_nwn"
         },
         "OnLock": {
           "type": "resref",
-          "value": "hook_placeable07"
+          "value": "hook_nwn"
         },
         "OnMeleeAttacked": {
           "type": "resref",
-          "value": "hook_placeable08"
+          "value": "hook_nwn"
         },
         "OnOpen": {
           "type": "resref",
-          "value": "hook_placeable09"
+          "value": "hook_nwn"
         },
         "OnSpellCastAt": {
           "type": "resref",
-          "value": "hook_placeable10"
+          "value": "hook_nwn"
         },
         "OnTrapTriggered": {
           "type": "resref",
@@ -1658,15 +1658,15 @@
         },
         "OnUnlock": {
           "type": "resref",
-          "value": "hook_placeable11"
+          "value": "hook_nwn"
         },
         "OnUsed": {
           "type": "resref",
-          "value": "hook_placeable12"
+          "value": "hook_nwn"
         },
         "OnUserDefined": {
           "type": "resref",
-          "value": "hook_placeable13"
+          "value": "hook_nwn"
         },
         "OpenLockDC": {
           "type": "byte",
@@ -1754,15 +1754,15 @@
         },
         "X": {
           "type": "float",
-          "value": 11.8577766418457
+          "value": 11.8578
         },
         "Y": {
           "type": "float",
-          "value": 11.56515693664551
+          "value": 11.5652
         },
         "Z": {
           "type": "float",
-          "value": -5.222045729169622e-06
+          "value": -0.0
         }
       },
       {
@@ -1781,7 +1781,7 @@
         },
         "Bearing": {
           "type": "float",
-          "value": -0.5890485644340515
+          "value": -0.589
         },
         "BodyBag": {
           "type": "byte",
@@ -1983,15 +1983,15 @@
         },
         "X": {
           "type": "float",
-          "value": 5.92555046081543
+          "value": 5.9256
         },
         "Y": {
           "type": "float",
-          "value": 3.215868473052979
+          "value": 3.2159
         },
         "Z": {
           "type": "float",
-          "value": -5.222045729169622e-06
+          "value": -0.0
         }
       },
       {
@@ -2010,7 +2010,7 @@
         },
         "Bearing": {
           "type": "float",
-          "value": 1.570796251296997
+          "value": 1.5708
         },
         "BodyBag": {
           "type": "byte",
@@ -2084,19 +2084,19 @@
         },
         "OnClick": {
           "type": "resref",
-          "value": "hook_placeable01"
+          "value": "hook_nwn"
         },
         "OnClosed": {
           "type": "resref",
-          "value": "hook_placeable02"
+          "value": "hook_nwn"
         },
         "OnDamaged": {
           "type": "resref",
-          "value": "hook_placeable03"
+          "value": "hook_nwn"
         },
         "OnDeath": {
           "type": "resref",
-          "value": "hook_placeable04"
+          "value": "hook_nwn"
         },
         "OnDisarm": {
           "type": "resref",
@@ -2104,27 +2104,27 @@
         },
         "OnHeartbeat": {
           "type": "resref",
-          "value": "hook_placeable05"
+          "value": "hook_nwn"
         },
         "OnInvDisturbed": {
           "type": "resref",
-          "value": "hook_placeable06"
+          "value": "hook_nwn"
         },
         "OnLock": {
           "type": "resref",
-          "value": "hook_placeable07"
+          "value": "hook_nwn"
         },
         "OnMeleeAttacked": {
           "type": "resref",
-          "value": "hook_placeable08"
+          "value": "hook_nwn"
         },
         "OnOpen": {
           "type": "resref",
-          "value": "hook_placeable09"
+          "value": "hook_nwn"
         },
         "OnSpellCastAt": {
           "type": "resref",
-          "value": "hook_placeable10"
+          "value": "hook_nwn"
         },
         "OnTrapTriggered": {
           "type": "resref",
@@ -2132,15 +2132,15 @@
         },
         "OnUnlock": {
           "type": "resref",
-          "value": "hook_placeable11"
+          "value": "hook_nwn"
         },
         "OnUsed": {
           "type": "resref",
-          "value": "hook_placeable12"
+          "value": "hook_nwn"
         },
         "OnUserDefined": {
           "type": "resref",
-          "value": "hook_placeable13"
+          "value": "hook_nwn"
         },
         "OpenLockDC": {
           "type": "byte",
@@ -2243,11 +2243,11 @@
         },
         "X": {
           "type": "float",
-          "value": 4.070909023284912
+          "value": 4.0709
         },
         "Y": {
           "type": "float",
-          "value": 7.593684196472168
+          "value": 7.5937
         },
         "Z": {
           "type": "float",
