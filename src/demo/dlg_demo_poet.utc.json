@@ -414,55 +414,55 @@
   },
   "ScriptAttacked": {
     "type": "resref",
-    "value": "hook_creature09"
+    "value": "hook_nwn"
   },
   "ScriptDamaged": {
     "type": "resref",
-    "value": "hook_creature04"
+    "value": "hook_nwn"
   },
   "ScriptDeath": {
     "type": "resref",
-    "value": "hook_creature05"
+    "value": "hook_nwn"
   },
   "ScriptDialogue": {
     "type": "resref",
-    "value": "hook_creature03"
+    "value": "hook_nwn"
   },
   "ScriptDisturbed": {
     "type": "resref",
-    "value": "hook_creature06"
+    "value": "hook_nwn"
   },
   "ScriptEndRound": {
     "type": "resref",
-    "value": "hook_creature02"
+    "value": "hook_nwn"
   },
   "ScriptHeartbeat": {
     "type": "resref",
-    "value": "hook_creature07"
+    "value": "hook_nwn"
   },
   "ScriptOnBlocked": {
     "type": "resref",
-    "value": "hook_creature01"
+    "value": "hook_nwn"
   },
   "ScriptOnNotice": {
     "type": "resref",
-    "value": "hook_creature08"
+    "value": "hook_nwn"
   },
   "ScriptRested": {
     "type": "resref",
-    "value": "hook_creature10"
+    "value": "hook_nwn"
   },
   "ScriptSpawn": {
     "type": "resref",
-    "value": "hook_creature11"
+    "value": "hook_nwn"
   },
   "ScriptSpellAt": {
     "type": "resref",
-    "value": "hook_creature12"
+    "value": "hook_nwn"
   },
   "ScriptUserDefine": {
     "type": "resref",
-    "value": "hook_creature13"
+    "value": "hook_nwn"
   },
   "SkillList": {
     "type": "list",

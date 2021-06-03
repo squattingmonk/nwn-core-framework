@@ -13,8 +13,8 @@
 // -----------------------------------------------------------------------------
 
 const string DATA_PREFIX = "Datapoint: ";
-const string DATA_POINT  = "util_datapoint";
-const string DATA_ITEM   = "util_dataitem";
+const string DATA_POINT  = "x1_hen_inv";
+const string DATA_ITEM   = "nw_it_msmlmisc22";
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
@@ -23,7 +23,7 @@ const string DATA_ITEM   = "util_dataitem";
 // ---< CreateDatapoint >---
 // ---< util_i_datapoint >---
 // Creates a datapoint that oOwner can use to store sSystem-related variables.
-// If oOwner is invalid, it will be the module. The waypoint is created at
+// If oOwner is invalid, it will be the module. The placeable is created at
 // oOwner's location (or the module starting location if oOwner is an area or
 // the module).
 object CreateDatapoint(string sSystem, object oOwner = OBJECT_INVALID);
@@ -57,7 +57,7 @@ object GetDataItem(object oDatapoint, string sSubSystem);
 
 // ---< SetDataItem >---
 // ---< util_i_datapoint >---
-// Sets oItem as the object that oDatapoint uses to stor sSubSystem-related
+// Sets oItem as the object that oDatapoint uses to store sSubSystem-related
 // variables.
 void SetDataItem(object oDatapoint, string sSubSystem, object oItem);
 

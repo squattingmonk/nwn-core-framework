@@ -429,17 +429,6 @@
                       "type": "resref",
                       "value": "bw_defaultevents"
                     }
-                  },
-                  {
-                    "__struct_id": 0,
-                    "NAME": {
-                      "type": "cexostring",
-                      "value": "Template: Data Item"
-                    },
-                    "RESREF": {
-                      "type": "resref",
-                      "value": "util_dataitem"
-                    }
                   }
                 ]
               },

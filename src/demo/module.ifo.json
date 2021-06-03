@@ -34,7 +34,9 @@
   },
   "Mod_Description": {
     "type": "cexolocstring",
-    "value": {}
+    "value": {
+      "0": ""
+    }
   },
   "Mod_DuskHour": {
     "type": "byte",
@@ -82,7 +84,7 @@
   },
   "Mod_MinGameVer": {
     "type": "cexostring",
-    "value": "1.82"
+    "value": "1.83"
   },
   "Mod_MinPerHour": {
     "type": "byte",
@@ -96,31 +98,31 @@
   },
   "Mod_OnAcquirItem": {
     "type": "resref",
-    "value": "hook_module01"
+    "value": ""
   },
   "Mod_OnActvtItem": {
     "type": "resref",
-    "value": "hook_module02"
+    "value": ""
   },
   "Mod_OnClientEntr": {
     "type": "resref",
-    "value": "hook_module03"
+    "value": ""
   },
   "Mod_OnClientLeav": {
     "type": "resref",
-    "value": "hook_module04"
+    "value": ""
   },
   "Mod_OnCutsnAbort": {
     "type": "resref",
-    "value": "hook_module05"
+    "value": ""
   },
   "Mod_OnHeartbeat": {
     "type": "resref",
-    "value": "hook_module06"
+    "value": ""
   },
   "Mod_OnModLoad": {
     "type": "resref",
-    "value": "hook_module07"
+    "value": "hook_nwn"
   },
   "Mod_OnModStart": {
     "type": "resref",
@@ -128,43 +130,43 @@
   },
   "Mod_OnPlrChat": {
     "type": "resref",
-    "value": "hook_module08"
+    "value": ""
   },
   "Mod_OnPlrDeath": {
     "type": "resref",
-    "value": "hook_module09"
+    "value": ""
   },
   "Mod_OnPlrDying": {
     "type": "resref",
-    "value": "hook_module10"
+    "value": ""
   },
   "Mod_OnPlrEqItm": {
     "type": "resref",
-    "value": "hook_module11"
+    "value": ""
   },
   "Mod_OnPlrLvlUp": {
     "type": "resref",
-    "value": "hook_module12"
+    "value": ""
   },
   "Mod_OnPlrRest": {
     "type": "resref",
-    "value": "hook_module14"
+    "value": ""
   },
   "Mod_OnPlrUnEqItm": {
     "type": "resref",
-    "value": "hook_module15"
+    "value": ""
   },
   "Mod_OnSpawnBtnDn": {
     "type": "resref",
-    "value": "hook_module13"
+    "value": ""
   },
   "Mod_OnUnAqreItem": {
     "type": "resref",
-    "value": "hook_module16"
+    "value": ""
   },
   "Mod_OnUsrDefined": {
     "type": "resref",
-    "value": "hook_module17"
+    "value": ""
   },
   "Mod_StartDay": {
     "type": "byte",

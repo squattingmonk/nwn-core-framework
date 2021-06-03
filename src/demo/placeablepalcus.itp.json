@@ -124,22 +124,6 @@
                 "type": "byte",
                 "value": 0
               },
-              "LIST": {
-                "type": "list",
-                "value": [
-                  {
-                    "__struct_id": 0,
-                    "NAME": {
-                      "type": "cexostring",
-                      "value": "Template: Datapoint"
-                    },
-                    "RESREF": {
-                      "type": "resref",
-                      "value": "util_datapoint"
-                    }
-                  }
-                ]
-              },
               "STRREF": {
                 "type": "dword",
                 "value": 6688

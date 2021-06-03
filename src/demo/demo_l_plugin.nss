@@ -10,6 +10,7 @@
 #include "util_i_color"
 #include "util_i_library"
 #include "core_i_framework"
+#include "chat_i_main"
 
 // -----------------------------------------------------------------------------
 //                                  VerifyEvent
