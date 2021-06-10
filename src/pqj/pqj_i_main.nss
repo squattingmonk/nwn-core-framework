@@ -7,22 +7,24 @@
 // This is the main include file for the Persistent Quests and Journals plugin.
 // -----------------------------------------------------------------------------
 
-#include "core_i_database"
-#include "util_i_csvlists"
-
-// -----------------------------------------------------------------------------
-//                                   Constants
-// -----------------------------------------------------------------------------
-
-const string PQJ_TABLE_SQLITE = "pqjdata (pc_id INTEGER, plot_id VARCHAR(32) NOT NULL DEFAULT '', state INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (pc_id, plot_id), FOREIGN KEY (pc_id) REFERENCES pc (id) ON DELETE CASCADE ON UPDATE CASCADE)";
-const string PQJ_TABLE_MYSQL  = "pqjdata (pc_id INT UNSIGNED NOT NULL DEFAULT 0, plot_id VARCHAR(32) NOT NULL DEFAULT '', state INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (pc_id, plot_id), FOREIGN KEY (pc_id) REFERENCES pc (id) ON DELETE CASCADE ON UPDATE CASCADE)";
-
-const string PQJ_PREFIX  = "PQJ PlotID: ";
-const string PQJ_ENTRIES = "PQJ Entries";
+#include "util_i_debug"
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
 // -----------------------------------------------------------------------------
+
+// ---< pqj_CreateTable >---
+// ---< pqj_i_main >---
+// Creates a table for PQJ quest data in oPC's persistent SQLite database. If
+// bForce is true, will drop any existing table before creating a new one.
+void pqj_CreateTable(object oPC, int bForce = FALSE);
+
+// ---< pqj_RestoreJournalEntries >---
+// ---< pqj_i_main >---
+// Restores all journal entries from oPC's persistent SQLite database. This
+// should be called once OnClientEnter. Ensure the table has been created using
+// pqj_CreateTable() before calling this.
+void pqj_RestoreJournalEntries(object oPC);
 
 // ---< pqj_GetQuestState >---
 // ---< pqj_i_main >---
@@ -46,97 +48,78 @@ void pqj_RemoveJournalQuestEntry(string sPlotID, object oPC, int bAllPartyMember
 //                              Funcion Definitions
 // -----------------------------------------------------------------------------
 
+void pqj_CreateTable(object oPC, int bForce = FALSE)
+{
+    if (!GetIsPC(oPC) || GetIsDM(oPC))
+        return;
+
+    if (bForce)
+        SqlStep(SqlPrepareQueryObject(oPC, "DROP TABLE IF NOT EXISTS pqjdata;"));
+
+    string sMessage = "creating table pqjdata on " + GetName(oPC);
+    string sQuery = "CREATE TABLE IF NOT EXISTS pqjdata (" +
+        "quest TEXT NOT NULL PRIMARY KEY, " +
+        "state INTEGER NOT NULL DEFAULT 0);";
+    sqlquery qQuery = SqlPrepareQueryObject(oPC, sQuery);
+    SqlStep(qQuery);
+
+    string sError = SqlGetError(qQuery);
+    if (sError == "")
+        Notice(HexColorString("[Success] ", COLOR_GREEN) + sMessage);
+    else
+        CriticalError(sMessage + ": " + sError);
+}
+
+void pqj_RestoreJournalEntries(object oPC)
+{
+    if (!GetIsPC(oPC) || GetIsDM(oPC))
+        return;
+
+    int    nState;
+    string sPlotID;
+    string sName = GetName(oPC);
+    string sQuery = "SELECT quest, state FROM pqjdata";
+    sqlquery qQuery = SqlPrepareQueryObject(oPC, sQuery);
+    while (SqlStep(qQuery))
+    {
+        sPlotID = SqlGetString(qQuery, 0);
+        nState = SqlGetInt(qQuery, 1);
+        Debug("Restoring journal entry; PC: " + sName + ", " +
+              "PlotID: " + sPlotID + "; PlotState: " + IntToString(nState));
+        AddJournalQuestEntry(sPlotID, nState, oPC, FALSE);
+    }
+}
+
 int pqj_GetQuestState(string sPlotID, object oPC)
 {
-    if (!GetIsPC(oPC))
+    if (!GetIsPC(oPC) || GetIsDM(oPC))
         return 0;
 
-    int nDatabase = GetDatabaseType();
-    if (nDatabase)
-    {
-        string sPCID = GetPCID(oPC);
-        string sQuery = "SELECT state FROM pqjdata WHERE pc_id=? AND plot_id=?";
-
-        if (NWNX_SQL_PrepareAndExecuteQuery(sQuery, sPCID, sPlotID) &&
-            NWNX_SQL_ReadyToReadNextRow())
-        {
-            NWNX_SQL_ReadNextRow();
-            return StringToInt(NWNX_SQL_ReadDataInActiveRow());
-        }
-
-        return 0;
-    }
-
-    return GetCampaignInt(FALLBACK_DATABASE, PQJ_PREFIX + sPlotID, oPC);
+    string sQuery = "SELECT state FROM pqjdata WHERE quest=@quest;";
+    sqlquery qQuery = SqlPrepareQueryObject(oPC, sQuery);
+    SqlBindString(qQuery, "@quest", sPlotID);
+    SqlStep(qQuery);
+    return SqlGetInt(qQuery, 0);
 }
 
 // Internal function for pqj_AddJournalQuestEntry().
 void _StoreQuestEntry(string sPlotID, int nState, object oPC, int bAllowOverrideHigher = FALSE)
 {
-    string sName    = GetName(oPC);
-    string sState   = IntToString(nState);
-    string sMessage = "persistent journal entry for " + sName + "; " +
-                      "PlotID: " + sPlotID + "; PlotState: " + sState;
+    string sMessage = "persistent journal entry for " + GetName(oPC) + "; " +
+        "sPlotID: " + sPlotID + "; nState: " + IntToString(nState);
+    string sQuery = "INSERT INTO pqjdata (quest, state) " +
+        "VALUES (@quest, @state) ON CONFLICT (quest) DO UPDATE SET state = " +
+        (bAllowOverrideHigher ? "@state" : "MAX(state, @state)") + ";";
+    sqlquery qQuery = SqlPrepareQueryObject(oPC, sQuery);
+    SqlBindString(qQuery, "@quest", sPlotID);
+    SqlBindInt(qQuery, "@state", nState);
+    SqlStep(qQuery);
 
-    int nDatabase = GetDatabaseType();
-    if (nDatabase)
-    {
-        string sQuery;
-        string sPCID = GetPCID(oPC);
-
-        switch (nDatabase)
-        {
-            case DATABASE_TYPE_SQLITE:
-            {
-                sQuery = "INSERT INTO pqjdata (pc_id, plot_id, state) " +
-                         "VALUES (?, ?, ?) ON CONFLICT (pc_id, plot_id) " +
-                         "DO UPDATE SET state = ";
-                sQuery += bAllowOverrideHigher ? "?" : "MAX(state, ?)";
-            } break;
-
-            case DATABASE_TYPE_MYSQL:
-            {
-                sQuery = "INSERT INTO pqjdata (pc_id, plot_id, state) " +
-                         "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE state = ";
-                sQuery += bAllowOverrideHigher ? "?" : "GREATEST(state, ?)";
-            } break;
-        }
-
-        if (NWNX_SQL_PrepareAndExecuteQuery(sQuery, sPCID, sPlotID, sState, sState))
-            Debug("Adding " + sMessage);
-        else
-        {
-            string sError = NWNX_SQL_GetLastError();
-            Debug("Could not add " + sMessage + ": " + sError, DEBUG_LEVEL_CRITICAL);
-        }
-    }
+    string sError = SqlGetError(qQuery);
+    if (sError == "")
+        Debug("Adding " + sMessage);
     else
-    {
-        int bStore = TRUE;
-        int nStored = GetCampaignInt(FALLBACK_DATABASE, PQJ_PREFIX + sPlotID, oPC);
-
-        if (nStored)
-            bStore = (nState > nStored || bAllowOverrideHigher);
-        else
-        {
-            string sPlotIDs = GetCampaignString(FALLBACK_DATABASE, PQJ_ENTRIES, oPC);
-            sPlotIDs = AddListItem(sPlotIDs, sPlotID, TRUE);
-            SetCampaignString(FALLBACK_DATABASE, PQJ_ENTRIES, sPlotIDs, oPC);
-        }
-
-        if (bStore)
-        {
-            if (nStored)
-                Debug("Updating " + sMessage + " from state " + IntToString(nStored));
-            else
-                Debug("Adding " + sMessage);
-
-            SetCampaignInt(FALLBACK_DATABASE, PQJ_PREFIX + sPlotID, nState, oPC);
-        }
-        else
-            Debug("Will not update " + sMessage + " because current state is " +
-                  IntToString(nStored));
-    }
+        CriticalError("Could not add " + sMessage + ": " + sError);
 }
 
 void pqj_AddJournalQuestEntry(string sPlotID, int nState, object oPC, int bAllPartyMembers = TRUE, int bAllPlayers = FALSE, int bAllowOverrideHigher = FALSE)
@@ -178,41 +161,16 @@ void _DeleteQuestEntry(string sPlotID, object oPC)
     string sMessage = "persistent journal entry for " + sName + "; " +
                       "PlotID: " + sPlotID;
 
-    int nDatabase = GetDatabaseType();
+    string sQuery = "DELETE FROM pqjdata WHERE quest=@quest;";
+    sqlquery qQuery = SqlPrepareQueryObject(oPC, sQuery);
+    SqlBindString(qQuery, "@quest", sPlotID);
+    SqlStep(qQuery);
 
-    if (nDatabase)
-    {
-        string sPCID  = GetPCID(oPC);
-        string sQuery = "DELETE FROM pqjdata WHERE pc_id=? AND plot_id=?";
-
-        if (NWNX_SQL_PrepareAndExecuteQuery(sQuery, sPCID, sPlotID))
-        {
-            if (NWNX_SQL_GetAffectedRows())
-                Debug("Removed " + sMessage);
-            else
-                Debug("No " + sMessage);
-        }
-        else
-        {
-            string sError = NWNX_SQL_GetLastError();
-            Debug("Could not remove " + sMessage + ": " + sError,
-                  DEBUG_LEVEL_CRITICAL);
-        }
-    }
+    string sError = SqlGetError(qQuery);
+    if (sError == "")
+        Debug("Removed " + sMessage);
     else
-    {
-        string sPlotIDs = GetCampaignString(FALLBACK_DATABASE, PQJ_ENTRIES, oPC);
-        string sUpdated = RemoveListItem(sPlotIDs, sPlotID);
-
-        if (sPlotIDs == sUpdated)
-            Debug("No " + sMessage);
-        else
-        {
-            Debug("Removing " + sMessage);
-            SetCampaignString(FALLBACK_DATABASE, PQJ_ENTRIES, sUpdated, oPC);
-            DeleteCampaignVariable(FALLBACK_DATABASE, PQJ_PREFIX + sPlotID, oPC);
-        }
-    }
+        CriticalError("Could not remove " + sMessage + ": " + sError);
 }
 
 void pqj_RemoveJournalQuestEntry(string sPlotID, object oPC, int bAllPartyMembers = TRUE, int bAllPlayers = FALSE)
