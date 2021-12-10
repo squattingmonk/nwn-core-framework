@@ -301,6 +301,8 @@ const string CHAT_COMMAND = "CHAT_COMMAND";
 const string CHAT_ARGUMENTS = "CHAT_ARGUMENTS";
 const string CHAT_OPTIONS = "CHAT_OPTIONS";
 const string CHAT_PAIRS = "CHAT_PAIRS";
+const string CHAT_PREDICATE = "CHAT_PREDICATE";     // 1.0.1
+const string CHAT_TOKENS = "CHAT_TOKENS";           // 1.0.1
 
 // Bitwise integers for chat struct components
 const int CHAT_ARGUMENT = 0x01;
@@ -328,6 +330,8 @@ struct COMMAND_LINE
     string options;
     string pairs;
     string args;
+    string predicate;   // 1.0.1
+    string tokens;      // 1.0.1
 };
 
 // -----------------------------------------------------------------------------
@@ -559,6 +563,8 @@ void _SaveParsedChatLine(object oPC, struct COMMAND_LINE cl)
     SetLocalString(oChat, CHAT_OPTIONS, cl.options);
     SetLocalString(oChat, CHAT_PAIRS, cl.pairs);
     SetLocalString(oChat, CHAT_ARGUMENTS, cl.args);
+    SetLocalString(oChat, CHAT_PREDICATE, cl.predicate);    // 1.0.1
+    SetLocalString(oChat, CHAT_TOKENS, cl.tokens);          // 1.0.1
 }
 
 // private
@@ -573,6 +579,8 @@ struct COMMAND_LINE _GetParsedChatLine(object oPC)
     cl.options = GetLocalString(oChat, CHAT_OPTIONS);
     cl.pairs = GetLocalString(oChat, CHAT_PAIRS);
     cl.args = GetLocalString(oChat, CHAT_ARGUMENTS);
+    cl.predicate = GetLocalString(oChat, CHAT_PREDICATE);   // 1.0.1
+    cl.tokens = GetLocalString(oChat, CHAT_TOKENS);         // 1.0.1
 
     return cl;
 }
@@ -890,6 +898,15 @@ int ParseCommandLine(object oPC = OBJECT_INVALID, string sLine = "", string sDes
         sShortOpts = "";
     }
 
+    // 1.0.1
+    sTokens = MergeLists(cl.options, cl.pairs);
+    sTokens = MergeLists(sTokens, cl.args);
+    cl.tokens = sTokens;
+    cl.predicate = TrimString(GetStringRight(cl.chatLine, 
+                              GetStringLength(cl.chatLine) - 
+                                GetStringLength(cl.cmdChar) -
+                                GetStringLength(cl.cmd)));
+
     if (IsDebugging(DEBUG_LEVEL_DEBUG))
         Debug("ParseCommandLine:" +
               "\n  Chat received -> " + sLine +
@@ -950,6 +967,20 @@ int FindKey(string sPairs, string sKey)
     }
 
     return -1;
+}
+
+// 1.0.1
+string GetChatPredicate(object oPC)
+{
+    struct COMMAND_LINE cl = _GetParsedChatLine(oPC);
+    return cl.predicate;
+}
+
+// 1.0.1
+string GetChatTokens(object oPC)
+{
+    struct COMMAND_LINE cl = _GetParsedChatLine(oPC);
+    return cl.tokens;
 }
 
 int HasParsedChatCommand(object oPC)
