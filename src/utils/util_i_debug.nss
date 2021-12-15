@@ -227,7 +227,7 @@ void Debug(string sMessage, int nLevel = DEBUG_LEVEL_DEBUG, object oTarget = OBJ
         int nLogging = GetLocalInt(GetModule(), DEBUG_LOG);
 
         if (nLogging & DEBUG_LOG_FILE)
-            WriteTimestampedLogEntry(sMessage);
+            WriteTimestampedLogEntry(UnColorString(sMessage));
 
         sMessage = ColorString(sMessage, sColor);
 
