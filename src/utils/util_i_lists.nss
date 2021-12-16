@@ -40,7 +40,7 @@ const int LIST_TYPE_STRING = 2;
 //   - LIST_TYPE_STRING (default)
 //   - LIST_TYPE_FLOAT
 //   - LIST_TYPE_INT
-void SplitList(object oTarget, string sList, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING);
+json SplitList(object oTarget, string sList, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING);
 
 // ---< JoinList >---
 // ---< util_i_lists >---
@@ -60,77 +60,59 @@ string JoinList(object oTarget, string sListName = "", int bAddUnique = FALSE, i
 //                           Function Implementations
 // -----------------------------------------------------------------------------
 
-void SplitList(object oTarget, string sList, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING)
+json SplitList(object oTarget, string sList, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING)
 {
-    int    offset, len = GetStringLength(sList);
-    string item, text  = sList;
+    json jList = JsonArray();
 
-    // This loop parses the list "a, b,c,d, e,f" and processes each item.
-    while (text != "")
+    if (nListType == LIST_TYPE_STRING)
     {
-        // Remove white space from the front of text
-        // Remember, we're in a loop here so we may have just gone from:
-        // "a, b" to " b" after "a," is stripped away. Since we want to
-        // process "b" not " b" we strip away all spaces and extra commas.
-        while (FindSubString(text, " ") == 0 || FindSubString(text, ",") == 0 )
-            text = GetStringRight(text, --len);
-
-        // Now find where the first item ends -- look for a comma.
-        offset = FindSubString(text, ",");
-
-        // If we found a comma there's more than one item; peel it off and
-        // truncate the left side of list, removing the item and its comma.
-        if (offset != -1)
+        int n, nCount = CountList(sList);
+        for (n = 0; n < nCount; n++)
         {
-            item  = GetStringLeft(text, offset);
-            len   -= offset+1;
-            text  = GetStringRight(text, len);
-        }
-        // Otherwise the offset is -1, we didn't find a comma - there is only one item left.
-        else
-        {
-            item = text;
-            text = "";
-        }
-
-        // Add the item to the list.
-        switch (nListType)
-        {
-            case LIST_TYPE_STRING: AddListString(oTarget,               item,  sListName, bAddUnique); break;
-            case LIST_TYPE_INT:    AddListFloat (oTarget, StringToFloat(item), sListName, bAddUnique); break;
-            case LIST_TYPE_FLOAT:  AddListInt   (oTarget, StringToInt  (item), sListName, bAddUnique); break;
+            string sListItem = GetListItem(sList, n);
+            jList = JsonArrayInsert(jList, JsonString(TrimString(sListItem)));
         }
     }
+    else
+        jList = JsonParse("[" + sList + "]");
+
+    string sListType = (nListType == LIST_TYPE_STRING ? VARLIST_TYPE_STRING :
+                        nListType == LIST_TYPE_INT ?    VARLIST_TYPE_INT :
+                                                        VARLIST_TYPE_FLOAT);
+
+    if (bAddUnique == TRUE)
+        jList = JsonArrayTransform(jList, JSON_ARRAY_UNIQUE);
+
+    if (oTarget != OBJECT_INVALID)
+        _SetList(oTarget, sListType, sListName, jList);
+        
+    return jList;
 }
 
 string JoinList(object oTarget, string sListName = "", int bAddUnique = FALSE, int nListType = LIST_TYPE_STRING)
 {
-    int nCount;
+    string sListType = (nListType == LIST_TYPE_STRING ? VARLIST_TYPE_STRING :
+                        nListType == LIST_TYPE_INT ?    VARLIST_TYPE_INT :
+                                                        VARLIST_TYPE_FLOAT);    
 
-    // Count the items in the list
-    switch (nListType)
-    {
-        case LIST_TYPE_STRING: nCount = CountStringList(oTarget, sListName); break;
-        case LIST_TYPE_FLOAT:  nCount = CountFloatList (oTarget, sListName); break;
-        case LIST_TYPE_INT:    nCount = CountIntList   (oTarget, sListName); break;
-    }
-
-    if (!nCount)
+    json jList = _GetList(oTarget, sListType, sListName);
+    if (jList == JsonNull() || JsonGetLength(jList) == 0)
         return "";
 
-    // Now add the items to the compressed list
-    int i;
-    string sList, sListItem;
-    for (i = 0; i < nCount; i++)
-    {
-        switch (nListType)
-        {
-            case LIST_TYPE_STRING: sListItem =               GetListString(oTarget, i, sListName);  break;
-            case LIST_TYPE_FLOAT:  sListItem = FloatToString(GetListFloat (oTarget, i, sListName)); break;
-            case LIST_TYPE_INT:    sListItem = IntToString  (GetListInt   (oTarget, i, sListName)); break;
-        }
+    if (bAddUnique == TRUE)
+        jList = JsonArrayTransform(jList, JSON_ARRAY_UNIQUE);
 
-        sList = AddListItem(sList, sListItem, bAddUnique);
+    string sList;
+    if (nListType == LIST_TYPE_STRING)
+    {
+        int n, nCount = JsonGetLength(jList);
+        for (n = 0; n < nCount; n++)
+            sList = AddListItem(sList, JsonGetString(JsonArrayGet(jList, n)));
+    }
+    else
+    {
+        sList = JsonDump(jList);
+        sList = GetStringSlice(sList, 1, GetStringLength(sList) - 2);
     }
 
     return sList;
