@@ -1071,7 +1071,7 @@ int _IncrementListElement(object oTarget, string sListName, int nIndex, int nInc
     {
         int nValue = JsonGetInt(JsonArrayGet(jList, nIndex)) + nIncrement;
         jList = JsonArraySet(jList, nIndex, JsonInt(nValue));
-        _SetList(oTarget, sListName, sListName, jList);
+        _SetList(oTarget, VARLIST_TYPE_INT, sListName, jList);
 
         return nValue;
     }
