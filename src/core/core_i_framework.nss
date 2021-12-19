@@ -11,8 +11,7 @@
 // HCR2, EPOlson's Common Scripting Framework, and William Bull's Memetic AI.
 // -----------------------------------------------------------------------------
 
-#include "util_i_csvlists"
-#include "util_i_varlists"
+#include "util_i_lists"
 #include "util_i_libraries"
 #include "core_i_constants"
 #include "core_i_database"
@@ -840,32 +839,18 @@ void ExpandEventScripts(object oTarget, string sEvent, string sScripts, float fD
 
 void SortEventScripts(object oTarget, string sEvent)
 {
-    int i, j, nLarger, nCount = CountFloatList(oTarget, sEvent);
-    float fCurrent, fCompare;
+    json jPriority = GetFloatList(oTarget, sEvent);
+    if (jPriority == JsonArray())
+        return;
 
-    // Initialize the list to allow us to set ints out of order.
-    DeclareIntList(oTarget, nCount, sEvent);
+    string sQuery = "SELECT json_group_array(id - 1) " +
+                    "FROM (SELECT id, atom " +
+                        "FROM json_each(json('" + JsonDump(jPriority) + "')) " +
+                        "ORDER BY value);";
+    sqlquery sql = SqlPrepareQueryObject(GetModule(), sQuery);
+    SqlStep(sql);
 
-    // Outer loop: processes each priority.
-    for (i = 0; i < nCount; i++)
-    {
-        nLarger = 0;
-        fCurrent = GetListFloat(oTarget, i, sEvent);
-
-        // Inner loop: counts the priorities higher than the current one
-        for (j = 0; j < nCount; j++)
-        {
-            // Don't compare priorities with themselves
-            if (i == j)
-                continue;
-
-            fCompare = GetListFloat(oTarget, j, sEvent);
-            if ((fCompare > fCurrent) || (fCompare == fCurrent && i > j))
-                nLarger++;
-        }
-
-        SetListInt(oTarget, nLarger, i, sEvent);
-    }
+    SetIntList(oTarget, SqlGetJson(sql, 0), sEvent);
 }
 
 void DumpEventScripts(object oTarget, string sEvent)
