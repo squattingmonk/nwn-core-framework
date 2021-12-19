@@ -383,7 +383,7 @@ void framework_OnModuleLoad()
     int nEvent;
     object oModule = GetModule();
 
-    for (nEvent = EVENT_SCRIPT_MODULE_ON_HEARTBEAT; nEvent <= EVENT_SCRIPT_MODULE_ON_PLAYER_TARGET; nEvent++)
+    for (nEvent = EVENT_SCRIPT_MODULE_ON_HEARTBEAT; nEvent <= EVENT_SCRIPT_MODULE_ON_NUI_EVENT; nEvent++)
     {
         string sScript = GetEventScript(oModule, nEvent);
         if (sScript != "")
@@ -507,14 +507,12 @@ void framework_OnUnAcquireItem()
 
 void framework_OnPlayerDeath()
 {
-    object oPC = GetLastPlayerDied();
-    RunEvent(MODULE_EVENT_ON_PLAYER_DEATH, oPC);
+    RunEvent(MODULE_EVENT_ON_PLAYER_DEATH, GetLastPlayerDied());
 }
 
 void framework_OnPlayerDying()
 {
-    object oPC = GetLastPlayerDying();
-    RunEvent(MODULE_EVENT_ON_PLAYER_DYING, oPC);
+    RunEvent(MODULE_EVENT_ON_PLAYER_DYING, GetLastPlayerDying());
 }
 
 void framework_OnPlayerTarget()
@@ -524,8 +522,7 @@ void framework_OnPlayerTarget()
 
 void framework_OnPlayerReSpawn()
 {
-    object oPC = GetLastRespawnButtonPresser();
-    RunEvent(MODULE_EVENT_ON_PLAYER_RESPAWN, oPC);
+    RunEvent(MODULE_EVENT_ON_PLAYER_RESPAWN, GetLastRespawnButtonPresser());
 }
 
 void framework_OnPlayerRest()
@@ -577,8 +574,7 @@ void framework_OnPlayerLevelUp()
 
 void framework_OnCutSceneAbort()
 {
-    object oPC = GetLastPCToCancelCutscene();
-    RunEvent(MODULE_EVENT_ON_CUTSCENE_ABORT, oPC);
+    RunEvent(MODULE_EVENT_ON_CUTSCENE_ABORT, GetLastPCToCancelCutscene());
 }
 
 void framework_OnPlayerEquipItem()
@@ -623,6 +619,28 @@ void framework_OnPlayerChat()
         if (nState & EVENT_STATE_DENIED)
             SetPCChatMessage();
     }
+}
+
+void framework_OnPlayerGUI()
+{
+    RunEvent(MODULE_EVENT_ON_PLAYER_GUI, GetLastGuiEventPlayer());
+}
+
+void framework_OnNUI()
+{
+    object oPC    = NuiGetEventPlayer();
+    int    nState = RunEvent(MODULE_EVENT_ON_NUI, oPC);
+
+    if (ENABLE_TAGBASED_SCRIPTS && !(nState & EVENT_STATE_DENIED))
+    {
+        string sTag = NuiGetWindowId(oPC, NuiGetEventWindow());
+        RunLibraryScript(sTag);
+    }
+}
+
+void framework_OnPlayerTileAction()
+{
+    RunEvent(MODULE_EVENT_ON_PLAYER_TILE_ACTION, GetLastPlayerToDoTileAction());
 }
 
 // -----------------------------------------------------------------------------
@@ -741,6 +759,9 @@ void main()
                 case EVENT_SCRIPT_MODULE_ON_EQUIP_ITEM:             framework_OnPlayerEquipItem();      break;
                 case EVENT_SCRIPT_MODULE_ON_UNEQUIP_ITEM:           framework_OnPlayerUnEquipItem();    break;
                 case EVENT_SCRIPT_MODULE_ON_PLAYER_CHAT:            framework_OnPlayerChat();           break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_GUIEVENT:        framework_OnPlayerGUI();            break;
+                case EVENT_SCRIPT_MODULE_ON_NUI_EVENT:              framework_OnNUI();                  break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_TILE_ACTION:     framework_OnPlayerTileAction();     break;
             } break;
         }
         case EVENT_TYPE_AREA:
