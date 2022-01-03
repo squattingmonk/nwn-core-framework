@@ -652,49 +652,112 @@ void DeleteJsonList(object oTarget, string sListName = "");
 // Creates a float list of sListName on oTarget with nCount fDefault items. If
 // oTarget already had a list with this name, that list is deleted before the
 // new one is created.
-void DeclareFloatList(object oTarget, int nCount, string sListName = "", float fDefault = 0.0);
+json DeclareFloatList(object oTarget, int nCount, string sListName = "", float fDefault = 0.0);
 
 // ---< DeclareIntList >---
 // ---< util_i_varlists >---
 // Creates an int list of sListName on oTarget with nCount nDefault items. If
 // oTarget already had a list with this name, that list is deleted before the
 // new one is created.
-void DeclareIntList(object oTarget, int nCount, string sListName = "", int nDefault = 0);
+json DeclareIntList(object oTarget, int nCount, string sListName = "", int nDefault = 0);
 
 // ---< DeclareLocationList >---
 // ---< util_i_varlists >---
 // Creates a location list of sListName on oTarget with nCount null items. If
 // oTarget already had a list with this name, that list is deleted before the
 // new one is created.
-void DeclareLocationList(object oTarget, int nCount, string sListName = "");
+json DeclareLocationList(object oTarget, int nCount, string sListName = "");
 
 // ---< DeclareVectorList >---
 // ---< util_i_varlists >---
 // Creates a vector list of sListName on oTarget with nCount null items. If
 // oTarget already had a list with this name, that list is deleted before the
 // new one is created.
-void DeclareVectorList(object oTarget, int nCount, string sListName = "");
+json DeclareVectorList(object oTarget, int nCount, string sListName = "");
 
 // ---< DeclareObjectList >---
 // ---< util_i_varlists >---
 // Creates an object list of sListName on oTarget with nCount null items. If
 // oTarget already had a list with this name, that list is deleted before the
 // new one is created.
-void DeclareObjectList(object oTarget, int nCount, string sListName = "");
+json DeclareObjectList(object oTarget, int nCount, string sListName = "");
 
 // ---< DeclareStringList >---
 // ---< util_i_varlists >---
 // Creates a string list of sListName on oTarget with nCount sDefault items. If
 // oTarget already had a list with this name, that list is deleted before the
 // new one is created.
-void DeclareStringList(object oTarget, int nCount, string sListName = "", string sDefault = "");
+json DeclareStringList(object oTarget, int nCount, string sListName = "", string sDefault = "");
 
 // ---< DeclareJsonList >---
 // ---< util_i_varlists >---
 // Creates a json list of sListName on oTarget with nCount null items. If
 // oTarget already had a list with this name, that list is deleted before the
 // new one is created.
-void DeclareJsonList(object oTarget, int nCount, string sListName = "");
+json DeclareJsonList(object oTarget, int nCount, string sListName = "");
+
+// ---< NormalizeFloatList >---
+// ---< util_i_varlists >---
+// Sets length of float list sListName on oTarget to nCount.  If nCount is less
+// than the current list length, the list is shortened.  If nCount is greater than
+// the current list length, fDefault elements are added to the list until the list
+// is the desired length.  If the list doesn't exist, this function mimics
+// DeclareFloatList().
+json NormalizeFloatList(object oTarget, int nCount, string sListName = "", float fDefault = 0.0);
+
+// ---< NormalizeIntList >---
+// ---< util_i_varlists >---
+// Sets length of int list sListName on oTarget to nCount.  If nCount is less
+// than the current list length, the list is shortened.  If nCount is greater than
+// the current list length, nDefault elements are added to the list until the list
+// is the desired length.  If the list doesn't exist, this function mimics
+// DeclareIntList().
+json NormalizeIntList(object oTarget, int nCount, string sListName = "", int nDefault = 0);
+
+// ---< NormalizeLocationList >---
+// ---< util_i_varlists >---
+// Sets length of location list sListName on oTarget to nCount.  If nCount is less
+// than the current list length, the list is shortened.  If nCount is greater than
+// the current list length, JsonNull() elements are added to the list until the list
+// is the desired length.  If the list doesn't exist, this function mimics
+// DeclareLocationList().
+json NormalizeLocationList(object oTarget, int nCount, string sListName = "");
+
+// ---< NormalizeVectorList >---
+// ---< util_i_varlists >---
+// Sets length of vector list sListName on oTarget to nCount.  If nCount is less
+// than the current list length, the list is shortened.  If nCount is greater than
+// the current list length, JsonNull() elements are added to the list until the list
+// is the desired length.  If the list doesn't exist, this function mimics
+// DeclareVectorList().
+json NormalizeVectorList(object oTarget, int nCount, string sListName = "");
+
+// ---< NormalizeObjectList >---
+// ---< util_i_varlists >---
+// Sets length of object list sListName on oTarget to nCount.  If nCount is less
+// than the current list length, the list is shortened.  If nCount is greater than
+// the current list length, JsonNull() elements are added to the list until the list
+// is the desired length.  If the list doesn't exist, this function mimics
+// DeclareObjectList().
+json NormalizeObjectList(object oTarget, int nCount, string sListName = "");
+
+// ---< NormalizeStringList >---
+// ---< util_i_varlists >---
+// Sets length of string list sListName on oTarget to nCount.  If nCount is less
+// than the current list length, the list is shortened.  If nCount is greater than
+// the current list length, sDefault elements are added to the list until the list
+// is the desired length.  If the list doesn't exist, this function mimics
+// DeclareStringList().
+json NormalizeStringList(object oTarget, int nCount, string sListName = "", string sDefault = "");
+
+// ---< NormalizeJsonList >---
+// ---< util_i_varlists >---
+// Sets length of json list sListName on oTarget to nCount.  If nCount is less
+// than the current list length, the list is shortened.  If nCount is greater than
+// the current list length, JsonNull() elements are added to the list until the list
+// is the desired length.  If the list doesn't exist, this function mimics
+// DeclareJsonList().
+json NormalizeJsonList(object oTarget, int nCount, string sListName = "");
 
 // ---< CopyFloatList >---
 // ---< util_i_varlists >---
@@ -883,8 +946,8 @@ int _GetIsIndexValid(json jList, int nIndex, int bNegative = FALSE)
 // Retrieves json array sListName of sListType from oTarget.
 json _GetList(object oTarget, string sListType, string sListName = "")
 {
-    json jReturn = GetLocalJson(oTarget, LIST_REF + sListType + sListName);
-    return jReturn == JsonNull() ? JsonArray() : jReturn;
+    json jList = GetLocalJson(oTarget, LIST_REF + sListType + sListName);
+    return jList == JsonNull() ? JsonArray() : jList;
 }
 
 // Sets sListType json array jList as sListName on oTarget.
@@ -964,7 +1027,7 @@ int _RemoveListElement(object oTarget, string sListType, string sListName, json 
     if (nIndex > -1)
     {
         jList = JsonArrayDel(jList, nIndex);
-        _SetList(oTarget, sListType, sListName, jList);
+        _SetList(oTarget, sListType, sListName, JsonArrayDel(jList, nIndex));
     }
 
     return JsonGetLength(jList);
@@ -983,10 +1046,7 @@ void _SetListElement(object oTarget, string sListType, string sListName, int nIn
     json jList = _GetList(oTarget, sListType, sListName);
 
     if (_GetIsIndexValid(jList, nIndex) == TRUE)
-    {
-        jList = JsonArraySet(jList, nIndex, jValue);
-        _SetList(oTarget, sListType, sListName, jList);
-    }
+        _SetList(oTarget, sListType, sListName, JsonArraySet(jList, nIndex, jValue));
 }
 
 // This procedure exists because current json operations cannot easily append a list without
@@ -1079,8 +1139,8 @@ int _IncrementListElement(object oTarget, string sListName, int nIndex, int nInc
     return 0;
 }
 
-// Creates a array of length nLength jDefault elements as sListName on oTarget.
-void _DeclareList(object oTarget, string sListType, string sListName, int nLength, json jDefault)
+// Creates an array of length nLength jDefault elements as sListName on oTarget.
+json _DeclareList(object oTarget, string sListType, string sListName, int nLength, json jDefault)
 {
     json jList = JsonArray();
     
@@ -1089,6 +1149,32 @@ void _DeclareList(object oTarget, string sListType, string sListName, int nLengt
         jList = JsonArrayInsert(jList, jDefault);
 
     _SetList(oTarget, sListType, sListName, jList);
+    return jList;
+}
+
+// Sets the array length to nLength, adding/removing elements as required.
+json _NormalizeList(object oTarget, string sListType, string sListName, int nLength, json jDefault)
+{
+    json jList = _GetList(oTarget, sListType, sListName);
+    if (jList == JsonArray())
+        return _DeclareList(oTarget, sListType, sListName, nLength, jDefault);
+    else if (nLength < 0)
+        return jList;
+    else
+    {
+        int n, nList = JsonGetLength(jList);
+        if (nList > nLength)
+            jList = JsonArrayGetRange(jList, 0, nLength - 1);
+        else
+        {
+            for (n = 0; n < nLength - nList; n++)
+                jList = JsonArrayInsert(jList, jDefault);
+        }
+
+        _SetList(oTarget, sListType, sListName, jList);
+    }
+
+    return jList;
 }
 
 // Returns the length of array sListName on oTarget.
@@ -1102,11 +1188,8 @@ void _SortList(object oTarget, string sListType, string sListName, int nOrder)
 {
     json jList = _GetList(oTarget, sListType, sListName);
 
-    if (JsonGetLength(jList) > 0)
-    {
-        jList = JsonArrayTransform(jList, nOrder);
-        _SetList(oTarget, sListType, sListName, jList);
-    }
+    if (JsonGetLength(jList) > 1)
+        _SetList(oTarget, sListType, sListName, JsonArrayTransform(jList, nOrder));
 }
 
 // -----------------------------------------------------------------------------
@@ -1606,39 +1689,74 @@ void DeleteJsonList(object oTarget, string sListName = "")
     _DeleteList(oTarget, VARLIST_TYPE_JSON, sListName);
 }
 
-void DeclareFloatList(object oTarget, int nCount, string sListName = "", float fDefault = 0.0)
+json DeclareFloatList(object oTarget, int nCount, string sListName = "", float fDefault = 0.0)
 {
-    _DeclareList(oTarget, VARLIST_TYPE_FLOAT, sListName, nCount, JsonFloat(fDefault));
+    return _DeclareList(oTarget, VARLIST_TYPE_FLOAT, sListName, nCount, JsonFloat(fDefault));
 }
 
-void DeclareIntList(object oTarget, int nCount, string sListName = "", int nDefault = 0)
+json DeclareIntList(object oTarget, int nCount, string sListName = "", int nDefault = 0)
 {
-    _DeclareList(oTarget, VARLIST_TYPE_INT, sListName, nCount, JsonInt(nDefault));
+    return _DeclareList(oTarget, VARLIST_TYPE_INT, sListName, nCount, JsonInt(nDefault));
 }
 
-void DeclareLocationList(object oTarget, int nCount, string sListName = "")
+json DeclareLocationList(object oTarget, int nCount, string sListName = "")
 {
-    _DeclareList(oTarget, VARLIST_TYPE_LOCATION, sListName, nCount, JsonNull());
+    return _DeclareList(oTarget, VARLIST_TYPE_LOCATION, sListName, nCount, JsonNull());
 }
 
-void DeclareVectorList(object oTarget, int nCount, string sListName = "")
+json DeclareVectorList(object oTarget, int nCount, string sListName = "")
 {
-    _DeclareList(oTarget, VARLIST_TYPE_VECTOR, sListName, nCount, JsonNull());
+    return _DeclareList(oTarget, VARLIST_TYPE_VECTOR, sListName, nCount, JsonNull());
 }
 
-void DeclareObjectList(object oTarget, int nCount, string sListName = "")
+json DeclareObjectList(object oTarget, int nCount, string sListName = "")
 {
-    _DeclareList(oTarget, VARLIST_TYPE_OBJECT, sListName, nCount, JsonNull());
+    return _DeclareList(oTarget, VARLIST_TYPE_OBJECT, sListName, nCount, JsonNull());
 }
 
-void DeclareStringList(object oTarget, int nCount, string sListName = "", string sDefault = "")
+json DeclareStringList(object oTarget, int nCount, string sListName = "", string sDefault = "")
 {
-    _DeclareList(oTarget, VARLIST_TYPE_STRING, sListName, nCount, JsonString(sDefault));
+    return _DeclareList(oTarget, VARLIST_TYPE_STRING, sListName, nCount, JsonString(sDefault));
 }
 
-void DeclareJsonList(object oTarget, int nCount, string sListName = "")
+json DeclareJsonList(object oTarget, int nCount, string sListName = "")
 {
-    _DeclareList(oTarget, VARLIST_TYPE_JSON, sListName, nCount, JsonNull());
+    return _DeclareList(oTarget, VARLIST_TYPE_JSON, sListName, nCount, JsonNull());
+}
+
+json NormalizeFloatList(object oTarget, int nCount, string sListName = "", float fDefault = 0.0)
+{
+    return _NormalizeList(oTarget, VARLIST_TYPE_FLOAT, sListName, nCount, JsonFloat(fDefault));
+}
+
+json NormalizeIntList(object oTarget, int nCount, string sListName = "", int nDefault = 0)
+{
+    return _NormalizeList(oTarget, VARLIST_TYPE_INT, sListName, nCount, JsonInt(nDefault));
+}
+
+json NormalizeLocationList(object oTarget, int nCount, string sListName = "")
+{
+    return _NormalizeList(oTarget, VARLIST_TYPE_LOCATION, sListName, nCount, JsonNull());
+}
+
+json NormalizeVectorList(object oTarget, int nCount, string sListName = "")
+{
+    return _NormalizeList(oTarget, VARLIST_TYPE_VECTOR, sListName, nCount, JsonNull());
+}
+
+json NormalizeObjectList(object oTarget, int nCount, string sListName = "")
+{
+    return _NormalizeList(oTarget, VARLIST_TYPE_OBJECT, sListName, nCount, JsonNull());
+}
+
+json NormalizeStringList(object oTarget, int nCount, string sListName = "", string sDefault = "")
+{
+    return _NormalizeList(oTarget, VARLIST_TYPE_STRING, sListName, nCount, JsonString(sDefault));
+}
+
+json NormalizeJsonList(object oTarget, int nCount, string sListName = "")
+{
+    return _NormalizeList(oTarget, VARLIST_TYPE_JSON, sListName, nCount, JsonNull());
 }
 
 void CopyFloatList(object oSource, object oTarget, string sSourceName, string sTargetName, int bAddUnique = FALSE)

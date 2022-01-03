@@ -36,8 +36,7 @@
 
 #include "util_i_datapoint"
 #include "util_i_debug"
-#include "util_i_csvlists"
-#include "util_i_varlists"
+#include "util_i_lists"
 #include "util_i_libraries"
 #include "dlg_c_dialogs"
 
@@ -158,7 +157,6 @@ string DialogEventToString(int nEvent);
 // - bNoHello: prevent the "hello" voicechat from playing on dialog start
 // - bNoZoom: prevent zooming in towards the PC on dialog start
 void StartDialog(object oPC, object oTarget = OBJECT_SELF, string sDialog = "", int bPrivate = FALSE, int bNoHello = FALSE, int bNoZoom = FALSE);
-
 
 // ----- Dialog Setup ----------------------------------------------------------
 
@@ -1286,36 +1284,20 @@ void RegisterDialogScript(string sDialog, string sScript = "", int nEvents = DLG
 void SortDialogScripts(int nEvent)
 {
     string sEvent = DialogEventToString(nEvent);
-    int nCount = CountFloatList(DIALOG, sEvent);
-    int i, j, nLarger;
-    float fCurrent, fCompare;
+    json jPriority = GetFloatList(DIALOG, sEvent);
+    if (jPriority == JsonArray())
+        return;
 
-    Debug("Sorting " + IntToString(nCount) + " scripts for " + sEvent);
+    Debug("Sorting " + IntToString(JsonGetLength(jPriority)) + " scripts for " + sEvent);
 
-    // Initialize the ints to allow us to set them out of order
-    DeclareIntList(DIALOG, nCount, sEvent);
+    string sQuery = "SELECT json_group_array(id - 1) " +
+                    "FROM (SELECT id, atom " +
+                        "FROM json_each(json('" + JsonDump(jPriority) + "')) " +
+                        "ORDER BY value);";
+    sqlquery sql = SqlPrepareQueryObject(GetModule(), sQuery);
+    SqlStep(sql);
 
-    // Outer loop: process each priority
-    for (i = 0; i < nCount; i++)
-    {
-        nLarger = 0;
-        fCurrent = GetListFloat(DIALOG, i, sEvent);
-
-        // Inner loop: counts the priorities higher than the current one
-        for (j = 0; j < nCount; j++)
-        {
-            if (i == j)
-                continue;
-
-            fCompare = GetListFloat(DIALOG, j, sEvent);
-            if ((fCompare > fCurrent) || (fCompare == fCurrent && i < j))
-                nLarger++;
-        }
-
-        SetListInt(DIALOG, nLarger, i, sEvent);
-    }
-
-    // Mark the event as sorted
+    SetIntList(DIALOG, SqlGetJson(sql, 0), sEvent);
     SetLocalInt(DIALOG, sEvent, TRUE);
 }
 
