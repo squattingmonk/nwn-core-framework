@@ -7,34 +7,35 @@ This system is in alpha. Things will change and will break. You have been
 warned.
 
 ## Prerequisites
-- [nwnsc](https://gitlab.com/glorwinger/nwnsc)
+- [nwnsc](https://github.com/nwneetools/nwnsc)
 - [neverwinter.nim](https://github.com/niv/neverwinter.nim)
-- [nasher.nim](https://github.com/squattingmonk/nasher.nim)
+- [nasher.nim](https://github.com/squattingmonk/nasher)
+- [sm-utils](https://github.com/squattingmonk/sm-utils)
 
 ## Installation
 Get the code:
 ```
 git clone https://github.com/squattingmonk/nwn-core-framework.git
+git clone https://github.com/squattingmonk/sm-utils.git
 ```
 
 Run the build script:
 ```
 cd nwn-core-framework
-nasher install all
+nasher install demo erf utils
 ```
 
-This will create the following files in your Neverwinter Nights install
-directory:
+This will create the following files in your Neverwinter Nights user directory:
 - `modules/core_framework.mod`: a demo module showing the framework in action
   (currently a barebones testing ground).
 - `erf/core_framework.erf`: an installable erf for use in new or existing
   modules.
 - `erf/core_utilities.erf`: an installable erf with stand-alone utilities for
-  use in new or existing module. This contains all scripts in `src/utils`. You
+  use in new or existing module. This contains all scripts in `sm-utils`. You
   don't need this if you import `core_framework.erf`.
 
 Note: `util_i_library.nss` relies on script extensions added by
-[nwnsc](https://gitlab.com/glorwinger/nwnsc). This prevents error messages when
+[nwnsc](https://github.com/nwneetools/nwnsc). This prevents error messages when
 compiling with `nwnsc`, but prevents compilation in the Toolset. If you want to
 compile the scripts in the toolset instead, you can comment out the lines
 beginning with `#pragma` near the bottom of the script. Note that
