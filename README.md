@@ -8,8 +8,8 @@ warned.
 
 ## Prerequisites
 - [nwnsc](https://github.com/nwneetools/nwnsc)
-- [neverwinter.nim](https://github.com/niv/neverwinter.nim)
-- [nasher](https://github.com/squattingmonk/nasher)
+- [neverwinter.nim](https://github.com/niv/neverwinter.nim) >= 1.5.5
+- [nasher](https://github.com/squattingmonk/nasher) >= 0.18.x
 - [sm-utils](https://github.com/squattingmonk/sm-utils)
 
 ## Installation
