@@ -11,18 +11,20 @@ warned.
 - [neverwinter.nim](https://github.com/niv/neverwinter.nim) >= 1.5.5
 - [nasher](https://github.com/squattingmonk/nasher) >= 0.18.x
 - [sm-utils](https://github.com/squattingmonk/sm-utils)
+- [sm-dialogs](https://github.com/squattingmonk/sm-dialogs)
 
 ## Installation
 Get the code:
 ```
 git clone https://github.com/squattingmonk/nwn-core-framework.git
 git clone https://github.com/squattingmonk/sm-utils.git
+git clone https://github.com/squattingmonk/sm-dialogs.git
 ```
 
 Run the build script:
 ```
 cd nwn-core-framework
-nasher install demo erf utils
+nasher install demo erf
 ```
 
 This will create the following files in your Neverwinter Nights user directory:
@@ -30,9 +32,6 @@ This will create the following files in your Neverwinter Nights user directory:
   (currently a barebones testing ground).
 - `erf/core_framework.erf`: an installable erf for use in new or existing
   modules.
-- `erf/core_utilities.erf`: an installable erf with stand-alone utilities for
-  use in new or existing module. This contains all scripts in `sm-utils`. You
-  don't need this if you import `core_framework.erf`.
 
 Note: `sm-utils` relies on script extensions added by
 [nwnsc](https://github.com/nwneetools/nwnsc). This prevents error messages when
