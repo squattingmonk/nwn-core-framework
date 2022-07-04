@@ -20,14 +20,6 @@
 #include "util_i_debug"
 
 // -----------------------------------------------------------------------------
-//                                   Database
-// -----------------------------------------------------------------------------
-
-// This is the name of the campaign database to use with Get/SetDatabase*
-// functions if an NWNX:EE SQL database is not detected.
-const string FALLBACK_DATABASE = "core_framework";
-
-// -----------------------------------------------------------------------------
 //                                   Debugging
 // -----------------------------------------------------------------------------
 

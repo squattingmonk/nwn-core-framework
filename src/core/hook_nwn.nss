@@ -10,7 +10,6 @@
 // -----------------------------------------------------------------------------
 
 #include "x2_inc_switches"
-#include "chat_i_main"
 #include "core_i_framework"
 
 
@@ -55,7 +54,7 @@ void framework_OnAoEExit()
         RemoveListObject(OBJECT_SELF, oPC, AOE_ROSTER);
 
     int nState = RunEvent(AOE_EVENT_ON_EXIT, oPC);
-    
+
     if (!(nState & EVENT_STATE_ABORT))
     {
         if (!CountObjectList(OBJECT_SELF, AOE_ROSTER))
@@ -430,7 +429,7 @@ void framework_OnClientEnter()
         // It will count DMs separately. This is a handy utility for counting
         // online players.
         if (GetIsDM(oPC))
-        {    
+        {
             AddListObject(OBJECT_SELF, oPC, DM_ROSTER, TRUE);
             SetLocalInt(oPC, IS_DM, TRUE);
         }
@@ -707,7 +706,7 @@ void framework_OnDoorConversation()
     RunEvent(DOOR_EVENT_ON_CONVERSATION, GetLastSpeaker());
 }
 
-void framework_OnDoorFailToOpen() 
+void framework_OnDoorFailToOpen()
 {
     RunEvent(DOOR_EVENT_ON_FAIL_TO_OPEN, GetClickingObject());
 }
@@ -856,7 +855,7 @@ void main()
                 case EVENT_SCRIPT_DOOR_ON_USERDEFINED:      framework_OnDoorUserDefined();          break;
                 case EVENT_SCRIPT_DOOR_ON_CLICKED:          framework_OnDoorAreaTransitionClick();  break;
                 case EVENT_SCRIPT_DOOR_ON_DIALOGUE:         framework_OnDoorConversation();         break;
-                case EVENT_SCRIPT_DOOR_ON_FAIL_TO_OPEN:     framework_OnDoorFailToOpen();           break; 
+                case EVENT_SCRIPT_DOOR_ON_FAIL_TO_OPEN:     framework_OnDoorFailToOpen();           break;
             } break;
         }
         case EVENT_TYPE_ENCOUNTER:

@@ -14,10 +14,7 @@
 #include "util_i_lists"
 #include "util_i_libraries"
 #include "core_i_constants"
-#include "core_i_database"
 #include "core_c_config"
-#include "nwnx_events"
-#include "nwnx_util"
 
 // -----------------------------------------------------------------------------
 //                               Global Variables
@@ -203,12 +200,6 @@ void SetEventState(int nState, object oEvent = OBJECT_INVALID);
 // Clear the state of the event represented by oEvent. If oEvent is invalid,
 // clearsa the state of the currently executing event.
 void ClearEventState(object oEvent = OBJECT_INVALID);
-
-// ---< RegisterNWNXEvent >---
-// ---< core_i_framework >---
-// Registers the nwnx hook script to NWNX event sEvent.  Returns FALSE if the NWNX_Events plugin is not
-// available, otherwise returns TRUE.
-int RegisterNWNXEventScripts(string sEvent);
 
 // ---< RegisterEventScripts >---
 // ---< core_i_framework >---
@@ -446,9 +437,6 @@ void InitializeCoreFramework()
         SetEventDebugLevel(CREATURE_EVENT_ON_PERCEPTION, PERCEPTION_DEBUG_LEVEL);
 
     Debug("Initializing Core Framework...");
-
-    // Ensure the core database tables are set up
-    InitializeDatabase();
 
     // Load all libraries and plugins in the core config file
     LoadLibraries(INSTALLED_LIBRARIES);
@@ -740,17 +728,6 @@ float StringToPriority(string sPriority, float fDefaultPriority)
         return fPriority;
 }
 
-int RegisterNWNXEventScripts(string sEvent)
-{
-    if (NWNX_Util_PluginExists("NWNX_Events"))
-    {
-        NWNX_Events_SubscribeEvent(sEvent, "hook_nwnx");
-        return TRUE;
-    }    
-    
-    return FALSE;
-}
-
 void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0)
 {
     if (!GetIsObjectValid(oTarget))
@@ -763,18 +740,12 @@ void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float 
     string sPriority = PriorityToString(fPriority);
     int i, nCount = CountList(sScripts);
 
-    // Handle NWNX hook script subscription.  The NWNX_Events plugin handles multiple
-    // subscription errors, so don't use CountEventScripts here.
+    // Handle NWNX hook script subscription. The NWNX_Events plugin handles
+    // multiple subscription errors, so don't use CountEventScripts here.
     if (GetStringLeft(sEvent, 4) == "NWNX")
     {
-        if (!RegisterNWNXEventScripts(sEvent))
-        {
-            Warning("Script Hook registration failed for event " + sEvent +
-                    "; NWNX Events plug-in is not active");
-            return;
-        }
-        else
-            Debug("Registered NWNX event hook for " + sEvent);
+        SetScriptParam(EVENT_NAME, sEvent);
+        ExecuteScript("hook_nwnx");
     }
 
     for (i = 0; i < nCount; i++)
@@ -1176,7 +1147,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
         if (ENABLE_TAGBASED_SCRIPTS && !(nState & EVENT_STATE_ABORT) && GetIsObjectValid(oSelf))
             RunLibraryScript(GetTag(oSelf));
     }
-    
+
     // Clean up
     if (nEventLevel)
         OverrideDebugLevel(FALSE);
