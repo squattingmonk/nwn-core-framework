@@ -29,7 +29,7 @@ void pqj_RestoreJournalEntries(object oPC);
 // ---< pqj_GetQuestState >---
 // ---< pqj_i_main >---
 // Returns the state of a quest for the PC. This matches a plot ID and number
-// from the journal.
+// from the journal. Returns 0 if the quest has not been started.
 int pqj_GetQuestState(string sPlotID, object oPC);
 
 // ---< pqj_AddJournalQuestEntry >---
@@ -98,8 +98,10 @@ int pqj_GetQuestState(string sPlotID, object oPC)
     string sQuery = "SELECT state FROM pqjdata WHERE quest=@quest;";
     sqlquery qQuery = SqlPrepareQueryObject(oPC, sQuery);
     SqlBindString(qQuery, "@quest", sPlotID);
-    SqlStep(qQuery);
-    return SqlGetInt(qQuery, 0);
+    if (SqlStep(qQuery))
+        return SqlGetInt(qQuery, 0);
+
+    return 0;
 }
 
 // Internal function for pqj_AddJournalQuestEntry().
