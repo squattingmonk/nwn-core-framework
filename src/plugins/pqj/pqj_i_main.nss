@@ -54,7 +54,7 @@ void pqj_CreateTable(object oPC, int bForce = FALSE)
         return;
 
     if (bForce)
-        SqlStep(SqlPrepareQueryObject(oPC, "DROP TABLE IF NOT EXISTS pqjdata;"));
+        SqlStep(SqlPrepareQueryObject(oPC, "DROP TABLE IF EXISTS pqjdata;"));
 
     string sMessage = "creating table pqjdata on " + GetName(oPC);
     string sQuery = "CREATE TABLE IF NOT EXISTS pqjdata (" +
