@@ -109,16 +109,13 @@ void framework_OnAreaExit()
     // Don't run this event if the exiting object is a PC that is about to be booted.
     object oPC = GetExitingObject();
 
-    if (GetWasPC(oPC) && GetLocalInt(oPC, LOGIN_BOOT))
+    if (GetLocalInt(oPC, IS_PC) && GetLocalInt(oPC, LOGIN_BOOT))
         return;
 
     if (!RemoveListObject(OBJECT_SELF, oPC, AREA_ROSTER) && ENABLE_ON_AREA_EMPTY_EVENT)
     {
-        if (CountEventScripts(AREA_EVENT_ON_EMPTY, oPC))
-        {
-            int nTimerID = CreateTimer(OBJECT_SELF, AREA_EVENT_ON_EMPTY, ON_AREA_EMPTY_EVENT_DELAY, 1);
-            StartTimer(nTimerID, FALSE);
-        }
+        int nTimerID = CreateTimer(OBJECT_SELF, AREA_EVENT_ON_EMPTY, ON_AREA_EMPTY_EVENT_DELAY, 1);
+        StartTimer(nTimerID, FALSE);
     }
 
     RemoveScriptSource(oPC);

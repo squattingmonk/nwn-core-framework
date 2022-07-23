@@ -38,11 +38,11 @@ void OnLibraryLoad()
 {
     if (!GetIfPluginExists("chat"))
     {
-        object oPlugin = GetPlugin("chat", TRUE);
+        object oPlugin = CreatePlugin("chat");
         SetName(oPlugin, "[Plugin] Chat Command System");
         SetDescription(oPlugin,
             "Allows players and DMs to run commands via the chat bar");
-        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_PLAYER_CHAT,
+        RegisterEventScript(oPlugin, MODULE_EVENT_ON_PLAYER_CHAT,
             "chat_OnPlayerChat", EVENT_PRIORITY_FIRST);
     }
 

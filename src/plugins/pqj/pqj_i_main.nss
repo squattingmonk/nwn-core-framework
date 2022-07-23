@@ -8,6 +8,7 @@
 // -----------------------------------------------------------------------------
 
 #include "util_i_debug"
+#include "util_i_sqlite"
 
 // -----------------------------------------------------------------------------
 //                              Function Prototypes
@@ -53,21 +54,10 @@ void pqj_CreateTable(object oPC, int bForce = FALSE)
     if (!GetIsPC(oPC) || GetIsDM(oPC))
         return;
 
-    if (bForce)
-        SqlStep(SqlPrepareQueryObject(oPC, "DROP TABLE IF EXISTS pqjdata;"));
-
-    string sMessage = "creating table pqjdata on " + GetName(oPC);
-    string sQuery = "CREATE TABLE IF NOT EXISTS pqjdata (" +
+    Debug("Creating table pqjdata on " + GetName(oPC));
+    SqlCreateTablePC(oPC, "pqjdata",
         "quest TEXT NOT NULL PRIMARY KEY, " +
-        "state INTEGER NOT NULL DEFAULT 0);";
-    sqlquery qQuery = SqlPrepareQueryObject(oPC, sQuery);
-    SqlStep(qQuery);
-
-    string sError = SqlGetError(qQuery);
-    if (sError == "")
-        Notice(HexColorString("[Success] ", COLOR_GREEN) + sMessage);
-    else
-        CriticalError(sMessage + ": " + sError);
+        "state INTEGER NOT NULL DEFAULT 0", bForce);
 }
 
 void pqj_RestoreJournalEntries(object oPC)

@@ -21,8 +21,7 @@
 
 void VerifyEvent(object oPC)
 {
-    object oEvent = GetCurrentEvent();
-    SendMessageToPC(oPC, GetName(oEvent) + " fired!");
+    SendMessageToPC(oPC, GetCurrentEvent() + " fired!");
 }
 
 // -----------------------------------------------------------------------------
@@ -97,14 +96,18 @@ void OnLibraryLoad()
 {
     if (!GetIfPluginExists("core_demo"))
     {
-        object oPlugin = GetPlugin("core_demo", TRUE);
+        object oPlugin = CreatePlugin("core_demo");
         SetName(oPlugin, "[Plugin] Core Framework Demo");
         SetDescription(oPlugin,
             "This plugin provides some simple demos of the Core Framework.");
 
-        RegisterEventScripts(oPlugin, PLACEABLE_EVENT_ON_USED, "VerifyEvent");
-        RegisterEventScripts(oPlugin, "CHAT_!colors", "PrintColors");
+        RegisterEventScript(oPlugin, PLACEABLE_EVENT_ON_USED, "VerifyEvent");
+        RegisterEventScript(oPlugin, "CHAT_!colors", "PrintColors");
     }
+
+    // This plugin is created from a blueprint
+    if (!GetIfPluginExists("bw_defaultevents"))
+        CreatePlugin("bw_defaultevents");
 
     RegisterLibraryScript("VerifyEvent", 1);
     RegisterLibraryScript("PrintColors", 2);

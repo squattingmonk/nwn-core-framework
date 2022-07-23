@@ -19,12 +19,12 @@ void OnLibraryLoad()
 {
     if (!GetIfPluginExists("pqj"))
     {
-        object oPlugin = GetPlugin("pqj", TRUE);
+        object oPlugin = CreatePlugin("pqj");
         SetName(oPlugin, "[Plugin] Persistent Quests and Journals");
         SetDescription(oPlugin,
             "This plugin allows database-driven persistent journal entries.");
 
-        RegisterEventScripts(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER, "pqj_RestoreJournalEntries");
+        RegisterEventScript(oPlugin, MODULE_EVENT_ON_CLIENT_ENTER, "pqj_RestoreJournalEntries");
     }
 
     RegisterLibraryScript("pqj_RestoreJournalEntries", 1);

@@ -45,8 +45,9 @@ const string PLUGIN_LIBRARIES   = "*Libraries";
 const string PLUGIN_STATUS      = "*Status";
 
 // Acceptable values for the plugin's activation status.
-const int PLUGIN_STATUS_OFF =  0;
-const int PLUGIN_STATUS_ON  =  1;
+const int PLUGIN_STATUS_MISSING = -1;
+const int PLUGIN_STATUS_OFF     =  0;
+const int PLUGIN_STATUS_ON      =  1;
 
 // The last plugin to run
 const string PLUGIN_LAST = "PLUGIN_LAST";

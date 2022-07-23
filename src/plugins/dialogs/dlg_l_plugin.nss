@@ -179,12 +179,11 @@ void PluginControl_Node()
         int nNode = GetDialogNode();
         string sData = GetDialogData(sPage, nNode);
         string sPlugin = GetDialogData(sPage);
-        object oPlugin = GetPlugin(sPlugin);
 
         if (sData == PLUGIN_ACTIVATE)
-            ActivatePlugin(oPlugin);
+            ActivatePlugin(sPlugin);
         else if (sData == PLUGIN_DEACTIVATE)
-            DeactivatePlugin(oPlugin);
+            DeactivatePlugin(sPlugin);
     }
 }
 
@@ -197,11 +196,11 @@ void OnLibraryLoad()
     // Plugin setup
     if (!GetIfPluginExists("dlg"))
     {
-        object oPlugin = GetPlugin("dlg", TRUE);
+        object oPlugin = CreatePlugin("dlg");
         SetName(oPlugin, "[Plugin] Dynamic Dialogs");
         SetDescription(oPlugin,
             "This plugin allows the creation and launching of script-driven dialogs.");
-        SetPluginLibraries(oPlugin, "dlg_l_plugin, dlg_l_tokens, dlg_l_demo");
+        LoadLibraries("dlg_l_tokens, dlg_l_demo");
     }
 
     // Event scripts
