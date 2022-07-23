@@ -10,20 +10,17 @@ warned.
 - [nwnsc](https://github.com/nwneetools/nwnsc)
 - [neverwinter.nim](https://github.com/niv/neverwinter.nim) >= 1.5.5
 - [nasher](https://github.com/squattingmonk/nasher) >= 0.18.x
-- [sm-utils](https://github.com/squattingmonk/sm-utils)
-- [sm-dialogs](https://github.com/squattingmonk/sm-dialogs)
 
 ## Installation
 Get the code:
 ```
 git clone https://github.com/squattingmonk/nwn-core-framework.git
-git clone https://github.com/squattingmonk/sm-utils.git
-git clone https://github.com/squattingmonk/sm-dialogs.git
+cd nwn-core-framework
+git submodule update --init
 ```
 
 Run the build script:
 ```
-cd nwn-core-framework
 nasher install demo erf
 ```
 

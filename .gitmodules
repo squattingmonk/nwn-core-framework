@@ -1,0 +1,9 @@
+[submodule "lib/sm-utils"]
+	path = lib/sm-utils
+	url = https://github.com/squattingmonk/sm-utils
+[submodule "lib/sm-dialogs"]
+	path = lib/sm-dialogs
+	url = https://github.com/squattingmonk/sm-dialogs
+[submodule "lib/nwnxee"]
+	path = lib/nwnxee
+	url = https://github.com/nwnxee/unified
