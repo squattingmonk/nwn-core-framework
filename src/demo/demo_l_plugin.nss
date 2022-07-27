@@ -103,6 +103,7 @@ void OnLibraryLoad()
 
         RegisterEventScript(oPlugin, PLACEABLE_EVENT_ON_USED, "VerifyEvent");
         RegisterEventScript(oPlugin, "CHAT_!colors", "PrintColors");
+        RegisterEventScript(oPlugin, "TestTimer", "VerifyEvent");
     }
 
     // This plugin is created from a blueprint

@@ -1,4 +1,5 @@
 #include "pqj_i_main"
+#include "core_i_framework"
 
 void main()
 {
@@ -8,4 +9,9 @@ void main()
         pqj_RemoveJournalQuestEntry("test", oPC);
     else
         pqj_AddJournalQuestEntry("test", nState + 1, oPC);
+
+    int nTimer = CreateTimer(oPC, "TestTimer", 6.0f, 4);
+    StartTimer(nTimer);
+    DelayCommand(12.0, StopTimer(nTimer));
+    DelayCommand(24.0, KillTimer(nTimer));
 }

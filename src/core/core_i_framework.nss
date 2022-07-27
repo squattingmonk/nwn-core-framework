@@ -807,11 +807,12 @@ int CreateTimer(object oTarget, string sEvent, float fInterval, int nIterations 
     SqlBindInt   (q, "@iterations", nIterations);
     SqlBindInt   (q, "@remaining",  nIterations);
     SqlBindInt   (q, "@is_pc",      GetIsPC(oTarget));
+    SqlStep(q);
 
-    if (SqlStep(q))
+    int nTimerID = SqlGetLastInsertIdModule();
+    if (nTimerID > 0)
     {
-        int nTimerID = SqlGetLastInsertIdModule();
-        Debug("Successfully created new timer with ID=" + IntToString(nTimerID));
+        Debug("Successfully created new timer " + sEvent + " with ID=" + IntToString(nTimerID));
         return nTimerID;
     }
 
@@ -924,7 +925,9 @@ void StartTimer(int nTimerID, int bInstant = TRUE)
     sqlquery q = SqlPrepareQueryModule("UPDATE event_timers SET running = 1 " +
                     "WHERE timer_id = @timer_id AND running = 0;");
     SqlBindInt(q, "@timer_id", nTimerID);
-    if (SqlStep(q))
+    SqlStep(q);
+
+    if (SqlGetError(q) == "")
     {
         Debug("Starting timer " + IntToString(nTimerID));
         _TimerElapsed(nTimerID, !bInstant);
@@ -936,7 +939,8 @@ void StopTimer(int nTimerID)
     sqlquery q = SqlPrepareQueryModule("UPDATE event_timers SET running = 0 " +
                     "WHERE timer_id = @timer_id;");
     SqlBindInt(q, "@timer_id", nTimerID);
-    if (SqlStep(q))
+    SqlStep(q);
+    if (SqlGetError(q) == "")
         Debug("Stopping timer " + IntToString(nTimerID));
 }
 
@@ -945,7 +949,8 @@ void ResetTimer(int nTimerID)
     sqlquery q = SqlPrepareQueryModule("UPDATE event_timers " +
                     "SET remaining = event_timers.iterations WHERE timer_id = @timer_id;");
     SqlBindInt(q, "@timer_id", nTimerID);
-    if (SqlStep(q))
+    SqlStep(q);
+    if (SqlGetError(q) == "")
     {
         Debug("Resetting remaining iterations of timer " + IntToString(nTimerID) +
               " to " + IntToString(GetTimerRemaining(nTimerID)));
