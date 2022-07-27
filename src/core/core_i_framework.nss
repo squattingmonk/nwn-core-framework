@@ -300,12 +300,12 @@ void InitializeCoreFramework()
 
     Notice("Loading plugins...");
     int i = 1;
-    string sPlugin = ResManFindPrefix("", RESTYPE_NSS, i++);
+    string sPlugin = ResManFindPrefix("", RESTYPE_NCS, i++);
     while (sPlugin != "")
     {
         if (GetStringRight(sPlugin, 9) == "_l_plugin")
             LoadLibrary(sPlugin);
-        sPlugin = ResManFindPrefix("", RESTYPE_NSS, i++);
+        sPlugin = ResManFindPrefix("", RESTYPE_NCS, i++);
     }
 
     int nCount = CountList(INSTALLED_PLUGINS);
