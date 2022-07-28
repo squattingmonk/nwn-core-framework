@@ -301,17 +301,20 @@ void InitializeCoreFramework()
     Notice("Loading libraries...");
     LoadLibraries(INSTALLED_LIBRARIES);
 
-    Notice("Loading plugins...");
-    int i = 1;
-    string sPlugin = ResManFindPrefix("", RESTYPE_NCS, i++);
-    while (sPlugin != "")
+    if (AUTO_LOAD_PLUGINS)
     {
-        if (GetStringRight(sPlugin, 9) == "_l_plugin")
-            LoadLibrary(sPlugin);
-        sPlugin = ResManFindPrefix("", RESTYPE_NCS, i++);
+        Notice("Loading plugins...");
+        int i = 1;
+        string sPlugin = ResManFindPrefix("", RESTYPE_NCS, i++);
+        while (sPlugin != "")
+        {
+            if (GetStringRight(sPlugin, 9) == "_l_plugin")
+                LoadLibrary(sPlugin);
+            sPlugin = ResManFindPrefix("", RESTYPE_NCS, i++);
+        }
     }
 
-    int nCount = CountList(INSTALLED_PLUGINS);
+    int i, nCount = CountList(INSTALLED_PLUGINS);
     for (i = 0; i < nCount; i++)
         ActivatePlugin(GetListItem(INSTALLED_PLUGINS, i));
 

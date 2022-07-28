@@ -103,11 +103,15 @@ const int INITIALIZATION_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
 //                         Library and Plugin Management
 // -----------------------------------------------------------------------------
 
+// If this is TRUE, libraries matching the form *_l_plugin will be detected and
+// loaded (but not activated) automatically.
+const int AUTO_LOAD_PLUGINS = TRUE;
+
 // This is a comma-separated list of libraries that should be loaded when the
 // Core Framework is initialized. These libraries are loaded before plugins are
-// installed. Note that libraries matching the form *_l_plugin will be loaded
-// automatically, so you do not have to include them here unless you want to
-// control the order of loading.
+// loaded. Note that libraries matching the form *_l_plugin will be loaded
+// automatically if AUTO_LOAD_PLUGINS is TRUE, so you do not have to include
+// them here unless you want to control the order of loading.
 const string INSTALLED_LIBRARIES = "";
 
 // This is a comma-separated list of plugins that should be activated when the
