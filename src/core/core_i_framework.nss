@@ -537,6 +537,14 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // some events fire before OnModuleLoad.
     InitializeCoreFramework();
 
+    // Set the debugging level specific to this event, if it is defined. If an
+    // event has a debug level set, we use that debug level, no matter what it
+    // is. Otherwise, we use the object's debug level (or the module's debug
+    // level if no level was set for the object).
+    int nEventLevel = GetEventDebugLevel(sEvent, oSelf);
+    if (nEventLevel)
+        OverrideDebugLevel(nEventLevel);
+
     // Initialize event status
     ClearEventState(sEvent);
 
@@ -634,6 +642,10 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
         if (fPriority == EVENT_PRIORITY_ONLY)
             break;
     }
+
+    // Cleanup
+    if (nEventLevel)
+        OverrideDebugLevel(FALSE);
 
     return nState;
 }
