@@ -298,6 +298,9 @@ void InitializeCoreFramework()
         "FROM v_active_plugins AS p FULL OUTER JOIN event_scripts AS s " +
         "USING(object_id);");
 
+    Notice("Loading libraries...");
+    LoadLibraries(INSTALLED_LIBRARIES);
+
     Notice("Loading plugins...");
     int i = 1;
     string sPlugin = ResManFindPrefix("", RESTYPE_NCS, i++);

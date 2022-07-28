@@ -103,14 +103,15 @@ const int INITIALIZATION_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
 //                         Library and Plugin Management
 // -----------------------------------------------------------------------------
 
-// This is a comma-separated list of libraries that should be loaded
-// OnModuleLoad. These libraries are loaded before plugins are installed, so
-// they can programatically generate plugins to be installed.
+// This is a comma-separated list of libraries that should be loaded when the
+// Core Framework is initialized. These libraries are loaded before plugins are
+// installed. Note that libraries matching the form *_l_plugin will be loaded
+// automatically, so you do not have to include them here unless you want to
+// control the order of loading.
 const string INSTALLED_LIBRARIES = "";
 
-// This is a comma-separated list of plugins that should be loaded OnModuleLoad.
-// Plugins can define libraries to install. If the IDs for those libraries are
-// in this list, they will be loaded.
+// This is a comma-separated list of plugins that should be activated when the
+// Core Framework is initialized.
 const string INSTALLED_PLUGINS = "bw_defaultevents, core_demo, dlg, pqj, chat";
 
 // -----------------------------------------------------------------------------
