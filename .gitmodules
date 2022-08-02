@@ -7,3 +7,5 @@
 [submodule "lib/nwnxee"]
 	path = lib/nwnxee
 	url = https://github.com/nwnxee/unified
+	branch = master
+	shallow = true
