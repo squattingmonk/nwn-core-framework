@@ -5,6 +5,7 @@
 [submodule "lib/sm-dialogs"]
 	path = lib/sm-dialogs
 	url = https://github.com/squattingmonk/sm-dialogs
+	branch = master
 [submodule "lib/nwnxee"]
 	path = lib/nwnxee
 	url = https://github.com/nwnxee/unified
