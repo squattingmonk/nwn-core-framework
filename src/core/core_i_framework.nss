@@ -723,7 +723,10 @@ object CreatePlugin(string sPlugin)
     if (GetIsObjectValid(oPlugin))
         SetDataItem(PLUGINS, sPlugin, oPlugin);
     else
+    {
         oPlugin = CreateDataItem(PLUGINS, sPlugin);
+        SetTag(oPlugin, sPlugin);
+    }
 
     sqlquery q = SqlPrepareQueryModule("INSERT INTO event_plugins " +
                     "(plugin_id, object_id) VALUES (@plugin_id, @object_id);");
