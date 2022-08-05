@@ -50,7 +50,6 @@ void PrintColors(object oPC)
     PrintColor(oPC, "Light Blue", COLOR_BLUE_LIGHT);
     PrintColor(oPC, "Brown", COLOR_BROWN);
     PrintColor(oPC, "Light Brown", COLOR_BROWN_LIGHT);
-    PrintColor(oPC, "Divine", COLOR_DIVINE);
     PrintColor(oPC, "Gold", COLOR_GOLD);
     PrintColor(oPC, "Gray", COLOR_GRAY);
     PrintColor(oPC, "Dark Gray", COLOR_GRAY_DARK);
