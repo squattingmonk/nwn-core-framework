@@ -355,6 +355,7 @@ void InitializeCoreFramework()
 
 void AddScriptSource(object oTarget, object oSource = OBJECT_SELF)
 {
+    Notice("Adding script source " + GetDebugPrefix(oTarget), oSource);
     sqlquery q = SqlPrepareQueryModule("INSERT OR IGNORE INTO event_sources " +
         "(object_id, source_id) VALUES (@object_id, @source_id);");
     SqlBindString(q, "@object_id", ObjectToString(oTarget));
@@ -364,6 +365,7 @@ void AddScriptSource(object oTarget, object oSource = OBJECT_SELF)
 
 void RemoveScriptSource(object oTarget, object oSource = OBJECT_SELF)
 {
+    Notice("Removing script source " + GetDebugPrefix(oTarget), oSource);
     sqlquery q = SqlPrepareQueryModule("DELETE FROM event_sources WHERE " +
                     "object_id = @object_id AND source_id = @source_id;");
     SqlBindString(q, "@object_id", ObjectToString(oTarget));
@@ -373,6 +375,8 @@ void RemoveScriptSource(object oTarget, object oSource = OBJECT_SELF)
 
 void SetSourceBlacklisted(object oSource, int bBlacklist = TRUE, object oTarget = OBJECT_SELF)
 {
+    Notice((bBlacklist ? "Blacklisting" : "Unblacklisting") + " script source " +
+        GetDebugPrefix(oTarget), oSource);
     string sSql = bBlacklist ?
         "INSERT OR IGNORE INTO event_blacklists VALUES (@object_id, @source_id);" :
         "DELETE FROM event_blacklist WHERE object_id = @object_id AND source_id = @source_id;";
@@ -500,20 +504,20 @@ void RegisterEventScript(object oTarget, string sEvent, string sScript, float fP
         (fPriority != EVENT_PRIORITY_FIRST && fPriority != EVENT_PRIORITY_LAST &&
          fPriority != EVENT_PRIORITY_ONLY  && fPriority != EVENT_PRIORITY_DEFAULT))
     {
-        CriticalError("Could not register script on " + GetName(oTarget) + ":" +
+        CriticalError("Could not register script : " +
             "\n    Source: " + sTarget +
             "\n    Event: " + sEvent +
             "\n    Script: " + sScript +
             "\n    Priority: " + sPriority +
-            "\n    Error: priority outside expected range");
+            "\n    Error: priority outside expected range", oTarget);
         return;
     }
 
-    Notice("Registering event script on " + GetName(oTarget) + ":" +
+    Notice("Registering event script :" +
         "\n    Source: " + sTarget +
         "\n    Event: " + sEvent +
         "\n    Script: " + sScript +
-        "\n    Priority: " + sPriority);
+        "\n    Priority: " + sPriority, oTarget);
 
     sqlquery q = SqlPrepareQueryModule("INSERT INTO event_scripts " +
                     "(object_id, event, script, priority) VALUES " +
@@ -546,13 +550,12 @@ void ExpandEventScripts(object oTarget, string sEvent, float fDefaultPriority)
 
     float fPriority;
     string sScript, sPriority;
-    string sTarget = GetName(oTarget);
     int i, nScripts = CountList(sScripts);
 
     for (i = 0; i < nScripts; i++)
     {
         sScript = GetListItem(sScripts, i);
-        Notice("Expanding " + sTarget + "'s " + sEvent + " scripts: " + sScript);
+        Notice("Expanding " + sEvent + " scripts: " + sScript, oTarget);
 
         sPriority = StringParse(sScript, ":", TRUE);
         if (sPriority != sScript)
@@ -586,7 +589,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // Initialize event status
     ClearEventState(sEvent);
 
-    Notice("Preparing to run event " + sEvent);
+    Notice("Preparing to run event " + sEvent, oSelf);
 
     // Expand the target's own local event scripts
     ExpandEventScripts(oSelf, sEvent, LOCAL_EVENT_PRIORITY);
@@ -661,8 +664,8 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
             break;
 
         Notice("Executing event script " + sScript + " from " +
-               GetName(StringToObject(sSource)) + " on " + sName +
-               " with a priority of " + PriorityToString(fPriority));
+               GetDebugPrefix(StringToObject(sSource)) + " with a priority of " +
+               PriorityToString(fPriority), oSelf);
 
         SetScriptParam(EVENT_LAST, sEvent);       // Current event
         SetScriptParam(EVENT_TRIGGERED, sInit);   // Triggering object
@@ -767,7 +770,7 @@ int _ActivatePlugin(string sPlugin, int bActive, int bForce)
     int nStatus = GetPluginStatus(oPlugin);
     if (nStatus == PLUGIN_STATUS_MISSING)
     {
-        Error("Cannot " + sVerb + " plugin '" + sPlugin + "': plugin missing");
+        Error("Cannot " + sVerb + " plugin: plugin missing", oPlugin);
         return FALSE;
     }
 
@@ -778,7 +781,7 @@ int _ActivatePlugin(string sPlugin, int bActive, int bForce)
         int nState = RunEvent(sEvent, OBJECT_INVALID, oPlugin, TRUE);
         if (nState & EVENT_STATE_DENIED)
         {
-            Warning("Cannot " + sVerb + " plugin '" + sPlugin + "': denied");
+            Warning("Cannot " + sVerb + " plugin: denied", oPlugin);
             return FALSE;
         }
 
@@ -788,11 +791,11 @@ int _ActivatePlugin(string sPlugin, int bActive, int bForce)
         SqlBindString(q, "@object_id", ObjectToString(oPlugin));
         SqlStep(q);
 
-        Notice("Plugin '" + sPlugin + "' " + sVerbed);
+        Notice("Plugin " + sVerbed, oPlugin);
         return TRUE;
     }
 
-    Warning("Cannot " + sVerb + " plugin '" + sPlugin + "': already " + sVerbed);
+    Warning("Cannot " + sVerb + " plugin: already " + sVerbed, oPlugin);
     return FALSE;
 }
 

@@ -100,6 +100,7 @@ void OnLibraryLoad()
         SetName(oPlugin, "[Plugin] Core Framework Demo");
         SetDescription(oPlugin,
             "This plugin provides some simple demos of the Core Framework.");
+        SetDebugPrefix(GetName(oPlugin), oPlugin);
 
         RegisterEventScript(oPlugin, PLACEABLE_EVENT_ON_USED, "VerifyEvent");
         RegisterEventScript(oPlugin, "CHAT_!colors", "PrintColors");
@@ -108,7 +109,10 @@ void OnLibraryLoad()
 
     // This plugin is created from a blueprint
     if (!GetIfPluginExists("bw_defaultevents"))
-        CreatePlugin("bw_defaultevents");
+    {
+        object oPlugin = CreatePlugin("bw_defaultevents");
+        SetDebugPrefix(GetName(oPlugin), oPlugin);
+    }
 
     RegisterLibraryScript("VerifyEvent", 1);
     RegisterLibraryScript("PrintColors", 2);
