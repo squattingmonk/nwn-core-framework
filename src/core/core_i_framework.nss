@@ -42,8 +42,21 @@ int GetSourceBlacklisted(object oSource, object oTarget = OBJECT_SELF);
 /// @brief Returns the name of the currently executing event.
 string GetCurrentEvent();
 
+/// @brief Sets the current event. Pass before running a script if you want the
+/// event name to be accessible with GetCurentEvent().
+/// @param sEvent The name of the event. If blank, will use the current event
+/// name.
+void SetCurrentEvent(string sEvent = "");
+
 /// @brief Returns the object that triggered the currently executing event.
 object GetEventTriggeredBy();
+
+/// @brief Sets the object triggering the current event. Pass before running a
+/// script if you want the triggering object to be accessible with
+/// GetEventTriggeredBy().
+/// @param oObject The object triggering the event. If invalid, will use the
+/// object triggering the current event.
+void SetEventTriggeredBy(object oObject = OBJECT_INVALID);
 
 /// @brief Returns the debug level set for sEvent on oTarget (or globally, if
 /// oTarget is invalid).
@@ -160,6 +173,13 @@ int GetIsPlugin(object oObject);
 /// @brief Get the plugin object associated with the currently executing script.
 object GetCurrentPlugin();
 
+/// @brief Sets the plugin that is the source of the current event script. Pass
+/// before running a script if you want the triggering object to be accessible
+/// with GetCurrentPlugin().
+/// @param oPlugin The plugin data object. If invalid, will use the current
+/// plugin.
+void SetCurrentPlugin(object oPlugin = OBJECT_INVALID);
+
 // ----- Timer Management ------------------------------------------------------
 
 // Timers are events that fire at regular intervals.
@@ -204,6 +224,12 @@ void KillTimer(int nTimerID);
 /// @brief Returns the ID of the timer executing the current script. Returns 0
 /// if the script was not executed by a timer.
 int GetCurrentTimer();
+
+/// @brief Sets the ID of the timer executing the current script. Use this
+/// before executing a script if you want the timer ID to be accessible with
+/// GetCurrentTimer().
+/// @param nTimerID The ID of the timer. If 0, will use the current timer ID.
+void SetCurrentTimer(int nTimerID = 0);
 
 /// @brief Returns whether a timer will run infinitely.
 int GetIsTimerInfinite(int nTimerID);
@@ -372,9 +398,20 @@ string GetCurrentEvent()
     return GetScriptParam(EVENT_LAST);
 }
 
+void SetCurrentEvent(string sEvent = "")
+{
+    SetScriptParam(EVENT_LAST, sEvent != "" ? sEvent : GetCurrentEvent());
+}
+
 object GetEventTriggeredBy()
 {
     return StringToObject(GetScriptParam(EVENT_TRIGGERED));
+}
+
+void SetEventTriggeredBy(object oObject = OBJECT_INVALID)
+{
+    string sObject = GetIsObjectValid(oObject) ? ObjectToString(oObject) : GetScriptParam(EVENT_TRIGGERED);
+    SetScriptParam(EVENT_TRIGGERED, sObject);
 }
 
 int GetEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID)
@@ -786,6 +823,12 @@ object GetCurrentPlugin()
     return StringToObject(GetScriptParam(PLUGIN_LAST));
 }
 
+void SetCurrentPlugin(object oPlugin = OBJECT_INVALID)
+{
+    string sPlugin = GetIsObjectValid(oPlugin) ? ObjectToString(oPlugin) : GetScriptParam(PLUGIN_LAST);
+    SetScriptParam(PLUGIN_LAST, sPlugin);
+}
+
 // ----- Timer Management ------------------------------------------------------
 
 int CreateTimer(object oTarget, string sEvent, float fInterval, int nIterations = 0, float fJitter = 0.0)
@@ -989,6 +1032,12 @@ void KillTimer(int nTimerID)
 int GetCurrentTimer()
 {
     return StringToInt(GetScriptParam(TIMER_LAST));
+}
+
+void SetCurrentTimer(int nTimerID = 0)
+{
+    string sTimerID = nTimerID ? IntToString(nTimerID) : GetScriptParam(TIMER_LAST);
+    SetScriptParam(TIMER_LAST, sTimerID);
 }
 
 int GetIsTimerInfinite(int nTimerID)
