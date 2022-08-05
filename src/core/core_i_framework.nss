@@ -238,6 +238,7 @@ void InitializeCoreFramework()
     // Start debugging
     SetDebugLevel(INITIALIZATION_DEBUG_LEVEL, oModule);
     SetDebugLogging(DEBUG_LOGGING);
+    SetDebugPrefix(HexColorString("[Module]", COLOR_CYAN), oModule);
 
     // Set specific event debug levels
     if (HEARTBEAT_DEBUG_LEVEL)
