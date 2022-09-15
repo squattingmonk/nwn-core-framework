@@ -7,6 +7,7 @@ This system is in alpha. Things will change and will break. You have been
 warned.
 
 ## Prerequisites
+- NWN:EE >= v87.8193.34
 - [nwnsc](https://github.com/nwneetools/nwnsc)
 - [neverwinter.nim](https://github.com/niv/neverwinter.nim) >= 1.5.5
 - [nasher](https://github.com/squattingmonk/nasher) >= 0.18.x
