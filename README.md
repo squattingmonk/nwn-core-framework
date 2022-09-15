@@ -39,7 +39,9 @@ beginning with `#pragma` near the bottom of the script `util_i_library.nss`.
 Note that `util_i_library.nss` will still not compile on its own, since it's
 meant to be included in other scripts that implement its functions.
 
-## Acknowledgements
 
+## Acknowledgements
 This system was heavily influenced by [HCR2](https://neverwintervault.org/project/nwn1/script/hcr2-nwn1-core-framework-and-systems-final-nbde-hcr2-15)
 and EPOlson's [Common Scripting Framework](https://neverwintervault.org/project/nwn2/script/csf-common-scripting-framework).
+
+Huge thanks to @tinygiant98 for his continued testing and contributions.
