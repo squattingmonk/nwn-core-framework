@@ -119,7 +119,7 @@ const string INSTALLED_LIBRARIES = "";
 
 /// This is a comma-separated list of plugins that should be activated when the
 /// Core Framework is initialized.
-const string INSTALLED_PLUGINS = "bw_defaultevents, core_demo, dlg, pqj, chat";
+const string INSTALLED_PLUGINS = "";
 
 // -----------------------------------------------------------------------------
 //                               Event Management
