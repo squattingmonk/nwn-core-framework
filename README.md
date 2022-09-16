@@ -1,7 +1,10 @@
 # Core Framework
 
 This project is a framework for managing a [Neverwinter
-Nights](https://neverwintervault.org) module.
+Nights](https://neverwintervault.org) module. At the most basic, it is a set of
+scripts to hook all events in a module. Scripts can then subscribe to the hooks
+and be run when the event is triggered. This allows the module builder to
+modularize script systems instead of combining scripts.
 
 This system is in alpha. Things will change and will break. You have been
 warned.
@@ -39,6 +42,22 @@ beginning with `#pragma` near the bottom of the script `util_i_library.nss`.
 Note that `util_i_library.nss` will still not compile on its own, since it's
 meant to be included in other scripts that implement its functions.
 
+## Usage
+- Import `core_framework.erf` into your module.
+- Read and customize `core_c_config.nss`. If you make changes, be sure to
+  recompile all scripts.
+- Set the module's `OnModuleLoad` event script to `hook_nwn.nss`. If you set
+  `AUTO_HOOK_MODULE_EVENTS` in `core_c_config.nss` to `FALSE`, you will need to
+  set all other module events to `hook_nwn.nss` as well.
+- Set other event scripts to `hook_nwn.nss` as you wish. You can do this
+  manually in the toolset or by script using `HookObjectEvents()` from
+  `core_i_framework.nss`.
+
+Note: some events may be triggered before the module loads. An example is the
+OnAreaEnter event being triggered by NPCs placed in the toolset. If you want to
+capture these, you will either have to set those event scripts to `hook_nwn.nss`
+manually or somehow call `InitializeCoreFramework()` from `core_i_framework.nss`
+before they are run (e.g., using NWNX).
 
 ## Acknowledgements
 This system was heavily influenced by [HCR2](https://neverwintervault.org/project/nwn1/script/hcr2-nwn1-core-framework-and-systems-final-nbde-hcr2-15)
