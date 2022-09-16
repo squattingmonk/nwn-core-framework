@@ -414,55 +414,55 @@
   },
   "ScriptAttacked": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptDamaged": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptDeath": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptDialogue": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptDisturbed": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptEndRound": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptHeartbeat": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptOnBlocked": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptOnNotice": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptRested": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptSpawn": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptSpellAt": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "ScriptUserDefine": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "SkillList": {
     "type": "list",

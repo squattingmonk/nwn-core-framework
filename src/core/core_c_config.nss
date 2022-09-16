@@ -191,6 +191,26 @@ const int AUTO_HOOK_AREA_EVENTS = TRUE;
 /// AUTO_HOOK_AREA_EVENTS is FALSE.
 const int AUTO_HOOK_AREA_HEARTBEAT_EVENT = FALSE;
 
+/// This is a bitmasked value matching object types that should have their event
+/// handlers changed to "hook_nwn" when the Core Framework is initialized. Any
+/// existing event scripts will be set as local event scripts and will still
+/// fire when the event is triggered. You can add multiple types using the `|`
+/// operator (e.g., OBJECT_TYPE_CREATURE | OBJECT_TYPE_PLACEABLE). To hook all
+/// eligible objects, set this to OBJECT_TYPE_ALL. To disable hooking for all
+/// objects, set this to 0.
+/// @note You can skip auto-hooking an individual object by setting a local int
+///     named `SKIP_AUTO_HOOK` to TRUE on it.
+/// @note Objects spawned by script after the Core Framework is initialized will
+///     not have the handlers set.
+int AUTO_HOOK_OBJECT_EVENTS = OBJECT_TYPE_CREATURE | OBJECT_TYPE_PLACEABLE;
+
+/// This controls whether the OnHeartbeat event is hooked when automatically
+/// hooking objects during initialization. It is a bitmasked value matching the
+/// types that should have their heartbeat events hooked. To enable heartbeat
+/// hooking for all eligible objects, set this to OBJECT_TYPE_ALL. To disable
+/// heartbeat hooking for all objects, set this to 0.
+int AUTO_HOOK_OBJECT_HEARTBEAT_EVENT = 0;
+
 /// If TRUE, this will cause all of a PC's event scripts to be set to "hook_nwn"
 /// OnClientEnter. Existing event scripts (usually "default") are not preserved.
 const int AUTO_HOOK_PC_EVENTS = TRUE;

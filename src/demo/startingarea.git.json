@@ -230,55 +230,55 @@
         },
         "ScriptAttacked": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptDamaged": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptDeath": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptDialogue": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptDisturbed": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptEndRound": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptHeartbeat": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptOnBlocked": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptOnNotice": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptRested": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptSpawn": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptSpellAt": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptUserDefine": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "SkillList": {
           "type": "list",
@@ -1159,55 +1159,55 @@
         },
         "ScriptAttacked": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptDamaged": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptDeath": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptDialogue": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptDisturbed": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptEndRound": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptHeartbeat": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptOnBlocked": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptOnNotice": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptRested": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptSpawn": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptSpellAt": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "ScriptUserDefine": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "SkillList": {
           "type": "list",
@@ -1610,19 +1610,19 @@
         },
         "OnClick": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnClosed": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnDamaged": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnDeath": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnDisarm": {
           "type": "resref",
@@ -1634,23 +1634,23 @@
         },
         "OnInvDisturbed": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnLock": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnMeleeAttacked": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnOpen": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnSpellCastAt": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnTrapTriggered": {
           "type": "resref",
@@ -1658,15 +1658,15 @@
         },
         "OnUnlock": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnUsed": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnUserDefined": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OpenLockDC": {
           "type": "byte",
@@ -2084,19 +2084,19 @@
         },
         "OnClick": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnClosed": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnDamaged": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnDeath": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnDisarm": {
           "type": "resref",
@@ -2104,27 +2104,27 @@
         },
         "OnHeartbeat": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnInvDisturbed": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnLock": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnMeleeAttacked": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnOpen": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnSpellCastAt": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnTrapTriggered": {
           "type": "resref",
@@ -2132,15 +2132,15 @@
         },
         "OnUnlock": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnUsed": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OnUserDefined": {
           "type": "resref",
-          "value": "hook_nwn"
+          "value": ""
         },
         "OpenLockDC": {
           "type": "byte",

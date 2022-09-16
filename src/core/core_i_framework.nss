@@ -283,13 +283,27 @@ void InitializeCoreFramework()
     if (AUTO_HOOK_MODULE_EVENTS)
         HookObjectEvents(oModule, FALSE);
 
-    if (AUTO_HOOK_AREA_EVENTS)
+    if (AUTO_HOOK_AREA_EVENTS || AUTO_HOOK_OBJECT_EVENTS)
     {
         object oArea = GetFirstArea();
         while (GetIsObjectValid(oArea))
         {
-            if (!GetLocalInt(oArea, SKIP_AUTO_HOOK))
+            if (AUTO_HOOK_AREA_EVENTS && !GetLocalInt(oArea, SKIP_AUTO_HOOK))
                 HookObjectEvents(oArea, !AUTO_HOOK_AREA_HEARTBEAT_EVENT);
+
+            if (AUTO_HOOK_OBJECT_EVENTS)
+            {
+                // Once .35 is released, we can use the nObjectFilter parameter.
+                object oObject = GetFirstObjectInArea(oArea);
+                while (GetIsObjectValid(oObject))
+                {
+                    int nType = GetObjectType(oObject);
+                    if (AUTO_HOOK_OBJECT_EVENTS & nType && !GetLocalInt(oObject, SKIP_AUTO_HOOK))
+                        HookObjectEvents(oObject, !(AUTO_HOOK_OBJECT_HEARTBEAT_EVENT & nType));
+                    oObject = GetNextObjectInArea(oArea);
+                }
+            }
+
             oArea = GetNextArea();
         }
     }

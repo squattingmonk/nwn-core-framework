@@ -100,7 +100,7 @@
   },
   "OnExit": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "OnHeartbeat": {
     "type": "resref",
@@ -108,7 +108,7 @@
   },
   "OnUserDefined": {
     "type": "resref",
-    "value": "hook_nwn"
+    "value": ""
   },
   "PlayerVsPlayer": {
     "type": "byte",
