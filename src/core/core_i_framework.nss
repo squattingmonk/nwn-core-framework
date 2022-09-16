@@ -743,7 +743,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
         float  fPriority = SqlGetFloat (q, 3);
 
         // Scripts with "default" priority only run if no other scripts did.
-        if (fPriority == EVENT_PRIORITY_DEFAULT && nExecuted++)
+        if (nExecuted++ && fPriority == EVENT_PRIORITY_DEFAULT)
             break;
 
         Notice("Executing event script " + sScript + " from " +
