@@ -373,24 +373,25 @@ void InitializeCoreFramework()
         "USING(object_id);");
 
     Notice("Loading libraries...");
-    LoadLibraries(INSTALLED_LIBRARIES);
-
-    if (AUTO_LOAD_PLUGINS)
     {
-        Notice("Loading plugins...");
-        int i = 1;
-        string sPlugin = ResManFindPrefix("", RESTYPE_NCS, i++);
-        while (sPlugin != "")
+        string sLibrary;
+        int i, nCount = CountList(INSTALLED_LIBRARIES);
+        for (i = 0; i < nCount; i++)
         {
-            if (GetStringRight(sPlugin, 9) == "_l_plugin")
-                LoadLibrary(sPlugin);
-            sPlugin = ResManFindPrefix("", RESTYPE_NCS, i++);
+            sLibrary = GetListItem(INSTALLED_LIBRARIES, i);
+            if (GetIsPattern(sLibrary))
+                LoadLibrariesByPattern(sLibrary);
+            else
+                LoadLibrary(sLibrary);
         }
     }
 
-    int i, nCount = CountList(INSTALLED_PLUGINS);
-    for (i = 0; i < nCount; i++)
-        ActivatePlugin(GetListItem(INSTALLED_PLUGINS, i));
+    Notice("Activating plugins...");
+    {
+        int i, nCount = CountList(INSTALLED_PLUGINS);
+        for (i = 0; i < nCount; i++)
+            ActivatePlugin(GetListItem(INSTALLED_PLUGINS, i));
+    }
 
     Notice("Successfully initialized Core Framework");
     SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
