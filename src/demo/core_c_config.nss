@@ -170,23 +170,31 @@ const float LOCAL_EVENT_PRIORITY = 7.0;
 /// Default value: TRUE
 const int ENABLE_TAGBASED_SCRIPTS = TRUE;
 
-/// This controls whether the module's event scripts will be automatically set
-/// to the Core Framework event handler "hook_nwn" when the Framework is first
-/// initialized. If TRUE, any existing event scripts on the module will instead
-/// be set as local event scripts. If you have already set all module events to
-/// "hook_nwn" or want to do it during the preload script, you can safely set
-/// this to FALSE.
+/// If TRUE, this will cause all event handlers for the module to be set to
+/// "hook_nwn" when the Core Framework is initialized. Any existing event
+/// scripts will be set as local event scripts and will still fire when the
+/// event is triggered.
 const int AUTO_HOOK_MODULE_EVENTS = TRUE;
 
-/// This controls whether all areas' event scripts will be automatically set to
-/// the Core Framework event handler "hook_nwn" when the Framework is first
-/// initialized. If TRUE, any existing event scripts on areas will instead be
-/// set as local event scripts.
+/// If TRUE, this will cause all event handlers for all areas in the module to
+/// be set to "hook_nwn" when the Core Framework is initialized. Any existing
+/// event scripts will be set as local event scripts and will still fire when
+/// the event is triggered.
 const int AUTO_HOOK_AREA_EVENTS = TRUE;
 
-/// This controls whether areas' OnHeartbeat event will be automatically hooked.
-/// Has no effect if AUTO_HOOK_AREA_EVENTS is FALSE.
+/// This controls whether the OnHeartbreat event is hooked when automatically
+/// hooking area events during initialization. Has no effect if
+/// AUTO_HOOK_AREA_EVENTS is FALSE.
 const int AUTO_HOOK_AREA_HEARTBEAT_EVENT = FALSE;
+
+/// If TRUE, this will cause all of a PC's event scripts to be set to "hook_nwn"
+/// OnClientEnter. Existing event scripts (usually "default") are not preserved.
+const int AUTO_HOOK_PC_EVENTS = TRUE;
+
+/// This controls whether the OnHeartbeat event is hooked when automatically
+/// hooking PC events OnClientEnter. If AUTO_HOOK_PC_EVENTS is FALSE, this will
+/// have no effect.
+const int AUTO_HOOK_PC_HEARTBEAT_EVENT = FALSE;
 
 // -----------------------------------------------------------------------------
 //                                 Custom Events

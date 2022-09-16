@@ -408,6 +408,10 @@ void framework_OnClientEnter()
             SetLocalInt(oPC, IS_PC, TRUE);
         }
 
+        // Set hook-in scripts for all PC events.
+        if (AUTO_HOOK_PC_EVENTS)
+            HookObjectEvents(oPC, !AUTO_HOOK_PC_HEARTBEAT_EVENT, FALSE);
+
         // Send the player the welcome message.
         if (WELCOME_MESSAGE != "")
             DelayCommand(1.0, SendMessageToPC(oPC, WELCOME_MESSAGE));
