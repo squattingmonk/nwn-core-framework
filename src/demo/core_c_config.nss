@@ -180,9 +180,13 @@ const int AUTO_HOOK_MODULE_EVENTS = TRUE;
 /// be set to "hook_nwn" when the Core Framework is initialized. Any existing
 /// event scripts will be set as local event scripts and will still fire when
 /// the event is triggered.
+/// @note You can skip auto-hooking an individual area by setting a local int
+///     named `SKIP_AUTO_HOOK` to TRUE on it.
+/// @note Areas spawned by script after the Core Framework is initialized will
+///     not have the handlers set.
 const int AUTO_HOOK_AREA_EVENTS = TRUE;
 
-/// This controls whether the OnHeartbreat event is hooked when automatically
+/// This controls whether the OnHeartbeat event is hooked when automatically
 /// hooking area events during initialization. Has no effect if
 /// AUTO_HOOK_AREA_EVENTS is FALSE.
 const int AUTO_HOOK_AREA_HEARTBEAT_EVENT = FALSE;
