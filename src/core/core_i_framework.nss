@@ -288,7 +288,8 @@ void InitializeCoreFramework()
         object oArea = GetFirstArea();
         while (GetIsObjectValid(oArea))
         {
-            HookObjectEvents(oArea, !AUTO_HOOK_AREA_HEARTBEAT_EVENT);
+            if (!GetLocalInt(oArea, SKIP_AUTO_HOOK))
+                HookObjectEvents(oArea, !AUTO_HOOK_AREA_HEARTBEAT_EVENT);
             oArea = GetNextArea();
         }
     }

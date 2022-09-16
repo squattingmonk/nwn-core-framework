@@ -35,6 +35,9 @@ object TIMERS  = GetDatapoint(CORE_TIMERS);
 
 const string CORE_INITIALIZED = "CORE_INITIALIZED";
 
+// Set on an object to prevent auto-hooking during Core initialization.
+const string SKIP_AUTO_HOOK   = "SKIP_AUTO_HOOK";
+
 // ----- Plugin Management -----------------------------------------------------
 
 // Local variable names used for plugin objects.
