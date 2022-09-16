@@ -1,6 +1,7 @@
 /// ----------------------------------------------------------------------------
-/// @file  core_i_events.nss
-/// @brief Functions for managing event hooks.
+/// @file   core_i_framework.nss
+/// @author Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
+/// @brief  Main include for the Core Framework.
 /// ----------------------------------------------------------------------------
 
 #include "util_i_sqlite"
@@ -13,86 +14,101 @@
 //                              Function Prototypes
 // -----------------------------------------------------------------------------
 
-/// @brief Runs initial setup for the Core Framework.
+/// @brief Run initial setup for the Core Framework.
 /// @note This is a system function that need not be used by the builder.
 void InitializeCoreFramework();
 
-/// @brief Add oSource as a source of local scripts for oTarget.
+/// @brief Add a local source of event scripts to an object.
 /// @details When an event is triggered on oTarget, all sources added with this
-/// function will be checked for scripts for that event. For example, running
-/// `AddScriptSource(GetEnteringObject())` OnAreaEnter and adding an
-/// OnPlayerDeath script to the area will cause players in the area to run that
-/// OnPlayerDeath script.
+///     function will be checked for scripts for that event. For example,
+///     running `AddScriptSource(GetEnteringObject())` OnAreaEnter and adding an
+///     OnPlayerDeath script to the area will cause players in the area to run
+///     that OnPlayerDeath script if they die in the area.
+/// @param oTarget The object that will receive oSource as a source of scripts.
+/// @param oSource The object that will serve as a source of scripts.
 void AddScriptSource(object oTarget, object oSource = OBJECT_SELF);
 
-/// @brief Removes oSource as a source of local scripts for oTarget.
+/// @brief Remove a source of local scripts for an object.
+/// @param oTarget The object to remove the local event source from.
+/// @param oSource The object to remove as a local event source.
 void RemoveScriptSource(object oTarget, object oSource = OBJECT_SELF);
 
-/// @brief Prevents oSource from being checked for local event scripts on
-/// Target, even if oSource has been added to oTarget's source list.
+/// @brief Blacklist an object as a local event source. The blacklisted object
+///     will not be checked as for event scripts even if it is added to the
+///     target's source list.
 /// @param oSource A plugin object, area, trigger, encounter, AoE, or another
-/// other object that has been set as a local script source on oTarget.
+///     other object that may be set as a local script source on oTarget.
 /// @param bBlacklist Blacklists oSource if TRUE, otherwise unblacklists.
+/// @param oTarget The object that will blacklist oSource.
 void SetSourceBlacklisted(object oSource, int bBlacklist = TRUE, object oTarget = OBJECT_SELF);
 
-/// #brief Returns whether oTarget has blacklisted oSource from providing local
-/// event scripts.
+/// @brief Return whether an object has been blacklisted as a local event source
+/// @param oSource A plugin object, area, trigger, encounter, AoE, or another
+///     other object that may be set as a local script source on oTarget.
+/// @param oTarget The object to check the blacklist of.
 int GetSourceBlacklisted(object oSource, object oTarget = OBJECT_SELF);
 
-/// @brief Returns the name of the currently executing event.
+/// @brief Return the name of the currently executing event.
 string GetCurrentEvent();
 
-/// @brief Sets the current event. Pass before running a script if you want the
-/// event name to be accessible with GetCurentEvent().
-/// @param sEvent The name of the event. If blank, will use the current event
-/// name.
+/// @brief Set the current event. Pass before running a script if you want the
+///     event name to be accessible with GetCurentEvent().
+/// @param sEvent The name of the event. If "", will use the current event name.
 void SetCurrentEvent(string sEvent = "");
 
-/// @brief Returns the object that triggered the currently executing event.
+/// @brief Return the object that triggered the currently executing event.
 object GetEventTriggeredBy();
 
-/// @brief Sets the object triggering the current event. Pass before running a
-/// script if you want the triggering object to be accessible with
-/// GetEventTriggeredBy().
+/// @brief Set the object triggering the current event. Pass before running a
+///     script if you want the triggering object to be accessible with
+///     GetEventTriggeredBy().
 /// @param oObject The object triggering the event. If invalid, will use the
-/// object triggering the current event.
+///     object triggering the current event.
 void SetEventTriggeredBy(object oObject = OBJECT_INVALID);
 
-/// @brief Returns the debug level set for sEvent on oTarget (or globally, if
-/// oTarget is invalid).
-/// @returns The debug level or 0 if an event-specific debug level is not set.
+/// @brief Return the debug level for an event.
+/// @param sEvent The name of the event to check.
+/// @param oTarget The object to check the debug level on. If invalid, will
+///     check the global debug level for the event.
+/// @returns A `DEBUG_LEVEL_*` constant or 0 if an event-specific debug level is
+///     not set.
 int GetEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID);
 
-/// @brief Sets the debug level for sEvent to nLevel. If oTarget is invalid,
-/// will set the global debug level for the event.
+/// @brief Set the debug level for an event.
+/// @param sEvent The name of the event to set the debug level for.
+/// @param nLevel The debug level for the event.
+/// @param oTarget The object to set the debug level on. If invalid, will set
+///     the global debug level for the event.
 void SetEventDebugLevel(string sEvent, int nLevel, object oTarget = OBJECT_INVALID);
 
-/// @brief Deletes the debug level set for sEvent. If oTarget is invalid, will
-/// delete the global debug level for the event.
+/// @brief Clear the debug level set for an event.
+/// @param sEvent The name of the event to clear the debug level for.
+/// @param oTarget The object to clear the debug level on. If invalid, will
+///     clear the global debug level for the event.
 void DeleteEventDebugLevel(string sEvent, object oTarget = OBJECT_INVALID);
 
-/// @brief Returns the state of an event.
-/// @param sEvent The name of an event. If blank, will use the current event.
+/// @brief Return the state of an event.
+/// @param sEvent The name of an event. If "", will use the current event.
 /// @returns A flagset consisting of:
-/// - EVENT_STATE_OK: continue with queued scripts
-/// - EVENT_STATE_ABORT: stop further queue processing
-/// - EVENT_STATE_DENIED: request denied
+///     - EVENT_STATE_OK: continue with queued scripts
+///     - EVENT_STATE_ABORT: stop further queue processing
+///     - EVENT_STATE_DENIED: request denied
 int GetEventState(string sEvent = "");
 
-/// @brief Sets the state of an event.
-/// @param sEvent The name of an event. If blank, will use the current event.
+/// @brief Set the state of an event.
+/// @param sEvent The name of an event. If "", will use the current event.
 /// @param nState A flagset consisting of:
-/// - EVENT_STATE_OK: continue with queued scripts
-/// - EVENT_STATE_ABORT: stop further queue processing
-/// - EVENT_STATE_DENIED: request denied
+///     - EVENT_STATE_OK: continue with queued scripts
+///     - EVENT_STATE_ABORT: stop further queue processing
+///     - EVENT_STATE_DENIED: request denied
 void SetEventState(int nState, string sEvent = "");
 
-/// @brief Clears the state of an event.
-/// @param sEvent The name of an event. If blank, will use the current event.
+/// @brief Clear the state of an event.
+/// @param sEvent The name of an event. If "", will use the current event.
 void ClearEventState(string sEvent = "");
 
-/// @brief Registers a script to an event on an object. Can be used to add event
-/// scripts to plugins or other objects.
+/// @brief Register a script to an event on an object. Can be used to add event
+///     scripts to plugins or other objects.
 /// @param oTarget The object to attach the scripts to.
 /// @param sEvent The name of the event the scripts will subscribe to.
 /// @param sScripts A CSV list of library scripts to execute when sEvent fires.
@@ -101,21 +117,21 @@ void ClearEventState(string sEvent = "");
 ///     whether oTarget is a plugin or other object.
 void RegisterEventScript(object oTarget, string sEvent, string sScripts, float fPriority = -1.0);
 
-/// @brief Runs an event, causing all subscribed scripts to trigger.
+/// @brief Run an event, causing all subscribed scripts to trigger.
 /// @param sEvent The name of the event
 /// @param oInit The object triggering the event (e.g, a PC OnClientEnter)
 /// @param oSelf The object on which to run the event
 /// @param bLocalOnly If TRUE, will skip scripts from plugins and other objects
 /// @returns the state of the event; consists of bitmasked `EVENT_STATE_*`
-/// constants representing how the event finished:
-/// - EVENT_STATE_OK: all queued scripts executed successfully
-/// - EVENT_STATE_ABORT: a script cancelled remaining scripts in the queue
-/// - EVENT_STATE_DENIED: a script specified that the event should cancelled
+///     constants representing how the event finished:
+///     - EVENT_STATE_OK: all queued scripts executed successfully
+///     - EVENT_STATE_ABORT: a script cancelled remaining scripts in the queue
+///     - EVENT_STATE_DENIED: a script specified that the event should cancelled
 int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT_SELF, int bLocalOnly = FALSE);
 
-/// @brief Runs an item event (e.g., OnAcquireItem) first on the module, then
-/// locally on the item. This allows oItem to specify its own scripts for the
-/// event which get executed if the module-level event it not denied.
+/// @brief Run an item event (e.g., OnAcquireItem) first on the module, then
+///     locally on the item. This allows oItem to specify its own scripts for
+///     the event which get executed if the module-level event it not denied.
 /// @param sEvent The name of the event
 /// @param oItem The item
 /// @param oPC The PC triggering the item event
@@ -143,42 +159,43 @@ void HookObjectEvents(object oObject, int bSkipHeartbeat = TRUE, int bStoreOldEv
 
 // ----- Plugin Management -----------------------------------------------------
 
-/// @brief Returns a plugin's data object.
+/// @brief Return a plugin's data object.
 /// @param sPlugin The plugin's unique identifier in the database.
 object GetPlugin(string sPlugin);
 
-/// @brief Creates a plugin object and registers it in the database.
+/// @brief Create a plugin object and register it in the database.
 /// @param sPlugin The plugin's unique identifier in the database.
+/// @returns The created plugin object.
 object CreatePlugin(string sPlugin);
 
-/// @brief Returns the status of a plugin.
+/// @brief Return the status of a plugin.
 /// @param oPlugin A plugin's data object.
-/// @return A `PLUGIN_STATUS_*` constant.
+/// @returns A `PLUGIN_STATUS_*` constant.
 int GetPluginStatus(object oPlugin);
 
 /// @brief Get whether a plugin has been registered and is valid.
 /// @param sPlugin The plugin's unique identifier in the database.
 /// @returns FALSE if the plugin has not been registered or if its data object
-/// has gone missing. Otherwise, returns TRUE.
+///     has gone missing. Otherwise, returns TRUE.
 int GetIfPluginExists(string sPlugin);
 
 /// @brief Get whether a plugin is active.
 /// @param oPlugin A plugin's data object.
 int GetIsPluginActivated(object oPlugin);
 
-/// @brief Runs a plugin's OnPluginActivate script and sets its status to ON.
+/// @brief Run a plugin's OnPluginActivate script and set its status to ON.
 /// @param sPlugin The plugin's unique identifier in the database.
 /// @param bForce If TRUE, will activate even if the plugin is already ON.
 /// @returns Whether the activation was successful.
 int ActivatePlugin(string sPlugin, int bForce = FALSE);
 
-/// @brief Runs a plugin's OnPluginDeactivate script and sets its status to OFF.
+/// @brief Run a plugin's OnPluginDeactivate script and set its status to OFF.
 /// @param sPlugin The plugin's unique identifier in the database.
 /// @param bForce If TRUE, will deactivate even if the plugin is already OFF.
 /// @returns Whether the deactivation was successful.
 int DeactivatePlugin(string sPlugin, int bForce = FALSE);
 
-/// @brief Returns a plugin's unique identifier in the database.
+/// @brief Return a plugin's unique identifier in the database.
 /// @param oPlugin A plugin's data object.
 /// @returns The plugin's ID, or "" if oPlugin is not registered to a plugin.
 /// @note This is the inverse of `GetPlugin()`.
@@ -192,76 +209,84 @@ int GetIsPlugin(object oObject);
 /// @brief Get the plugin object associated with the currently executing script.
 object GetCurrentPlugin();
 
-/// @brief Sets the plugin that is the source of the current event script. Pass
-/// before running a script if you want the triggering object to be accessible
-/// with GetCurrentPlugin().
+/// @brief Set the plugin that is the source of the current event script. Pass
+///     before running a script if you want the triggering object to be
+///     accessible with GetCurrentPlugin().
 /// @param oPlugin The plugin data object. If invalid, will use the current
-/// plugin.
+///     plugin.
 void SetCurrentPlugin(object oPlugin = OBJECT_INVALID);
 
 // ----- Timer Management ------------------------------------------------------
 
 // Timers are events that fire at regular intervals.
 
-/// @brief Creates a timer that fires an even on a target at regular intervals.
+/// @brief Create a timer that fires an event on a target at regular intervals.
 /// @details After a timer is created, you will need to start it to get it to
-/// run. You cannot create a time on an invalid target or with a non-positive
-/// interval value.
+///     run. You cannot create a time on an invalid target or with a
+///     non-positive interval value.
 /// @param oTarget The object the event will run on
 /// @param sEvent the name of the event that will fire when the timer elapses
 /// @param fInterval The number of seconds between iterations.
 /// @param nIterations the number of times the timer can elapse. 0 means no
-/// limit. If nIterations is 0, fInterval must be greater than or equal to 6.0.
+///     limit. If nIterations is 0, fInterval must be greater than or equal to
+///     6.0.
 /// @param fJitter Adds a random number of seconds between 0 and fJitter to
-/// fInterval between executions. Leave at 0.0 for no jitter.
+///     fInterval between executions. Leave at 0.0 for no jitter.
 /// @returns the ID of the timer. Save this so it can be used to start, stop, or
-/// kill the timer later.
+///     kill the timer later.
 int CreateTimer(object oTarget, string sEvent, float fInterval, int nIterations = 0, float fJitter = 0.0);
 
 /// @brief Return if a timer exists.
 /// @param nTimerID The ID of the timer in the database.
 int GetIsTimerValid(int nTimerID);
 
-/// @brief Starts a timer, executing its event immediately if bInstant is TRUE
-/// and again each interval until finished iterating, stopped, or killed.
+/// @brief Start a timer, executing its event each interval until finished
+///     iterating, stopped, or killed.
+/// @param nTimerID The ID of the timer in the database.
+/// @param bInstant If TRUE, execute the timer's event immediately.
 void StartTimer(int nTimerID, int bInstant = TRUE);
 
-/// @brief Suspends executing of a timer. This does not destroy the timer, only
-/// stops its event from being executed.
+/// @brief Suspend execution of a timer.
+/// @param nTimerID The ID of the timer in the database.
+/// @note This does not destroy the timer, only stops it from iterating or
+///     executing its event.
 void StopTimer(int nTimerID);
 
-/// @brief Resets the number or remaining iterations on the timer associated
-/// with nTimerID.
+/// @brief Reset the number or remaining iterations on a timer.
+/// @param nTimerID The ID of the timer in the database.
 void ResetTimer(int nTimerID);
 
-/// @brief Deletes the timer associated with nTimerID.
+/// @brief Delete a timer.
 /// @details This results in all information about the given timer being
-/// deleted. Since the information is gone, the event associated with that timer
-/// ID will not get executed again.
+///     deleted. Since the information is gone, the event associated with that
+///     timer ID will not get executed again.
+/// @param nTimerID The ID of the timer in the database.
 void KillTimer(int nTimerID);
 
-/// @brief Returns the ID of the timer executing the current script. Returns 0
-/// if the script was not executed by a timer.
+/// @brief Return the ID of the timer executing the current script. Returns 0
+///     if the script was not executed by a timer.
 int GetCurrentTimer();
 
-/// @brief Sets the ID of the timer executing the current script. Use this
-/// before executing a script if you want the timer ID to be accessible with
-/// GetCurrentTimer().
+/// @brief Set the ID of the timer executing the current script. Use this
+///     before executing a script if you want the timer ID to be accessible with
+///     GetCurrentTimer().
 /// @param nTimerID The ID of the timer. If 0, will use the current timer ID.
 void SetCurrentTimer(int nTimerID = 0);
 
-/// @brief Returns whether a timer will run infinitely.
+/// @brief Return whether a timer will run infinitely.
+/// @param nTimerID The ID of the timer in the database.
 int GetIsTimerInfinite(int nTimerID);
 
-/// @brief Returns the remaining number of iterations for a timer.
+/// @brief Return the remaining number of iterations for a timer.
 /// @details If called during a timer script, will not include the current
-/// iteration. Returns -1 if nTimerID is not a valid timer ID. Returns 0 if the
-/// timer is set to run indefinitely, so be sure to check for this with
-/// GetIsTimerInfinite().
+///     iteration. Returns -1 if nTimerID is not a valid timer ID. Returns 0 if
+///     the timer is set to run indefinitely, so be sure to check for this with
+///     GetIsTimerInfinite().
+/// @param nTimerID The ID of the timer in the database.
 int GetTimerRemaining(int nTimerID);
 
 /// @brief Sets the remaining number of iterations for a timer.
-/// @param nTimerID The ID of the timer
+/// @param nTimerID The ID of the timer in the database.
 /// @param nRemaining The remaining number of iteratins
 void SetTimerRemaining(int nTimerID, int nRemaining);
 
