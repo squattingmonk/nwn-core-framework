@@ -1,31 +1,18 @@
-// -----------------------------------------------------------------------------
-//    File: hook_nwn.nss
-//  System: Core Framework (event script)
-//     URL: https://github.com/squattingmonk/nwn-core-framework
-// Authors: Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
-// -----------------------------------------------------------------------------
-// Global event handler. Place this script in the event handler of every
-// game object.  For module events, it need only be placed in the event handler
-// for OnModuleLoad.
-// -----------------------------------------------------------------------------
+/// ----------------------------------------------------------------------------
+/// @file   hook_nwn.nss
+/// @author Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
+/// @author Ed Burke (tinygiant98) <af.hog.pilot@gmail.com>
+/// @brief  Global Core Framework event handler. Place this script in the
+///     handler of every game object that the Core should manage.
+/// @note If AUTO_HOOK_MODULE_EVENTS from core_c_config.nss is TRUE, you only
+///     need to have this in OnModuleLoad to hook all module scripts.
+/// @note If AUTO_HOOK_AREA_EVENTS from core_c_config.nss is TRUE, all areas
+///     existing at the time the Core is initialized will automatically have
+///     this script set as their event handler.
+/// ----------------------------------------------------------------------------
 
 #include "x2_inc_switches"
 #include "core_i_framework"
-
-
-// -----------------------------------------------------------------------------
-//                                  Constants
-// -----------------------------------------------------------------------------
-
-const int EVENT_TYPE_MODULE = 3;
-const int EVENT_TYPE_AREA = 4;
-const int EVENT_TYPE_CREATURE = 5;
-const int EVENT_TYPE_TRIGGER = 7;
-const int EVENT_TYPE_PLACEABLE = 9;
-const int EVENT_TYPE_DOOR = 10;
-const int EVENT_TYPE_AREAOFEFFECT = 11;
-const int EVENT_TYPE_ENCOUNTER = 13;
-const int EVENT_TYPE_STORE = 14;
 
 // -----------------------------------------------------------------------------
 //                                  Area of Effect
@@ -372,21 +359,6 @@ void framework_OnModuleLoad()
 {
     // Set the spellhook event
     SetModuleOverrideSpellscript(SPELLHOOK_EVENT_SCRIPT);
-
-    // Setup the module scripts for a single hook.  Any script currently
-    // assigned will be saved to a local module variable called
-    // MODULE!OldEventScript!#, where # is the event constant.
-    int nEvent;
-    object oModule = GetModule();
-
-    for (nEvent = EVENT_SCRIPT_MODULE_ON_HEARTBEAT; nEvent <= EVENT_SCRIPT_MODULE_ON_NUI_EVENT; nEvent++)
-    {
-        string sScript = GetEventScript(oModule, nEvent);
-        if (sScript != "")
-            SetLocalString(oModule, "MODULE!OldEventScript!" + IntToString(nEvent), sScript);
-
-        SetEventScript(oModule, nEvent, "hook_nwn");
-    }
 
     // If we're using the core's tagbased scripting, disable X2's version to
     // avoid conflicts with OnSpellCastAt; it will be handled by the spellhook.

@@ -1,12 +1,8 @@
-// -----------------------------------------------------------------------------
-//    File: core_i_constants.nss
-//  System: Core Framework (include script)
-//     URL: https://github.com/squattingmonk/nwn-core-framework
-// Authors: Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
-// -----------------------------------------------------------------------------
-// This file holds constants commonly used throughout the Core and associated
-// systems.
-// -----------------------------------------------------------------------------
+/// ----------------------------------------------------------------------------
+/// @file   core_i_constants.nss
+/// @author Michael A. Sinclair (Squatting Monk) <squattingmonk@gmail.com>
+/// @brief  Constants commonly used throughout the Core and associated systems.
+/// ----------------------------------------------------------------------------
 
 #include "util_i_datapoint"
 
@@ -20,6 +16,8 @@ const string CORE_PLUGINS = "Core Plugins";
 const string CORE_TIMERS  = "Core Timers";
 
 // Script names
+const string EVENT_SCRIPT           = "hook_nwn";
+const string NWNX_EVENT_SCRIPT      = "hook_nwnx";
 const string SPELLHOOK_EVENT_SCRIPT = "hook_spellhook";
 
 // -----------------------------------------------------------------------------
@@ -53,6 +51,17 @@ const int PLUGIN_STATUS_ON      =  1;
 const string PLUGIN_LAST = "PLUGIN_LAST";
 
 // ----- Event Management ------------------------------------------------------
+
+// Used to distinguish `EVENT_SCRIPT_*` constants
+const int EVENT_TYPE_MODULE        =  3;
+const int EVENT_TYPE_AREA          =  4;
+const int EVENT_TYPE_CREATURE      =  5;
+const int EVENT_TYPE_TRIGGER       =  7;
+const int EVENT_TYPE_PLACEABLE     =  9;
+const int EVENT_TYPE_DOOR          = 10;
+const int EVENT_TYPE_AREAOFEFFECT  = 11;
+const int EVENT_TYPE_ENCOUNTER     = 13;
+const int EVENT_TYPE_STORE         = 14;
 
 const string EVENT_NAME             = "EVENT_NAME";             // Name of the event the script should run on.
 const string EVENT_SOURCE           = "EVENT_SOURCE";           // List of sources for location hooks
