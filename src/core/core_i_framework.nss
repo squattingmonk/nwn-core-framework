@@ -93,13 +93,13 @@ void ClearEventState(string sEvent = "");
 
 /// @brief Registers a script to an event on an object. Can be used to add event
 /// scripts to plugins or other objects.
-/// @param oTarget The object to attach the scripts to
-/// @param sEvent The name of the event the script will subscribe to
-/// @param sScript A library script to execute when sEvent fires
-/// @param fPriority: the priority at which the script should be executed. If
-/// -1.0, will use the configured global or local priority, depending on whether
-/// oTarget is a plugin or other object.
-void RegisterEventScript(object oTarget, string sEvent, string sScript, float fPriority = -1.0);
+/// @param oTarget The object to attach the scripts to.
+/// @param sEvent The name of the event the scripts will subscribe to.
+/// @param sScripts A CSV list of library scripts to execute when sEvent fires.
+/// @param fPriority the priority at which the scripts should be executed. If
+///     -1.0, will use the configured global or local priority, depending on
+///     whether oTarget is a plugin or other object.
+void RegisterEventScript(object oTarget, string sEvent, string sScripts, float fPriority = -1.0);
 
 /// @brief Runs an event, causing all subscribed scripts to trigger.
 /// @param sEvent The name of the event
@@ -540,7 +540,7 @@ float StringToPriority(string sPriority, float fDefaultPriority)
         return fPriority;
 }
 
-void RegisterEventScript(object oTarget, string sEvent, string sScript, float fPriority = -1.0)
+void RegisterEventScript(object oTarget, string sEvent, string sScripts, float fPriority = -1.0)
 {
     if (fPriority == -1.0)
         fPriority = GetIsPlugin(oTarget) ? GLOBAL_EVENT_PRIORITY : LOCAL_EVENT_PRIORITY;
@@ -552,29 +552,40 @@ void RegisterEventScript(object oTarget, string sEvent, string sScript, float fP
         (fPriority != EVENT_PRIORITY_FIRST && fPriority != EVENT_PRIORITY_LAST &&
          fPriority != EVENT_PRIORITY_ONLY  && fPriority != EVENT_PRIORITY_DEFAULT))
     {
-        CriticalError("Could not register script : " +
+        CriticalError("Could not register scripts: " +
             "\n    Source: " + sTarget +
             "\n    Event: " + sEvent +
-            "\n    Script: " + sScript +
+            "\n    Scripts: " + sScripts +
             "\n    Priority: " + sPriority +
             "\n    Error: priority outside expected range", oTarget);
         return;
     }
 
-    Notice("Registering event script :" +
-        "\n    Source: " + sTarget +
-        "\n    Event: " + sEvent +
-        "\n    Script: " + sScript +
-        "\n    Priority: " + sPriority, oTarget);
+    int i, nCount = CountList(sScripts);
+    for (i = 0; i < nCount; i++)
+    {
+        string sScript = GetListItem(sScripts, i);
+        Notice("Registering event script :" +
+            "\n    Source: " + sTarget +
+            "\n    Event: " + sEvent +
+            "\n    Script: " + sScript +
+            "\n    Priority: " + sPriority, oTarget);
 
-    sqlquery q = SqlPrepareQueryModule("INSERT INTO event_scripts " +
-                    "(object_id, event, script, priority) VALUES " +
-                    "(@object_id, @event, @script, @priority);");
-    SqlBindString(q, "@object_id", sTarget);
-    SqlBindString(q, "@event", sEvent);
-    SqlBindString(q, "@script", sScript);
-    SqlBindFloat(q, "@priority", fPriority);
-    SqlStep(q);
+        sqlquery q = SqlPrepareQueryModule("INSERT INTO event_scripts " +
+                        "(object_id, event, script, priority) VALUES " +
+                        "(@object_id, @event, @script, @priority);");
+        SqlBindString(q, "@object_id", sTarget);
+        SqlBindString(q, "@event", sEvent);
+        SqlBindString(q, "@script", sScript);
+        SqlBindFloat(q, "@priority", fPriority);
+        SqlStep(q);
+    }
+}
+
+// Alias function for backward compatibility.
+void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0)
+{
+    RegisterEventScript(oTarget, sEvent, sScripts, fPriority);
 }
 
 // Private function. Checks oTarget for a builder-specified event hook string
