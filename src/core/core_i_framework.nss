@@ -393,9 +393,8 @@ void InitializeCoreFramework()
         "SELECT plugin_id, object_id FROM event_plugins WHERE active = 1;");
 
     SqlExecModule("CREATE VIEW IF NOT EXISTS v_active_scripts AS " +
-        "SELECT p.plugin_id, s.object_id, s.event, s.script, s.priority " +
-        "FROM v_active_plugins AS p FULL OUTER JOIN event_scripts AS s " +
-        "USING(object_id);");
+        "SELECT plugin_id, object_id, event, script, priority " +
+        "FROM event_scripts LEFT JOIN v_active_plugins USING(object_id);");
 
     Notice("Loading libraries...");
     {
