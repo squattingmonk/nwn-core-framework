@@ -397,18 +397,7 @@ void InitializeCoreFramework()
         "FROM event_scripts LEFT JOIN v_active_plugins USING(object_id);");
 
     Notice("Loading libraries...");
-    {
-        string sLibrary;
-        int i, nCount = CountList(INSTALLED_LIBRARIES);
-        for (i = 0; i < nCount; i++)
-        {
-            sLibrary = GetListItem(INSTALLED_LIBRARIES, i);
-            if (GetIsPattern(sLibrary))
-                LoadLibrariesByPattern(sLibrary);
-            else
-                LoadLibrary(sLibrary);
-        }
-    }
+    LoadLibrariesByPattern(INSTALLED_LIBRARIES);
 
     Notice("Activating plugins...");
     {

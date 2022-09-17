@@ -65,7 +65,7 @@ int DEBUG_LOGGING = DEBUG_LOG_ALL;
 /// - DEBUG_LEVEL_WARNING: indicates unexpected behavior may occur
 /// - DEBUG_LEVEL_NOTICE: information to track the flow of functions
 /// - DEBUG_LEVEL_DEBUG: data dumps used for debugging
-const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
+const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 
 /// This controls the level of debug messages to generate on heartbeat events.
 /// This can be used to prevent the excessive generation of debug messages that
@@ -106,11 +106,18 @@ const int INITIALIZATION_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
 //                         Library and Plugin Management
 // -----------------------------------------------------------------------------
 
-/// This is a comma-separated list of libraries that should be automatically
-/// loaded when the Core Framework is initialized. Each entry may be either a
-/// literal library name or a string pattern using TestStringAgainstPattern()'s
-/// syntax.
-const string INSTALLED_LIBRARIES = "**_l_plugin";
+/// This is a comma-separated list of glob patterns matching libraries that
+/// should be automatically loaded when the Core Framework is initialized. The
+/// libraries will be loaded in the order of the pattern they matched. Multiple
+/// libraries matching the same pattern will be loaded in alphabetical order.
+///
+/// The following glob syntax is supported:
+/// - `*`: match zero or more characters
+/// - `?`: match a single character
+/// - `[abc]`: match any of a, b, or c
+/// - `[a-z]`: match any character from a-z
+/// Other text is matched literally, so using exact script names is okay.
+const string INSTALLED_LIBRARIES = "*_l_plugin";
 
 /// This is a comma-separated list of plugins that should be activated when the
 /// Core Framework is initialized.
