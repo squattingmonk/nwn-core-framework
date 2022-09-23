@@ -101,7 +101,7 @@ void framework_OnAreaExit()
 
     if (!RemoveListObject(OBJECT_SELF, oPC, AREA_ROSTER) && ENABLE_ON_AREA_EMPTY_EVENT)
     {
-        int nTimerID = CreateTimer(OBJECT_SELF, AREA_EVENT_ON_EMPTY, ON_AREA_EMPTY_EVENT_DELAY, 1);
+        int nTimerID = CreateEventTimer(OBJECT_SELF, AREA_EVENT_ON_EMPTY, ON_AREA_EMPTY_EVENT_DELAY, 1);
         StartTimer(nTimerID, FALSE);
     }
 
@@ -358,7 +358,7 @@ void framework_OnUserDefined()
 void framework_OnModuleLoad()
 {
     // Set the spellhook event
-    SetModuleOverrideSpellscript(SPELLHOOK_EVENT_SCRIPT);
+    SetModuleOverrideSpellscript(CORE_HOOK_SPELLS);
 
     // If we're using the core's tagbased scripting, disable X2's version to
     // avoid conflicts with OnSpellCastAt; it will be handled by the spellhook.

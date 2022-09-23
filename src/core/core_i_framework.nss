@@ -4,9 +4,9 @@
 /// @brief  Main include for the Core Framework.
 /// ----------------------------------------------------------------------------
 
-#include "util_i_sqlite"
 #include "util_i_lists"
 #include "util_i_libraries"
+#include "util_i_timers"
 #include "core_i_constants"
 #include "core_c_config"
 
@@ -218,51 +218,6 @@ void SetCurrentPlugin(object oPlugin = OBJECT_INVALID);
 
 // ----- Timer Management ------------------------------------------------------
 
-// Timers are events that fire at regular intervals.
-
-/// @brief Create a timer that fires an event on a target at regular intervals.
-/// @details After a timer is created, you will need to start it to get it to
-///     run. You cannot create a time on an invalid target or with a
-///     non-positive interval value.
-/// @param oTarget The object the event will run on
-/// @param sEvent the name of the event that will fire when the timer elapses
-/// @param fInterval The number of seconds between iterations.
-/// @param nIterations the number of times the timer can elapse. 0 means no
-///     limit. If nIterations is 0, fInterval must be greater than or equal to
-///     6.0.
-/// @param fJitter Adds a random number of seconds between 0 and fJitter to
-///     fInterval between executions. Leave at 0.0 for no jitter.
-/// @returns the ID of the timer. Save this so it can be used to start, stop, or
-///     kill the timer later.
-int CreateTimer(object oTarget, string sEvent, float fInterval, int nIterations = 0, float fJitter = 0.0);
-
-/// @brief Return if a timer exists.
-/// @param nTimerID The ID of the timer in the database.
-int GetIsTimerValid(int nTimerID);
-
-/// @brief Start a timer, executing its event each interval until finished
-///     iterating, stopped, or killed.
-/// @param nTimerID The ID of the timer in the database.
-/// @param bInstant If TRUE, execute the timer's event immediately.
-void StartTimer(int nTimerID, int bInstant = TRUE);
-
-/// @brief Suspend execution of a timer.
-/// @param nTimerID The ID of the timer in the database.
-/// @note This does not destroy the timer, only stops it from iterating or
-///     executing its event.
-void StopTimer(int nTimerID);
-
-/// @brief Reset the number or remaining iterations on a timer.
-/// @param nTimerID The ID of the timer in the database.
-void ResetTimer(int nTimerID);
-
-/// @brief Delete a timer.
-/// @details This results in all information about the given timer being
-///     deleted. Since the information is gone, the event associated with that
-///     timer ID will not get executed again.
-/// @param nTimerID The ID of the timer in the database.
-void KillTimer(int nTimerID);
-
 /// @brief Return the ID of the timer executing the current script. Returns 0
 ///     if the script was not executed by a timer.
 int GetCurrentTimer();
@@ -273,22 +228,21 @@ int GetCurrentTimer();
 /// @param nTimerID The ID of the timer. If 0, will use the current timer ID.
 void SetCurrentTimer(int nTimerID = 0);
 
-/// @brief Return whether a timer will run infinitely.
-/// @param nTimerID The ID of the timer in the database.
-int GetIsTimerInfinite(int nTimerID);
-
-/// @brief Return the remaining number of iterations for a timer.
-/// @details If called during a timer script, will not include the current
-///     iteration. Returns -1 if nTimerID is not a valid timer ID. Returns 0 if
-///     the timer is set to run indefinitely, so be sure to check for this with
-///     GetIsTimerInfinite().
-/// @param nTimerID The ID of the timer in the database.
-int GetTimerRemaining(int nTimerID);
-
-/// @brief Sets the remaining number of iterations for a timer.
-/// @param nTimerID The ID of the timer in the database.
-/// @param nRemaining The remaining number of iteratins
-void SetTimerRemaining(int nTimerID, int nRemaining);
+/// @brief Create a timer that fires an event on a target at regular intervals.
+/// @details After a timer is created, you will need to start it to get it to
+///     run. You cannot create a timer on an invalid target or with a
+///     non-positive interval value.
+/// @param oTarget The object the action will run on.
+/// @param sEvent The name of the event to execute when the timer elapses.
+/// @param fInterval The number of seconds between iterations.
+/// @param nIterations the number of times the timer can elapse. 0 means no
+///     limit. If nIterations is 0, fInterval must be greater than or equal to
+///     6.0.
+/// @param fJitter A random number of seconds between 0.0 and fJitter to add to
+///     fInterval between executions. Leave at 0.0 for no jitter.
+/// @returns the ID of the timer. Save this so it can be used to start, stop, or
+///     kill the timer later.
+int CreateEventTimer(object oTarget, string sEvent, float fInterval, int nIterations = 0, float fJitter = 0.0);
 
 // -----------------------------------------------------------------------------
 //                             Function Definitions
@@ -336,7 +290,9 @@ void InitializeCoreFramework()
     // Start debugging
     SetDebugLevel(INITIALIZATION_DEBUG_LEVEL, oModule);
     SetDebugLogging(DEBUG_LOGGING);
-    SetDebugPrefix(HexColorString("[Module]", COLOR_CYAN), oModule);
+    SetDebugPrefix(HexColorString("[Module]",  COLOR_CYAN), oModule);
+    SetDebugPrefix(HexColorString("[Events]",  COLOR_CYAN), EVENTS);
+    SetDebugPrefix(HexColorString("[Plugins]", COLOR_CYAN), PLUGINS);
 
     // Set specific event debug levels
     if (HEARTBEAT_DEBUG_LEVEL)
@@ -377,17 +333,6 @@ void InitializeCoreFramework()
         "object_id TEXT NOT NULL, " +
         "source_id TEXT NOT NULL, " +
         "UNIQUE(object_id, source_id)");
-
-    SqlCreateTableModule("event_timers",
-        "timer_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-        "event TEXT NOT NULL, " +
-        "target TEXT NOT NULL, " +
-        "interval REAL NOT NULL, " +
-        "jitter REAL NOT NULL, " +
-        "iterations INTEGER NOT NULL, " +
-        "remaining INTEGER NOT NULL, " +
-        "running BOOLEAN NOT NULL DEFAULT 0, " +
-        "is_pc BOOLEAN NOT NULL DEFAULT 0");
 
     SqlExecModule("CREATE VIEW IF NOT EXISTS v_active_plugins AS " +
         "SELECT plugin_id, object_id FROM event_plugins WHERE active = 1;");
@@ -695,7 +640,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
 
     string sInit = ObjectToString(oInit);
     string sName = GetName(oSelf);
-    string sTimerID = GetLocalString(GetModule(), TIMER_LAST);
+    string sTimerID = GetScriptParam(TIMER_LAST);
     sqlquery q;
 
     int nState, nExecuted;
@@ -925,8 +870,8 @@ string GetEventName(int nEvent)
 void HookObjectEvent(object oObject, int nEvent, int bStoreOldEvent = TRUE)
 {
     string sScript = GetEventScript(oObject, nEvent);
-    SetEventScript(oObject, nEvent, EVENT_SCRIPT);
-    if (!bStoreOldEvent || sScript == "" || sScript == EVENT_SCRIPT)
+    SetEventScript(oObject, nEvent, CORE_HOOK_NWN);
+    if (!bStoreOldEvent || sScript == "" || sScript == CORE_HOOK_NWN)
         return;
 
     string sEvent = GetEventName(nEvent);
@@ -1144,204 +1089,6 @@ void SetCurrentPlugin(object oPlugin = OBJECT_INVALID)
 
 // ----- Timer Management ------------------------------------------------------
 
-int CreateTimer(object oTarget, string sEvent, float fInterval, int nIterations = 0, float fJitter = 0.0)
-{
-    Debug("Creating timer " + sEvent + " on " + GetName(oTarget) +
-          ", nIterations=" + IntToString(nIterations) +
-          ", fInterval="   + FloatToString(fInterval) +
-          ", fJitter="     + FloatToString(fJitter));
-
-    // Sanity checks: don't create the timer if...
-    // 1. the target is invalid
-    // 2. the interval is not greater than 0.0
-    // 3. the number of iterations is non-positive
-    // 4. the interval is more than once per round and the timer is infinite
-    string sError;
-    if (!GetIsObjectValid(oTarget))
-        sError = "oTarget is invalid";
-    else if (fInterval <= 0.0)
-        sError = "fInterval is negative";
-    else if (nIterations < 0)
-        sError = "nIterations is negative";
-    else if (fInterval < 6.0 && !nIterations)
-        sError = "fInterval is too short for infinite executions";
-
-    if (sError != "")
-    {
-        CriticalError("Cannot create timer " + sEvent + ": " + sError);
-        return 0;
-    }
-
-    sqlquery q = SqlPrepareQueryModule("INSERT INTO event_timers " +
-        "(event, target, interval, jitter, iterations, remaining, is_pc) VALUES " +
-        "(@event, @target, @interval, @jitter, @iterations, @remaining, @is_pc);");
-    SqlBindString(q, "@event",      sEvent);
-    SqlBindString(q, "@target",     ObjectToString(oTarget));
-    SqlBindFloat (q, "@interval",   fInterval);
-    SqlBindFloat (q, "@jitter",     fabs(fJitter));
-    SqlBindInt   (q, "@iterations", nIterations);
-    SqlBindInt   (q, "@remaining",  nIterations);
-    SqlBindInt   (q, "@is_pc",      GetIsPC(oTarget));
-    SqlStep(q);
-
-    int nTimerID = SqlGetLastInsertIdModule();
-    if (nTimerID > 0)
-    {
-        Debug("Successfully created new timer " + sEvent + " with ID=" + IntToString(nTimerID));
-        return nTimerID;
-    }
-
-    CriticalError("Could not create timer " + sEvent + ": " + SqlGetError(q));
-    return 0;
-}
-
-int GetIsTimerValid(int nTimerID)
-{
-    // Timer IDs less than or equal to 0 are always invalid.
-    if (nTimerID < 0)
-        return FALSE;
-
-    sqlquery q = SqlPrepareQueryModule("SELECT COUNT(*) FROM event_timers " +
-                    "WHERE timer_id = @timer_id;");
-    SqlBindInt(q, "@timer_id", nTimerID);
-    return SqlStep(q) ? SqlGetInt(q, 0) : FALSE;
-}
-
-// Private function used by StartTimer().
-void _TimerElapsed(int nTimerID, int bFirstRun = FALSE)
-{
-    string sError, sTimerID = IntToString(nTimerID);
-    int    bPreserve;
-
-    Debug("Timer elapsed: nTimerID=" + sTimerID + " bFirstRun=" + IntToString(bFirstRun));
-    sqlquery q = SqlPrepareQueryModule("SELECT * FROM event_timers " +
-                    "WHERE timer_id = @timer_id;");
-    SqlBindInt(q, "@timer_id", nTimerID);
-
-    if (!SqlStep(q))
-    {
-        Warning("Cannot execute timer " + IntToString(nTimerID) + ": timer no longer exists");
-        return;
-    }
-
-    string sEvent      = SqlGetString(q, 1);
-    string sTarget     = SqlGetString(q, 2);
-    float  fInterval   = SqlGetFloat (q, 3);
-    float  fJitter     = SqlGetFloat (q, 4);
-    int    nIterations = SqlGetInt   (q, 5);
-    int    nRemaining  = SqlGetInt   (q, 6);
-    int    bRunning    = SqlGetInt   (q, 7);
-    int    bIsPC       = SqlGetInt   (q, 8);
-    object oTarget     = StringToObject(sTarget);
-
-    if (!bRunning)
-    {
-        sError = "Timer has not been started";
-        bPreserve = TRUE;
-    }
-    else if (!GetIsObjectValid(oTarget))
-        sError = "Timer target is no longer valid. Running cleanup...";
-    else if (bIsPC && !GetIsPC(oTarget))
-        sError = "Timer target used to be a PC but now is not";
-
-    if (sError != "")
-    {
-        Warning("Cannot execute timer " + sEvent + ": " + sError);
-
-        if (!bPreserve)
-            KillTimer(nTimerID);
-
-        return;
-    }
-
-    // If we're running infinitely or we have more runs remaining...
-    if (!nIterations || nRemaining)
-    {
-        if (!bFirstRun)
-        {
-            // If we're not running an infinite number of times, decrement the
-            // number of iterations we have remaining
-            if (nIterations)
-                SetTimerRemaining(nTimerID, nRemaining - 1);
-
-            // Run the event hook
-            SetLocalString(GetModule(), TIMER_LAST, sTimerID);
-            RunEvent(sEvent, OBJECT_INVALID, oTarget);
-            DeleteLocalString(GetModule(), TIMER_LAST);
-
-            // In case one of those scripts we just called reset the timer...
-            if (nIterations)
-                nRemaining = GetTimerRemaining(nTimerID);
-        }
-
-        // If we have runs left, call our timer's next iteration.
-        if (!nIterations || nRemaining)
-        {
-            // Account for any jitter
-            int nJitter = FloatToInt(fJitter * 10.0);
-            float fTimerInterval = fInterval + IntToFloat(Random(nJitter + 1)) / 10.0;
-
-            Debug("Calling next iteration of timer " + sTimerID + " in " +
-                  FloatToString(fTimerInterval) + " seconds. Runs remaining: " +
-                  (nIterations ? IntToString(nRemaining) : "Infinite"));
-
-            DelayCommand(fTimerInterval, _TimerElapsed(nTimerID));
-            return;
-        }
-    }
-
-    // We have no more runs left! Kill the timer to clean up.
-    Debug("No more runs remaining on timer " + sTimerID + ". Running cleanup...");
-    KillTimer(nTimerID);
-}
-
-void StartTimer(int nTimerID, int bInstant = TRUE)
-{
-    sqlquery q = SqlPrepareQueryModule("UPDATE event_timers SET running = 1 " +
-                    "WHERE timer_id = @timer_id AND running = 0;");
-    SqlBindInt(q, "@timer_id", nTimerID);
-    SqlStep(q);
-
-    if (SqlGetError(q) == "")
-    {
-        Debug("Starting timer " + IntToString(nTimerID));
-        _TimerElapsed(nTimerID, !bInstant);
-    }
-}
-
-void StopTimer(int nTimerID)
-{
-    sqlquery q = SqlPrepareQueryModule("UPDATE event_timers SET running = 0 " +
-                    "WHERE timer_id = @timer_id;");
-    SqlBindInt(q, "@timer_id", nTimerID);
-    SqlStep(q);
-    if (SqlGetError(q) == "")
-        Debug("Stopping timer " + IntToString(nTimerID));
-}
-
-void ResetTimer(int nTimerID)
-{
-    sqlquery q = SqlPrepareQueryModule("UPDATE event_timers " +
-                    "SET remaining = event_timers.iterations WHERE timer_id = @timer_id;");
-    SqlBindInt(q, "@timer_id", nTimerID);
-    SqlStep(q);
-    if (SqlGetError(q) == "")
-    {
-        Debug("Resetting remaining iterations of timer " + IntToString(nTimerID) +
-              " to " + IntToString(GetTimerRemaining(nTimerID)));
-    }
-}
-
-void KillTimer(int nTimerID)
-{
-    Debug("Killing timer " + IntToString(nTimerID));
-
-    sqlquery q = SqlPrepareQueryModule("DELETE FROM event_timers " +
-                    "WHERE timer_id = @timer_id;");
-    SqlBindInt(q, "@timer_id", nTimerID);
-    SqlStep(q);
-}
-
 int GetCurrentTimer()
 {
     return StringToInt(GetScriptParam(TIMER_LAST));
@@ -1353,27 +1100,7 @@ void SetCurrentTimer(int nTimerID = 0)
     SetScriptParam(TIMER_LAST, sTimerID);
 }
 
-int GetIsTimerInfinite(int nTimerID)
+int CreateEventTimer(object oTarget, string sEvent, float fInterval, int nIterations = 0, float fJitter = 0.0)
 {
-    sqlquery q = SqlPrepareQueryModule("SELECT iterations FROM event_timers " +
-                    "WHERE timer_id = @timer_id;");
-    SqlBindInt(q, "@timer_id", nTimerID);
-    return SqlStep(q) ? !SqlGetInt(q, 0) : FALSE;
-}
-
-int GetTimerRemaining(int nTimerID)
-{
-    sqlquery q = SqlPrepareQueryModule("SELECT remaining FROM event_timers " +
-                    "WHERE timer_id = @timer_id;");
-    SqlBindInt(q, "@timer_id", nTimerID);
-    return SqlStep(q) ? SqlGetInt(q, 0) : -1;
-}
-
-void SetTimerRemaining(int nTimerID, int nRemaining)
-{
-    sqlquery q = SqlPrepareQueryModule("UPDATE event_timers " +
-                    "SET remaining = @remaining WHERE timer_id = @timer_id;");
-    SqlBindInt(q, "@timer_id",  nTimerID);
-    SqlBindInt(q, "@remaining", nRemaining);
-    SqlStep(q);
+    return CreateTimer(oTarget, sEvent, fInterval, nIterations, fJitter, CORE_HOOK_TIMERS);
 }
