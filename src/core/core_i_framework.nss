@@ -385,7 +385,7 @@ void SetSourceBlacklisted(object oSource, int bBlacklist = TRUE, object oTarget 
         GetDebugPrefix(oSource), oTarget);
     string sSql = bBlacklist ?
         "INSERT OR IGNORE INTO event_blacklists VALUES (@object_id, @source_id);" :
-        "DELETE FROM event_blacklist WHERE object_id = @object_id AND source_id = @source_id;";
+        "DELETE FROM event_blacklists WHERE object_id = @object_id AND source_id = @source_id;";
     sqlquery q = SqlPrepareQueryModule(sSql);
     SqlBindString(q, "@object_id", ObjectToString(oTarget));
     SqlBindString(q, "@source_id", ObjectToString(oSource));
