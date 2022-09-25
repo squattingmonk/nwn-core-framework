@@ -361,7 +361,7 @@ void InitializeCoreFramework()
 
 void AddScriptSource(object oTarget, object oSource = OBJECT_SELF)
 {
-    Notice("Adding script source " + GetDebugPrefix(oTarget), oSource);
+    Notice("Adding script source " + GetDebugPrefix(oSource), oTarget);
     sqlquery q = SqlPrepareQueryModule("INSERT OR IGNORE INTO event_sources " +
         "(object_id, source_id) VALUES (@object_id, @source_id);");
     SqlBindString(q, "@object_id", ObjectToString(oTarget));
@@ -371,7 +371,7 @@ void AddScriptSource(object oTarget, object oSource = OBJECT_SELF)
 
 void RemoveScriptSource(object oTarget, object oSource = OBJECT_SELF)
 {
-    Notice("Removing script source " + GetDebugPrefix(oTarget), oSource);
+    Notice("Removing script source " + GetDebugPrefix(oSource), oTarget);
     sqlquery q = SqlPrepareQueryModule("DELETE FROM event_sources WHERE " +
                     "object_id = @object_id AND source_id = @source_id;");
     SqlBindString(q, "@object_id", ObjectToString(oTarget));
@@ -382,7 +382,7 @@ void RemoveScriptSource(object oTarget, object oSource = OBJECT_SELF)
 void SetSourceBlacklisted(object oSource, int bBlacklist = TRUE, object oTarget = OBJECT_SELF)
 {
     Notice((bBlacklist ? "Blacklisting" : "Unblacklisting") + " script source " +
-        GetDebugPrefix(oTarget), oSource);
+        GetDebugPrefix(oSource), oTarget);
     string sSql = bBlacklist ?
         "INSERT OR IGNORE INTO event_blacklists VALUES (@object_id, @source_id);" :
         "DELETE FROM event_blacklist WHERE object_id = @object_id AND source_id = @source_id;";
