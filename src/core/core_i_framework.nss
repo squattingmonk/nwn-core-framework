@@ -519,6 +519,13 @@ void RegisterEventScript(object oTarget, string sEvent, string sScripts, float f
         return;
     }
 
+    // Handle NWNX script registration.
+    if (GetStringLeft(sEvent, 4) == "NWNX")
+    {
+        SetScriptParam(EVENT_NAME, sEvent);
+        ExecuteScript(CORE_HOOK_NWNX);
+    }
+
     int i, nCount = CountList(sScripts);
     for (i = 0; i < nCount; i++)
     {
