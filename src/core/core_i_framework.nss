@@ -243,6 +243,14 @@ void SetCurrentTimer(int nTimerID = 0);
 ///     kill the timer later.
 int CreateEventTimer(object oTarget, string sEvent, float fInterval, int nIterations = 0, float fJitter = 0.0);
 
+// ----- Miscellaneous ---------------------------------------------------------
+
+/// @brief Return whether an object is a PC.
+/// @param oObject The object to check.
+/// @returns TRUE if the object is an actual PC (i.e., not a possessed familiar
+///     or creature). Will work OnClientExit as well.
+int GetIsPCObject(object oObject);
+
 // -----------------------------------------------------------------------------
 //                             Function Definitions
 // -----------------------------------------------------------------------------
@@ -1111,4 +1119,12 @@ void SetCurrentTimer(int nTimerID = 0)
 int CreateEventTimer(object oTarget, string sEvent, float fInterval, int nIterations = 0, float fJitter = 0.0)
 {
     return CreateTimer(oTarget, sEvent, fInterval, nIterations, fJitter, CORE_HOOK_TIMERS);
+}
+
+// ----- Miscellaneous ---------------------------------------------------------
+
+int GetIsPCObject(object oObject)
+{
+    string sObject = ObjectToString(oObject);
+    return (GetStringLength(sObject) == 8 && GetStringLeft(sObject, 3) == "7ff");
 }
