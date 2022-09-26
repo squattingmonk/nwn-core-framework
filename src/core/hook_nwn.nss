@@ -403,7 +403,7 @@ void OnClientEnter()
             AddListObject(OBJECT_SELF, oPC, DM_ROSTER, TRUE);
             SetLocalInt(oPC, IS_DM, TRUE);
         }
-        else if (GetIsPC(oPC))
+        else
         {
             AddListObject(OBJECT_SELF, oPC, PLAYER_ROSTER, TRUE);
             SetLocalInt(oPC, IS_PC, TRUE);
@@ -426,13 +426,38 @@ void OnClientLeave()
     // Only execute hook-in scripts if the PC was not booted OnClientEnter.
     if (!GetLocalInt(oPC, LOGIN_BOOT))
     {
-        RunEvent(MODULE_EVENT_ON_CLIENT_LEAVE);
-
         // Decrement the count of players in the module
         if (GetIsDM(oPC))
             RemoveListObject(OBJECT_SELF, oPC, DM_ROSTER);
-        else if (GetIsPC(oPC))
+        else
             RemoveListObject(OBJECT_SELF, oPC, PLAYER_ROSTER);
+
+        RunEvent(MODULE_EVENT_ON_CLIENT_LEAVE);
+
+        // OnTriggerExit and OnAoEExit do not fire OnClientLeave, and OnAreaExit
+        // does not fire if the PC is dead. We run the exit event for all of
+        // those here. We do it after the OnClientLeave event so that if they
+        // have special OnClientLeave scripts, they still fire.
+        sqlquery q = GetScriptSources(oPC);
+        while (SqlStep(q))
+        {
+            object oSource = StringToObject(SqlGetString(q, 0));
+            switch (GetObjectType(oSource))
+            {
+                case OBJECT_TYPE_TRIGGER:
+                    if (GetIsInSubArea(oPC, oSource))
+                        AssignCommand(oSource, OnTriggerExit());
+                    break;
+                case OBJECT_TYPE_AREA_OF_EFFECT:
+                    if (GetIsInSubArea(oPC, oSource))
+                        AssignCommand(oSource, OnAoEExit());
+                    break;
+                default:
+                    if (GetArea(oPC) == oSource && GetIsDead(oPC))
+                        AssignCommand(oSource, OnAreaExit());
+                    break;
+            }
+        }
     }
 }
 
