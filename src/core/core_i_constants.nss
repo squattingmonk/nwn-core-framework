@@ -178,6 +178,22 @@ const string CREATURE_EVENT_ON_SPAWN                  = "OnCreatureSpawn";
 const string CREATURE_EVENT_ON_SPELL_CAST_AT          = "OnCreatureSpellCastAt";
 const string CREATURE_EVENT_ON_USER_DEFINED           = "OnCreatureUserDefined";
 
+// PC versions of the above. All work except for OnPCRested and OnPCSpawn. See
+// https://nwnlexicon.com/index.php?title=SetEventScript#Remarks for details.
+const string PC_EVENT_ON_BLOCKED                      = "OnPCBlocked";
+const string PC_EVENT_ON_COMBAT_ROUND_END             = "OnPCCombatRoundEnd";
+const string PC_EVENT_ON_CONVERSATION                 = "OnPCConversation";
+const string PC_EVENT_ON_DAMAGED                      = "OnPCDamaged";
+const string PC_EVENT_ON_DEATH                        = "OnPCDeath";
+const string PC_EVENT_ON_DISTURBED                    = "OnPCDisturbed";
+const string PC_EVENT_ON_HEARTBEAT                    = "OnPCHeartbeat";
+const string PC_EVENT_ON_PERCEPTION                   = "OnPCPerception";
+const string PC_EVENT_ON_PHYSICAL_ATTACKED            = "OnPCPhysicalAttacked";
+const string PC_EVENT_ON_RESTED                       = "OnPCRested";
+const string PC_EVENT_ON_SPAWN                        = "OnPCSpawn";
+const string PC_EVENT_ON_SPELL_CAST_AT                = "OnPCSpellCastAt";
+const string PC_EVENT_ON_USER_DEFINED                 = "OnPCUserDefined";
+
 // ----- Door Events -----------------------------------------------------------
 
 const string DOOR_EVENT_ON_AREA_TRANSITION_CLICK      = "OnDoorAreaTransitionClick";

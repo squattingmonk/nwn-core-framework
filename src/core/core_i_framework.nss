@@ -881,6 +881,8 @@ void HookObjectEvent(object oObject, int nEvent, int bStoreOldEvent = TRUE)
         return;
 
     string sEvent = GetEventName(nEvent);
+    if (GetIsPC(oObject) && GetStringLeft(sEvent, 10) == "OnCreature")
+        sEvent = ReplaceSubString(sEvent, "OnPC", 0, 9);
     AddLocalListItem(oObject, sEvent, sScript);
 }
 

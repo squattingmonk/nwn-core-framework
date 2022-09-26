@@ -114,69 +114,69 @@ void framework_OnAreaExit()
 //                                  Creature
 // -----------------------------------------------------------------------------
 
-void framework_OnCreatureHeartbeat()
+void framework_OnCreatureHeartbeat(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_HEARTBEAT);
+    RunEvent(bIsPC ? PC_EVENT_ON_HEARTBEAT : CREATURE_EVENT_ON_HEARTBEAT);
 }
 
-void framework_OnCreaturePerception()
+void framework_OnCreaturePerception(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_PERCEPTION, GetLastPerceived());
+    RunEvent(bIsPC ? PC_EVENT_ON_PERCEPTION : CREATURE_EVENT_ON_PERCEPTION, GetLastPerceived());
 }
 
-void framework_OnCreatureSpellCastAt()
+void framework_OnCreatureSpellCastAt(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_SPELL_CAST_AT, GetLastSpellCaster());
+    RunEvent(bIsPC ? PC_EVENT_ON_SPELL_CAST_AT : CREATURE_EVENT_ON_SPELL_CAST_AT, GetLastSpellCaster());
 }
 
-void framework_OnCreaturePhysicalAttacked()
+void framework_OnCreaturePhysicalAttacked(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_PHYSICAL_ATTACKED, GetLastAttacker());
+    RunEvent(bIsPC ? PC_EVENT_ON_PHYSICAL_ATTACKED : CREATURE_EVENT_ON_PHYSICAL_ATTACKED, GetLastAttacker());
 }
 
-void framework_OnCreatureDamaged()
+void framework_OnCreatureDamaged(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_DAMAGED, GetLastDamager());
+    RunEvent(bIsPC ? PC_EVENT_ON_DAMAGED : CREATURE_EVENT_ON_DAMAGED, GetLastDamager());
 }
 
-void framework_OnCreatureDisturbed()
+void framework_OnCreatureDisturbed(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_DISTURBED, GetLastDisturbed());
+    RunEvent(bIsPC ? PC_EVENT_ON_DISTURBED : CREATURE_EVENT_ON_DISTURBED, GetLastDisturbed());
 }
 
-void framework_OnCreatureCombatRoundEnd()
+void framework_OnCreatureCombatRoundEnd(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_COMBAT_ROUND_END);
+    RunEvent(bIsPC ? PC_EVENT_ON_COMBAT_ROUND_END : CREATURE_EVENT_ON_COMBAT_ROUND_END);
 }
 
-void framework_OnCreatureConversation()
+void framework_OnCreatureConversation(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_CONVERSATION, GetLastSpeaker());
+    RunEvent(bIsPC ? PC_EVENT_ON_CONVERSATION : CREATURE_EVENT_ON_CONVERSATION, GetLastSpeaker());
 }
 
-void framework_OnCreatureSpawn()
+void framework_OnCreatureSpawn(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_SPAWN);
+    RunEvent(bIsPC ? PC_EVENT_ON_SPAWN : CREATURE_EVENT_ON_SPAWN);
 }
 
-void framework_OnCreatureRested()
+void framework_OnCreatureRested(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_RESTED);
+    RunEvent(bIsPC ? PC_EVENT_ON_RESTED : CREATURE_EVENT_ON_RESTED);
 }
 
-void framework_OnCreatureDeath()
+void framework_OnCreatureDeath(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_DEATH, GetLastKiller());
+    RunEvent(bIsPC ? PC_EVENT_ON_DEATH : CREATURE_EVENT_ON_DEATH, GetLastKiller());
 }
 
-void framework_OnCreatureUserDefined()
+void framework_OnCreatureUserDefined(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_USER_DEFINED);
+    RunEvent(bIsPC ? PC_EVENT_ON_USER_DEFINED : CREATURE_EVENT_ON_USER_DEFINED);
 }
 
-void framework_OnCreatureBlocked()
+void framework_OnCreatureBlocked(int bIsPC)
 {
-    RunEvent(CREATURE_EVENT_ON_BLOCKED, GetBlockingDoor());
+    RunEvent(bIsPC ? PC_EVENT_ON_BLOCKED : CREATURE_EVENT_ON_BLOCKED, GetBlockingDoor());
 }
 
 // -----------------------------------------------------------------------------
@@ -759,21 +759,22 @@ void main()
         }
         case EVENT_TYPE_CREATURE:
         {
+            int bIsPC = GetIsPC(OBJECT_SELF);
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_CREATURE_ON_HEARTBEAT:            framework_OnCreatureHeartbeat();        break;
-                case EVENT_SCRIPT_CREATURE_ON_NOTICE:               framework_OnCreaturePerception();       break;
-                case EVENT_SCRIPT_CREATURE_ON_SPELLCASTAT:          framework_OnCreatureSpellCastAt();      break;
-                case EVENT_SCRIPT_CREATURE_ON_MELEE_ATTACKED:       framework_OnCreaturePhysicalAttacked(); break;
-                case EVENT_SCRIPT_CREATURE_ON_DAMAGED:              framework_OnCreatureDamaged();          break;
-                case EVENT_SCRIPT_CREATURE_ON_DISTURBED:            framework_OnCreatureDisturbed();        break;
-                case EVENT_SCRIPT_CREATURE_ON_END_COMBATROUND:      framework_OnCreatureCombatRoundEnd();   break;
-                case EVENT_SCRIPT_CREATURE_ON_DIALOGUE:             framework_OnCreatureConversation();     break;
-                case EVENT_SCRIPT_CREATURE_ON_SPAWN_IN:             framework_OnCreatureSpawn();            break;
-                case EVENT_SCRIPT_CREATURE_ON_RESTED:               framework_OnCreatureRested();           break;
-                case EVENT_SCRIPT_CREATURE_ON_DEATH:                framework_OnCreatureDeath();            break;
-                case EVENT_SCRIPT_CREATURE_ON_USER_DEFINED_EVENT:   framework_OnCreatureUserDefined();      break;
-                case EVENT_SCRIPT_CREATURE_ON_BLOCKED_BY_DOOR:      framework_OnCreatureBlocked();          break;
+                case EVENT_SCRIPT_CREATURE_ON_HEARTBEAT:            framework_OnCreatureHeartbeat(bIsPC);        break;
+                case EVENT_SCRIPT_CREATURE_ON_NOTICE:               framework_OnCreaturePerception(bIsPC);       break;
+                case EVENT_SCRIPT_CREATURE_ON_SPELLCASTAT:          framework_OnCreatureSpellCastAt(bIsPC);      break;
+                case EVENT_SCRIPT_CREATURE_ON_MELEE_ATTACKED:       framework_OnCreaturePhysicalAttacked(bIsPC); break;
+                case EVENT_SCRIPT_CREATURE_ON_DAMAGED:              framework_OnCreatureDamaged(bIsPC);          break;
+                case EVENT_SCRIPT_CREATURE_ON_DISTURBED:            framework_OnCreatureDisturbed(bIsPC);        break;
+                case EVENT_SCRIPT_CREATURE_ON_END_COMBATROUND:      framework_OnCreatureCombatRoundEnd(bIsPC);   break;
+                case EVENT_SCRIPT_CREATURE_ON_DIALOGUE:             framework_OnCreatureConversation(bIsPC);     break;
+                case EVENT_SCRIPT_CREATURE_ON_SPAWN_IN:             framework_OnCreatureSpawn(bIsPC);            break;
+                case EVENT_SCRIPT_CREATURE_ON_RESTED:               framework_OnCreatureRested(bIsPC);           break;
+                case EVENT_SCRIPT_CREATURE_ON_DEATH:                framework_OnCreatureDeath(bIsPC);            break;
+                case EVENT_SCRIPT_CREATURE_ON_USER_DEFINED_EVENT:   framework_OnCreatureUserDefined(bIsPC);      break;
+                case EVENT_SCRIPT_CREATURE_ON_BLOCKED_BY_DOOR:      framework_OnCreatureBlocked(bIsPC);          break;
             } break;
         }
         case EVENT_TYPE_TRIGGER:
