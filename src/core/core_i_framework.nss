@@ -32,6 +32,14 @@ void AddScriptSource(object oTarget, object oSource = OBJECT_SELF);
 /// @param oSource The object to remove as a local event source.
 void RemoveScriptSource(object oTarget, object oSource = OBJECT_SELF);
 
+/// @brief Get all script sources for an object.
+/// @param oTarget The object to get script sources from.
+/// @returns A query that will iterate over all script sources for the target.
+///     You can loop over the sources using `SqlStep(q)` and get each individual
+///     source with `StringToObject(SqlGetString(q, 0))`, where q is the return
+///     value of this function.
+sqlquery GetScriptSources(object oTarget);
+
 /// @brief Blacklist an object as a local event source. The blacklisted object
 ///     will not be checked as for event scripts even if it is added to the
 ///     target's source list.
@@ -46,6 +54,14 @@ void SetSourceBlacklisted(object oSource, int bBlacklist = TRUE, object oTarget 
 ///     other object that may be set as a local script source on oTarget.
 /// @param oTarget The object to check the blacklist of.
 int GetSourceBlacklisted(object oSource, object oTarget = OBJECT_SELF);
+
+/// @brief Get all script sources that an object has blacklisted.
+/// @param oTarget The object to get the source blacklist from.
+/// @returns A query that will iterate over all blacklisted script sources for
+///     the target. You can loop over the blacklist using `SqlStep(q)` and get
+///     each individual source with `StringToObject(SqlGetString(q, 0))` where q
+///     is the return value of this function.
+sqlquery GetSourceBlacklist(object oTarget);
 
 /// @brief Return the name of the currently executing event.
 string GetCurrentEvent();
@@ -386,6 +402,14 @@ void RemoveScriptSource(object oTarget, object oSource = OBJECT_SELF)
     SqlStep(q);
 }
 
+sqlquery GetScriptSources(object oTarget)
+{
+    sqlquery q = SqlPrepareQueryModule("SELECT source_id FROM event_sources " +
+        "WHERE object_id = @object_id;");
+    SqlBindString(q, "@object_id", ObjectToString(oTarget));
+    return q;
+}
+
 void SetSourceBlacklisted(object oSource, int bBlacklist = TRUE, object oTarget = OBJECT_SELF)
 {
     Notice((bBlacklist ? "Blacklisting" : "Unblacklisting") + " script source " +
@@ -406,6 +430,14 @@ int GetSourceBlacklisted(object oSource, object oTarget = OBJECT_SELF)
     SqlBindString(q, "@object_id", ObjectToString(oTarget));
     SqlBindString(q, "@source_id", ObjectToString(oSource));
     return SqlStep(q) ? SqlGetInt(q, 0) : FALSE;
+}
+
+sqlquery GetSourceBlacklist(object oTarget)
+{
+    sqlquery q = SqlPrepareQueryModule("SELECT source_id FROM event_blacklists " +
+        "WHERE object_id = @object_id;");
+    SqlBindString(q, "@object_id", ObjectToString(oTarget));
+    return q;
 }
 
 // ----- Event Management ------------------------------------------------------
