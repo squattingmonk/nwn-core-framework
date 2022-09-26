@@ -19,7 +19,7 @@
 //                                  Area of Effect
 // -----------------------------------------------------------------------------
 
-void framework_OnAoEEnter()
+void OnAoEEnter()
 {
     object oPC = GetEnteringObject();
 
@@ -30,12 +30,12 @@ void framework_OnAoEEnter()
     AddScriptSource(oPC);
 }
 
-void framework_OnAoEHeartbeat()
+void OnAoEHeartbeat()
 {
     RunEvent(AOE_EVENT_ON_HEARTBEAT);
 }
 
-void framework_OnAoEExit()
+void OnAoEExit()
 {
     object oPC = GetExitingObject();
 
@@ -52,7 +52,7 @@ void framework_OnAoEExit()
     }
 }
 
-void framework_OnAoEUserDefined()
+void OnAoEUserDefined()
 {
     RunEvent(AOE_EVENT_ON_USER_DEFINED);
 }
@@ -61,17 +61,17 @@ void framework_OnAoEUserDefined()
 //                                  Area
 // -----------------------------------------------------------------------------
 
-void framework_OnAreaHeartbeat()
+void OnAreaHeartbeat()
 {
     RunEvent(AREA_EVENT_ON_HEARTBEAT);
 }
 
-void framework_OnAreaUserDefined()
+void OnAreaUserDefined()
 {
     RunEvent(AREA_EVENT_ON_USER_DEFINED);
 }
 
-void framework_OnAreaEnter()
+void OnAreaEnter()
 {
     object oPC = GetEnteringObject();
 
@@ -94,7 +94,7 @@ void framework_OnAreaEnter()
     AddScriptSource(oPC);
 }
 
-void framework_OnAreaExit()
+void OnAreaExit()
 {
     // Don't run this event if the exiting object is a PC that is about to be booted.
     object oPC = GetExitingObject();
@@ -116,67 +116,67 @@ void framework_OnAreaExit()
 //                                  Creature
 // -----------------------------------------------------------------------------
 
-void framework_OnCreatureHeartbeat(int bIsPC)
+void OnCreatureHeartbeat(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_HEARTBEAT : CREATURE_EVENT_ON_HEARTBEAT);
 }
 
-void framework_OnCreaturePerception(int bIsPC)
+void OnCreaturePerception(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_PERCEPTION : CREATURE_EVENT_ON_PERCEPTION, GetLastPerceived());
 }
 
-void framework_OnCreatureSpellCastAt(int bIsPC)
+void OnCreatureSpellCastAt(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_SPELL_CAST_AT : CREATURE_EVENT_ON_SPELL_CAST_AT, GetLastSpellCaster());
 }
 
-void framework_OnCreaturePhysicalAttacked(int bIsPC)
+void OnCreaturePhysicalAttacked(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_PHYSICAL_ATTACKED : CREATURE_EVENT_ON_PHYSICAL_ATTACKED, GetLastAttacker());
 }
 
-void framework_OnCreatureDamaged(int bIsPC)
+void OnCreatureDamaged(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_DAMAGED : CREATURE_EVENT_ON_DAMAGED, GetLastDamager());
 }
 
-void framework_OnCreatureDisturbed(int bIsPC)
+void OnCreatureDisturbed(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_DISTURBED : CREATURE_EVENT_ON_DISTURBED, GetLastDisturbed());
 }
 
-void framework_OnCreatureCombatRoundEnd(int bIsPC)
+void OnCreatureCombatRoundEnd(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_COMBAT_ROUND_END : CREATURE_EVENT_ON_COMBAT_ROUND_END);
 }
 
-void framework_OnCreatureConversation(int bIsPC)
+void OnCreatureConversation(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_CONVERSATION : CREATURE_EVENT_ON_CONVERSATION, GetLastSpeaker());
 }
 
-void framework_OnCreatureSpawn(int bIsPC)
+void OnCreatureSpawn(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_SPAWN : CREATURE_EVENT_ON_SPAWN);
 }
 
-void framework_OnCreatureRested(int bIsPC)
+void OnCreatureRested(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_RESTED : CREATURE_EVENT_ON_RESTED);
 }
 
-void framework_OnCreatureDeath(int bIsPC)
+void OnCreatureDeath(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_DEATH : CREATURE_EVENT_ON_DEATH, GetLastKiller());
 }
 
-void framework_OnCreatureUserDefined(int bIsPC)
+void OnCreatureUserDefined(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_USER_DEFINED : CREATURE_EVENT_ON_USER_DEFINED);
 }
 
-void framework_OnCreatureBlocked(int bIsPC)
+void OnCreatureBlocked(int bIsPC)
 {
     RunEvent(bIsPC ? PC_EVENT_ON_BLOCKED : CREATURE_EVENT_ON_BLOCKED, GetBlockingDoor());
 }
@@ -185,72 +185,72 @@ void framework_OnCreatureBlocked(int bIsPC)
 //                                  Placeable
 // -----------------------------------------------------------------------------
 
-void framework_OnPlaceableClose()
+void OnPlaceableClose()
 {
     RunEvent(PLACEABLE_EVENT_ON_CLOSE, GetLastClosedBy());
 }
 
-void framework_OnPlaceableDamaged()
+void OnPlaceableDamaged()
 {
     RunEvent(PLACEABLE_EVENT_ON_DAMAGED, GetLastDamager());
 }
 
-void framework_OnPlaceableDeath()
+void OnPlaceableDeath()
 {
     RunEvent(PLACEABLE_EVENT_ON_DEATH, GetLastKiller());
 }
 
-void framework_OnPlaceableHeartbeat()
+void OnPlaceableHeartbeat()
 {
     RunEvent(PLACEABLE_EVENT_ON_HEARTBEAT);
 }
 
-void framework_OnPlaceableDisturbed()
+void OnPlaceableDisturbed()
 {
     RunEvent(PLACEABLE_EVENT_ON_DISTURBED, GetLastDisturbed());
 }
 
-void framework_OnPlaceableLock()
+void OnPlaceableLock()
 {
     RunEvent(PLACEABLE_EVENT_ON_LOCK, GetLastLocked());
 }
 
-void framework_OnPlaceablePhysicalAttacked()
+void OnPlaceablePhysicalAttacked()
 {
     RunEvent(PLACEABLE_EVENT_ON_PHYSICAL_ATTACKED, GetLastAttacker());
 }
 
-void framework_OnPlaceableOpen()
+void OnPlaceableOpen()
 {
     RunEvent(PLACEABLE_EVENT_ON_OPEN, GetLastOpenedBy());
 }
 
-void framework_OnPlaceableSpellCastAt()
+void OnPlaceableSpellCastAt()
 {
     RunEvent(PLACEABLE_EVENT_ON_SPELL_CAST_AT, GetLastSpellCaster());
 }
 
-void framework_OnPlaceableUnLock()
+void OnPlaceableUnLock()
 {
     RunEvent(PLACEABLE_EVENT_ON_UNLOCK, GetLastUnlocked());
 }
 
-void framework_OnPlaceableUsed()
+void OnPlaceableUsed()
 {
     RunEvent(PLACEABLE_EVENT_ON_USED, GetLastUsedBy());
 }
 
-void framework_OnPlaceableUserDefined()
+void OnPlaceableUserDefined()
 {
     RunEvent(PLACEABLE_EVENT_ON_USER_DEFINED);
 }
 
-void framework_OnPlaceableConversation()
+void OnPlaceableConversation()
 {
     RunEvent(PLACEABLE_EVENT_ON_CONVERSATION, GetLastSpeaker());
 }
 
-void framework_OnPlaceableClick()
+void OnPlaceableClick()
 {
     RunEvent(PLACEABLE_EVENT_ON_CLICK, GetPlaceableLastClickedBy());
 }
@@ -259,31 +259,31 @@ void framework_OnPlaceableClick()
 //                                  Trigger
 // -----------------------------------------------------------------------------
 
-void framework_OnTriggerHeartbeat()
+void OnTriggerHeartbeat()
 {
     RunEvent(TRIGGER_EVENT_ON_HEARTBEAT);
 }
 
-void framework_OnTriggerEnter()
+void OnTriggerEnter()
 {
     object oPC = GetEnteringObject();
     RunEvent(TRIGGER_EVENT_ON_ENTER, oPC);
     AddScriptSource(oPC);
 }
 
-void framework_OnTriggerExit()
+void OnTriggerExit()
 {
     object oPC = GetExitingObject();
     RemoveScriptSource(oPC);
     RunEvent(TRIGGER_EVENT_ON_EXIT, oPC);
 }
 
-void framework_OnTriggerUserDefined()
+void OnTriggerUserDefined()
 {
     RunEvent(TRIGGER_EVENT_ON_USER_DEFINED);
 }
 
-void framework_OnTriggerClick()
+void OnTriggerClick()
 {
     RunEvent(TRIGGER_EVENT_ON_CLICK, GetClickingObject());
 }
@@ -292,12 +292,12 @@ void framework_OnTriggerClick()
 //                                  Store
 // -----------------------------------------------------------------------------
 
-void framework_OnStoreOpen()
+void OnStoreOpen()
 {
     RunEvent(STORE_EVENT_ON_OPEN, GetLastOpenedBy());
 }
 
-void framework_OnStoreClose()
+void OnStoreClose()
 {
     RunEvent(STORE_EVENT_ON_CLOSE, GetLastClosedBy());
 }
@@ -306,27 +306,27 @@ void framework_OnStoreClose()
 //                                  Encounter
 // -----------------------------------------------------------------------------
 
-void framework_OnEncounterEnter()
+void OnEncounterEnter()
 {
     RunEvent(ENCOUNTER_EVENT_ON_ENTER, GetEnteringObject());
 }
 
-void framework_OnEncounterExit()
+void OnEncounterExit()
 {
     RunEvent(ENCOUNTER_EVENT_ON_EXIT, GetExitingObject());
 }
 
-void framework_OnEncounterHeartbeat()
+void OnEncounterHeartbeat()
 {
     RunEvent(ENCOUNTER_EVENT_ON_HEARTBEAT);
 }
 
-void framework_OnEncounterExhausted()
+void OnEncounterExhausted()
 {
     RunEvent(ENCOUNTER_EVENT_ON_EXHAUSTED);
 }
 
-void framework_OnEncounterUserDefined()
+void OnEncounterUserDefined()
 {
     RunEvent(ENCOUNTER_EVENT_ON_USER_DEFINED);
 }
@@ -335,7 +335,7 @@ void framework_OnEncounterUserDefined()
 //                                  Module
 // -----------------------------------------------------------------------------
 
-void framework_OnHeartbeat()
+void OnHeartbeat()
 {
     RunEvent(MODULE_EVENT_ON_HEARTBEAT);
 
@@ -353,12 +353,12 @@ void framework_OnHeartbeat()
     }
 }
 
-void framework_OnUserDefined()
+void OnUserDefined()
 {
     RunEvent(MODULE_EVENT_ON_USER_DEFINED);
 }
 
-void framework_OnModuleLoad()
+void OnModuleLoad()
 {
     // Set the spellhook event
     SetModuleOverrideSpellscript(CORE_HOOK_SPELLS);
@@ -372,7 +372,7 @@ void framework_OnModuleLoad()
     RunEvent(MODULE_EVENT_ON_MODULE_LOAD);
 }
 
-void framework_OnClientEnter()
+void OnClientEnter()
 {
     object oPC = GetEnteringObject();
 
@@ -421,7 +421,7 @@ void framework_OnClientEnter()
     }
 }
 
-void framework_OnClientLeave()
+void OnClientLeave()
 {
     object oPC = GetExitingObject();
 
@@ -438,7 +438,7 @@ void framework_OnClientLeave()
     }
 }
 
-void framework_OnActivateItem()
+void OnActivateItem()
 {
     object oItem  = GetItemActivated();
     object oPC    = GetItemActivator();
@@ -452,7 +452,7 @@ void framework_OnActivateItem()
     }
 }
 
-void framework_OnAcquireItem()
+void OnAcquireItem()
 {
     object oItem  = GetModuleItemAcquired();
     object oPC    = GetModuleItemAcquiredBy();
@@ -466,7 +466,7 @@ void framework_OnAcquireItem()
     }
 }
 
-void framework_OnUnAcquireItem()
+void OnUnAcquireItem()
 {
     object oItem  = GetModuleItemLost();
     object oPC    = GetModuleItemLostBy();
@@ -480,27 +480,27 @@ void framework_OnUnAcquireItem()
     }
 }
 
-void framework_OnPlayerDeath()
+void OnPlayerDeath()
 {
     RunEvent(MODULE_EVENT_ON_PLAYER_DEATH, GetLastPlayerDied());
 }
 
-void framework_OnPlayerDying()
+void OnPlayerDying()
 {
     RunEvent(MODULE_EVENT_ON_PLAYER_DYING, GetLastPlayerDying());
 }
 
-void framework_OnPlayerTarget()
+void OnPlayerTarget()
 {
     RunEvent(MODULE_EVENT_ON_PLAYER_TARGET);
 }
 
-void framework_OnPlayerReSpawn()
+void OnPlayerReSpawn()
 {
     RunEvent(MODULE_EVENT_ON_PLAYER_RESPAWN, GetLastRespawnButtonPresser());
 }
 
-void framework_OnPlayerRest()
+void OnPlayerRest()
 {
     object oPC = GetLastPCRested();
     int nState = RunEvent(MODULE_EVENT_ON_PLAYER_REST, oPC);
@@ -531,7 +531,7 @@ void framework_OnPlayerRest()
     }
 }
 
-void framework_OnPlayerLevelUp()
+void OnPlayerLevelUp()
 {
     object oPC = GetPCLevellingUp();
     int nState = RunEvent(MODULE_EVENT_ON_PLAYER_LEVEL_UP, oPC);
@@ -547,12 +547,12 @@ void framework_OnPlayerLevelUp()
     }
 }
 
-void framework_OnCutSceneAbort()
+void OnCutSceneAbort()
 {
     RunEvent(MODULE_EVENT_ON_CUTSCENE_ABORT, GetLastPCToCancelCutscene());
 }
 
-void framework_OnPlayerEquipItem()
+void OnPlayerEquipItem()
 {
     object oItem  = GetPCItemLastEquipped();
     object oPC    = GetPCItemLastEquippedBy();
@@ -566,7 +566,7 @@ void framework_OnPlayerEquipItem()
     }
 }
 
-void framework_OnPlayerUnEquipItem()
+void OnPlayerUnEquipItem()
 {
     object oItem  = GetPCItemLastUnequipped();
     object oPC    = GetPCItemLastUnequippedBy();
@@ -580,7 +580,7 @@ void framework_OnPlayerUnEquipItem()
     }
 }
 
-void framework_OnPlayerChat()
+void OnPlayerChat()
 {
     object oPC = GetPCChatSpeaker();
 
@@ -596,12 +596,12 @@ void framework_OnPlayerChat()
     }
 }
 
-void framework_OnPlayerGUI()
+void OnPlayerGUI()
 {
     RunEvent(MODULE_EVENT_ON_PLAYER_GUI, GetLastGuiEventPlayer());
 }
 
-void framework_OnNUI()
+void OnNUI()
 {
     object oPC    = NuiGetEventPlayer();
     int    nState = RunEvent(MODULE_EVENT_ON_NUI, oPC);
@@ -613,7 +613,7 @@ void framework_OnNUI()
     }
 }
 
-void framework_OnPlayerTileAction()
+void OnPlayerTileAction()
 {
     RunEvent(MODULE_EVENT_ON_PLAYER_TILE_ACTION, GetLastPlayerToDoTileAction());
 }
@@ -622,67 +622,67 @@ void framework_OnPlayerTileAction()
 //                                  Door
 // -----------------------------------------------------------------------------
 
-void framework_OnDoorOpen()
+void OnDoorOpen()
 {
     RunEvent(DOOR_EVENT_ON_OPEN, GetLastOpenedBy());
 }
 
-void framework_OnDoorClose()
+void OnDoorClose()
 {
     RunEvent(DOOR_EVENT_ON_CLOSE, GetLastClosedBy());
 }
 
-void framework_OnDoorDamaged()
+void OnDoorDamaged()
 {
     RunEvent(DOOR_EVENT_ON_DAMAGED, GetLastDamager());
 }
 
-void framework_OnDoorDeath()
+void OnDoorDeath()
 {
     RunEvent(DOOR_EVENT_ON_DEATH, GetLastKiller());
 }
 
-void framework_OnDoorHeartbeat()
+void OnDoorHeartbeat()
 {
     RunEvent(DOOR_EVENT_ON_HEARTBEAT);
 }
 
-void framework_OnDoorLock()
+void OnDoorLock()
 {
     RunEvent(DOOR_EVENT_ON_LOCK);
 }
 
-void framework_OnDoorPhysicalAttacked()
+void OnDoorPhysicalAttacked()
 {
     RunEvent(DOOR_EVENT_ON_PHYSICAL_ATTACKED, GetLastAttacker());
 }
 
-void framework_OnDoorSpellCastAt()
+void OnDoorSpellCastAt()
 {
     RunEvent(DOOR_EVENT_ON_SPELL_CAST_AT, GetLastSpellCaster());
 }
 
-void framework_OnDoorUnLock()
+void OnDoorUnLock()
 {
     RunEvent(DOOR_EVENT_ON_UNLOCK, GetLastUnlocked());
 }
 
-void framework_OnDoorUserDefined()
+void OnDoorUserDefined()
 {
     RunEvent(DOOR_EVENT_ON_USER_DEFINED);
 }
 
-void framework_OnDoorAreaTransitionClick()
+void OnDoorAreaTransitionClick()
 {
     RunEvent(DOOR_EVENT_ON_AREA_TRANSITION_CLICK, GetEnteringObject());
 }
 
-void framework_OnDoorConversation()
+void OnDoorConversation()
 {
     RunEvent(DOOR_EVENT_ON_CONVERSATION, GetLastSpeaker());
 }
 
-void framework_OnDoorFailToOpen()
+void OnDoorFailToOpen()
 {
     RunEvent(DOOR_EVENT_ON_FAIL_TO_OPEN, GetClickingObject());
 }
@@ -691,12 +691,12 @@ void framework_OnDoorFailToOpen()
 //                                  Trap
 // -----------------------------------------------------------------------------
 
-void framework_OnTrapDisarm()
+void OnTrapDisarm()
 {
     RunEvent(TRAP_EVENT_ON_DISARM, GetLastDisarmed());
 }
 
-void framework_OnTrapTriggered()
+void OnTrapTriggered()
 {
     RunEvent(TRAP_EVENT_ON_TRIGGERED, GetEnteringObject());
 }
@@ -715,48 +715,48 @@ void main()
         {
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_MODULE_ON_HEARTBEAT:              framework_OnHeartbeat();            break;
-                case EVENT_SCRIPT_MODULE_ON_USER_DEFINED_EVENT:     framework_OnUserDefined();          break;
-                case EVENT_SCRIPT_MODULE_ON_MODULE_LOAD:            framework_OnModuleLoad();           break;
+                case EVENT_SCRIPT_MODULE_ON_HEARTBEAT:              OnHeartbeat();            break;
+                case EVENT_SCRIPT_MODULE_ON_USER_DEFINED_EVENT:     OnUserDefined();          break;
+                case EVENT_SCRIPT_MODULE_ON_MODULE_LOAD:            OnModuleLoad();           break;
                 case EVENT_SCRIPT_MODULE_ON_MODULE_START:                                               break;
-                case EVENT_SCRIPT_MODULE_ON_CLIENT_ENTER:           framework_OnClientEnter();          break;
-                case EVENT_SCRIPT_MODULE_ON_CLIENT_EXIT:            framework_OnClientLeave();          break;
-                case EVENT_SCRIPT_MODULE_ON_ACTIVATE_ITEM:          framework_OnActivateItem();         break;
-                case EVENT_SCRIPT_MODULE_ON_ACQUIRE_ITEM:           framework_OnAcquireItem();          break;
-                case EVENT_SCRIPT_MODULE_ON_LOSE_ITEM:              framework_OnUnAcquireItem();        break;
-                case EVENT_SCRIPT_MODULE_ON_PLAYER_DEATH:           framework_OnPlayerDeath();          break;
-                case EVENT_SCRIPT_MODULE_ON_PLAYER_DYING:           framework_OnPlayerDying();          break;
-                case EVENT_SCRIPT_MODULE_ON_PLAYER_TARGET:          framework_OnPlayerTarget();         break;
-                case EVENT_SCRIPT_MODULE_ON_RESPAWN_BUTTON_PRESSED: framework_OnPlayerReSpawn();        break;
-                case EVENT_SCRIPT_MODULE_ON_PLAYER_REST:            framework_OnPlayerRest();           break;
-                case EVENT_SCRIPT_MODULE_ON_PLAYER_LEVEL_UP:        framework_OnPlayerLevelUp();        break;
-                case EVENT_SCRIPT_MODULE_ON_PLAYER_CANCEL_CUTSCENE: framework_OnCutSceneAbort();        break;
-                case EVENT_SCRIPT_MODULE_ON_EQUIP_ITEM:             framework_OnPlayerEquipItem();      break;
-                case EVENT_SCRIPT_MODULE_ON_UNEQUIP_ITEM:           framework_OnPlayerUnEquipItem();    break;
-                case EVENT_SCRIPT_MODULE_ON_PLAYER_CHAT:            framework_OnPlayerChat();           break;
-                case EVENT_SCRIPT_MODULE_ON_PLAYER_GUIEVENT:        framework_OnPlayerGUI();            break;
-                case EVENT_SCRIPT_MODULE_ON_NUI_EVENT:              framework_OnNUI();                  break;
-                case EVENT_SCRIPT_MODULE_ON_PLAYER_TILE_ACTION:     framework_OnPlayerTileAction();     break;
+                case EVENT_SCRIPT_MODULE_ON_CLIENT_ENTER:           OnClientEnter();          break;
+                case EVENT_SCRIPT_MODULE_ON_CLIENT_EXIT:            OnClientLeave();          break;
+                case EVENT_SCRIPT_MODULE_ON_ACTIVATE_ITEM:          OnActivateItem();         break;
+                case EVENT_SCRIPT_MODULE_ON_ACQUIRE_ITEM:           OnAcquireItem();          break;
+                case EVENT_SCRIPT_MODULE_ON_LOSE_ITEM:              OnUnAcquireItem();        break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_DEATH:           OnPlayerDeath();          break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_DYING:           OnPlayerDying();          break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_TARGET:          OnPlayerTarget();         break;
+                case EVENT_SCRIPT_MODULE_ON_RESPAWN_BUTTON_PRESSED: OnPlayerReSpawn();        break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_REST:            OnPlayerRest();           break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_LEVEL_UP:        OnPlayerLevelUp();        break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_CANCEL_CUTSCENE: OnCutSceneAbort();        break;
+                case EVENT_SCRIPT_MODULE_ON_EQUIP_ITEM:             OnPlayerEquipItem();      break;
+                case EVENT_SCRIPT_MODULE_ON_UNEQUIP_ITEM:           OnPlayerUnEquipItem();    break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_CHAT:            OnPlayerChat();           break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_GUIEVENT:        OnPlayerGUI();            break;
+                case EVENT_SCRIPT_MODULE_ON_NUI_EVENT:              OnNUI();                  break;
+                case EVENT_SCRIPT_MODULE_ON_PLAYER_TILE_ACTION:     OnPlayerTileAction();     break;
             } break;
         }
         case EVENT_TYPE_AREA:
         {
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_AREA_ON_HEARTBEAT:            framework_OnAreaHeartbeat();    break;
-                case EVENT_SCRIPT_AREA_ON_USER_DEFINED_EVENT:   framework_OnAreaUserDefined();  break;
-                case EVENT_SCRIPT_AREA_ON_ENTER:                framework_OnAreaEnter();        break;
-                case EVENT_SCRIPT_AREA_ON_EXIT:                 framework_OnAreaExit();         break;
+                case EVENT_SCRIPT_AREA_ON_HEARTBEAT:            OnAreaHeartbeat();    break;
+                case EVENT_SCRIPT_AREA_ON_USER_DEFINED_EVENT:   OnAreaUserDefined();  break;
+                case EVENT_SCRIPT_AREA_ON_ENTER:                OnAreaEnter();        break;
+                case EVENT_SCRIPT_AREA_ON_EXIT:                 OnAreaExit();         break;
             } break;
         }
         case EVENT_TYPE_AREAOFEFFECT:
         {
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_AREAOFEFFECT_ON_HEARTBEAT:            framework_OnAoEHeartbeat();     break;
-                case EVENT_SCRIPT_AREAOFEFFECT_ON_USER_DEFINED_EVENT:   framework_OnAoEUserDefined();   break;
-                case EVENT_SCRIPT_AREAOFEFFECT_ON_OBJECT_ENTER:         framework_OnAoEEnter();         break;
-                case EVENT_SCRIPT_AREAOFEFFECT_ON_OBJECT_EXIT:          framework_OnAoEExit();          break;
+                case EVENT_SCRIPT_AREAOFEFFECT_ON_HEARTBEAT:            OnAoEHeartbeat();     break;
+                case EVENT_SCRIPT_AREAOFEFFECT_ON_USER_DEFINED_EVENT:   OnAoEUserDefined();   break;
+                case EVENT_SCRIPT_AREAOFEFFECT_ON_OBJECT_ENTER:         OnAoEEnter();         break;
+                case EVENT_SCRIPT_AREAOFEFFECT_ON_OBJECT_EXIT:          OnAoEExit();          break;
             } break;
         }
         case EVENT_TYPE_CREATURE:
@@ -764,94 +764,94 @@ void main()
             int bIsPC = GetIsPC(OBJECT_SELF);
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_CREATURE_ON_HEARTBEAT:            framework_OnCreatureHeartbeat(bIsPC);        break;
-                case EVENT_SCRIPT_CREATURE_ON_NOTICE:               framework_OnCreaturePerception(bIsPC);       break;
-                case EVENT_SCRIPT_CREATURE_ON_SPELLCASTAT:          framework_OnCreatureSpellCastAt(bIsPC);      break;
-                case EVENT_SCRIPT_CREATURE_ON_MELEE_ATTACKED:       framework_OnCreaturePhysicalAttacked(bIsPC); break;
-                case EVENT_SCRIPT_CREATURE_ON_DAMAGED:              framework_OnCreatureDamaged(bIsPC);          break;
-                case EVENT_SCRIPT_CREATURE_ON_DISTURBED:            framework_OnCreatureDisturbed(bIsPC);        break;
-                case EVENT_SCRIPT_CREATURE_ON_END_COMBATROUND:      framework_OnCreatureCombatRoundEnd(bIsPC);   break;
-                case EVENT_SCRIPT_CREATURE_ON_DIALOGUE:             framework_OnCreatureConversation(bIsPC);     break;
-                case EVENT_SCRIPT_CREATURE_ON_SPAWN_IN:             framework_OnCreatureSpawn(bIsPC);            break;
-                case EVENT_SCRIPT_CREATURE_ON_RESTED:               framework_OnCreatureRested(bIsPC);           break;
-                case EVENT_SCRIPT_CREATURE_ON_DEATH:                framework_OnCreatureDeath(bIsPC);            break;
-                case EVENT_SCRIPT_CREATURE_ON_USER_DEFINED_EVENT:   framework_OnCreatureUserDefined(bIsPC);      break;
-                case EVENT_SCRIPT_CREATURE_ON_BLOCKED_BY_DOOR:      framework_OnCreatureBlocked(bIsPC);          break;
+                case EVENT_SCRIPT_CREATURE_ON_HEARTBEAT:            OnCreatureHeartbeat(bIsPC);        break;
+                case EVENT_SCRIPT_CREATURE_ON_NOTICE:               OnCreaturePerception(bIsPC);       break;
+                case EVENT_SCRIPT_CREATURE_ON_SPELLCASTAT:          OnCreatureSpellCastAt(bIsPC);      break;
+                case EVENT_SCRIPT_CREATURE_ON_MELEE_ATTACKED:       OnCreaturePhysicalAttacked(bIsPC); break;
+                case EVENT_SCRIPT_CREATURE_ON_DAMAGED:              OnCreatureDamaged(bIsPC);          break;
+                case EVENT_SCRIPT_CREATURE_ON_DISTURBED:            OnCreatureDisturbed(bIsPC);        break;
+                case EVENT_SCRIPT_CREATURE_ON_END_COMBATROUND:      OnCreatureCombatRoundEnd(bIsPC);   break;
+                case EVENT_SCRIPT_CREATURE_ON_DIALOGUE:             OnCreatureConversation(bIsPC);     break;
+                case EVENT_SCRIPT_CREATURE_ON_SPAWN_IN:             OnCreatureSpawn(bIsPC);            break;
+                case EVENT_SCRIPT_CREATURE_ON_RESTED:               OnCreatureRested(bIsPC);           break;
+                case EVENT_SCRIPT_CREATURE_ON_DEATH:                OnCreatureDeath(bIsPC);            break;
+                case EVENT_SCRIPT_CREATURE_ON_USER_DEFINED_EVENT:   OnCreatureUserDefined(bIsPC);      break;
+                case EVENT_SCRIPT_CREATURE_ON_BLOCKED_BY_DOOR:      OnCreatureBlocked(bIsPC);          break;
             } break;
         }
         case EVENT_TYPE_TRIGGER:
         {
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_TRIGGER_ON_HEARTBEAT:             framework_OnTriggerHeartbeat();     break;
-                case EVENT_SCRIPT_TRIGGER_ON_OBJECT_ENTER:          framework_OnTriggerEnter();         break;
-                case EVENT_SCRIPT_TRIGGER_ON_OBJECT_EXIT:           framework_OnTriggerExit();          break;
-                case EVENT_SCRIPT_TRIGGER_ON_USER_DEFINED_EVENT:    framework_OnTriggerUserDefined();   break;
-                case EVENT_SCRIPT_TRIGGER_ON_TRAPTRIGGERED:         framework_OnTrapTriggered();        break;
-                case EVENT_SCRIPT_TRIGGER_ON_DISARMED:              framework_OnTrapDisarm();           break;
-                case EVENT_SCRIPT_TRIGGER_ON_CLICKED:               framework_OnTriggerClick();         break;
+                case EVENT_SCRIPT_TRIGGER_ON_HEARTBEAT:             OnTriggerHeartbeat();     break;
+                case EVENT_SCRIPT_TRIGGER_ON_OBJECT_ENTER:          OnTriggerEnter();         break;
+                case EVENT_SCRIPT_TRIGGER_ON_OBJECT_EXIT:           OnTriggerExit();          break;
+                case EVENT_SCRIPT_TRIGGER_ON_USER_DEFINED_EVENT:    OnTriggerUserDefined();   break;
+                case EVENT_SCRIPT_TRIGGER_ON_TRAPTRIGGERED:         OnTrapTriggered();        break;
+                case EVENT_SCRIPT_TRIGGER_ON_DISARMED:              OnTrapDisarm();           break;
+                case EVENT_SCRIPT_TRIGGER_ON_CLICKED:               OnTriggerClick();         break;
             } break;
         }
         case EVENT_TYPE_PLACEABLE:
         {
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_PLACEABLE_ON_CLOSED:              framework_OnPlaceableClose();               break;
-                case EVENT_SCRIPT_PLACEABLE_ON_DAMAGED:             framework_OnPlaceableDamaged();             break;
-                case EVENT_SCRIPT_PLACEABLE_ON_DEATH:               framework_OnPlaceableDeath();               break;
-                case EVENT_SCRIPT_PLACEABLE_ON_DISARM:              framework_OnTrapDisarm();                   break;
-                case EVENT_SCRIPT_PLACEABLE_ON_HEARTBEAT:           framework_OnPlaceableHeartbeat();           break;
-                case EVENT_SCRIPT_PLACEABLE_ON_INVENTORYDISTURBED:  framework_OnPlaceableDisturbed();           break;
-                case EVENT_SCRIPT_PLACEABLE_ON_LOCK:                framework_OnPlaceableLock();                break;
-                case EVENT_SCRIPT_PLACEABLE_ON_MELEEATTACKED:       framework_OnPlaceablePhysicalAttacked();    break;
-                case EVENT_SCRIPT_PLACEABLE_ON_OPEN:                framework_OnPlaceableOpen();                break;
-                case EVENT_SCRIPT_PLACEABLE_ON_SPELLCASTAT:         framework_OnPlaceableSpellCastAt();         break;
-                case EVENT_SCRIPT_PLACEABLE_ON_TRAPTRIGGERED:       framework_OnTrapTriggered();                break;
-                case EVENT_SCRIPT_PLACEABLE_ON_UNLOCK:              framework_OnPlaceableUnLock();              break;
-                case EVENT_SCRIPT_PLACEABLE_ON_USED:                framework_OnPlaceableUsed();                break;
-                case EVENT_SCRIPT_PLACEABLE_ON_USER_DEFINED_EVENT:  framework_OnPlaceableUserDefined();         break;
-                case EVENT_SCRIPT_PLACEABLE_ON_DIALOGUE:            framework_OnPlaceableConversation();        break;
-                case EVENT_SCRIPT_PLACEABLE_ON_LEFT_CLICK:          framework_OnPlaceableClick();               break;
+                case EVENT_SCRIPT_PLACEABLE_ON_CLOSED:              OnPlaceableClose();               break;
+                case EVENT_SCRIPT_PLACEABLE_ON_DAMAGED:             OnPlaceableDamaged();             break;
+                case EVENT_SCRIPT_PLACEABLE_ON_DEATH:               OnPlaceableDeath();               break;
+                case EVENT_SCRIPT_PLACEABLE_ON_DISARM:              OnTrapDisarm();                   break;
+                case EVENT_SCRIPT_PLACEABLE_ON_HEARTBEAT:           OnPlaceableHeartbeat();           break;
+                case EVENT_SCRIPT_PLACEABLE_ON_INVENTORYDISTURBED:  OnPlaceableDisturbed();           break;
+                case EVENT_SCRIPT_PLACEABLE_ON_LOCK:                OnPlaceableLock();                break;
+                case EVENT_SCRIPT_PLACEABLE_ON_MELEEATTACKED:       OnPlaceablePhysicalAttacked();    break;
+                case EVENT_SCRIPT_PLACEABLE_ON_OPEN:                OnPlaceableOpen();                break;
+                case EVENT_SCRIPT_PLACEABLE_ON_SPELLCASTAT:         OnPlaceableSpellCastAt();         break;
+                case EVENT_SCRIPT_PLACEABLE_ON_TRAPTRIGGERED:       OnTrapTriggered();                break;
+                case EVENT_SCRIPT_PLACEABLE_ON_UNLOCK:              OnPlaceableUnLock();              break;
+                case EVENT_SCRIPT_PLACEABLE_ON_USED:                OnPlaceableUsed();                break;
+                case EVENT_SCRIPT_PLACEABLE_ON_USER_DEFINED_EVENT:  OnPlaceableUserDefined();         break;
+                case EVENT_SCRIPT_PLACEABLE_ON_DIALOGUE:            OnPlaceableConversation();        break;
+                case EVENT_SCRIPT_PLACEABLE_ON_LEFT_CLICK:          OnPlaceableClick();               break;
             } break;
         }
         case EVENT_TYPE_DOOR:
         {
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_DOOR_ON_OPEN:             framework_OnDoorOpen();                 break;
-                case EVENT_SCRIPT_DOOR_ON_CLOSE:            framework_OnDoorClose();                break;
-                case EVENT_SCRIPT_DOOR_ON_DAMAGE:           framework_OnDoorDamaged();              break;
-                case EVENT_SCRIPT_DOOR_ON_DEATH:            framework_OnDoorDeath();                break;
-                case EVENT_SCRIPT_DOOR_ON_DISARM:           framework_OnTrapDisarm();               break;
-                case EVENT_SCRIPT_DOOR_ON_HEARTBEAT:        framework_OnDoorHeartbeat();            break;
-                case EVENT_SCRIPT_DOOR_ON_LOCK:             framework_OnDoorLock();                 break;
-                case EVENT_SCRIPT_DOOR_ON_MELEE_ATTACKED:   framework_OnDoorPhysicalAttacked();     break;
-                case EVENT_SCRIPT_DOOR_ON_SPELLCASTAT:      framework_OnDoorSpellCastAt();          break;
-                case EVENT_SCRIPT_DOOR_ON_TRAPTRIGGERED:    framework_OnTrapTriggered();            break;
-                case EVENT_SCRIPT_DOOR_ON_UNLOCK:           framework_OnDoorUnLock();               break;
-                case EVENT_SCRIPT_DOOR_ON_USERDEFINED:      framework_OnDoorUserDefined();          break;
-                case EVENT_SCRIPT_DOOR_ON_CLICKED:          framework_OnDoorAreaTransitionClick();  break;
-                case EVENT_SCRIPT_DOOR_ON_DIALOGUE:         framework_OnDoorConversation();         break;
-                case EVENT_SCRIPT_DOOR_ON_FAIL_TO_OPEN:     framework_OnDoorFailToOpen();           break;
+                case EVENT_SCRIPT_DOOR_ON_OPEN:             OnDoorOpen();                 break;
+                case EVENT_SCRIPT_DOOR_ON_CLOSE:            OnDoorClose();                break;
+                case EVENT_SCRIPT_DOOR_ON_DAMAGE:           OnDoorDamaged();              break;
+                case EVENT_SCRIPT_DOOR_ON_DEATH:            OnDoorDeath();                break;
+                case EVENT_SCRIPT_DOOR_ON_DISARM:           OnTrapDisarm();               break;
+                case EVENT_SCRIPT_DOOR_ON_HEARTBEAT:        OnDoorHeartbeat();            break;
+                case EVENT_SCRIPT_DOOR_ON_LOCK:             OnDoorLock();                 break;
+                case EVENT_SCRIPT_DOOR_ON_MELEE_ATTACKED:   OnDoorPhysicalAttacked();     break;
+                case EVENT_SCRIPT_DOOR_ON_SPELLCASTAT:      OnDoorSpellCastAt();          break;
+                case EVENT_SCRIPT_DOOR_ON_TRAPTRIGGERED:    OnTrapTriggered();            break;
+                case EVENT_SCRIPT_DOOR_ON_UNLOCK:           OnDoorUnLock();               break;
+                case EVENT_SCRIPT_DOOR_ON_USERDEFINED:      OnDoorUserDefined();          break;
+                case EVENT_SCRIPT_DOOR_ON_CLICKED:          OnDoorAreaTransitionClick();  break;
+                case EVENT_SCRIPT_DOOR_ON_DIALOGUE:         OnDoorConversation();         break;
+                case EVENT_SCRIPT_DOOR_ON_FAIL_TO_OPEN:     OnDoorFailToOpen();           break;
             } break;
         }
         case EVENT_TYPE_ENCOUNTER:
         {
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_ENCOUNTER_ON_OBJECT_ENTER:        framework_OnEncounterEnter();       break;
-                case EVENT_SCRIPT_ENCOUNTER_ON_OBJECT_EXIT:         framework_OnEncounterExit();        break;
-                case EVENT_SCRIPT_ENCOUNTER_ON_HEARTBEAT:           framework_OnEncounterHeartbeat();   break;
-                case EVENT_SCRIPT_ENCOUNTER_ON_ENCOUNTER_EXHAUSTED: framework_OnEncounterExhausted();   break;
-                case EVENT_SCRIPT_ENCOUNTER_ON_USER_DEFINED_EVENT:  framework_OnEncounterUserDefined(); break;
+                case EVENT_SCRIPT_ENCOUNTER_ON_OBJECT_ENTER:        OnEncounterEnter();       break;
+                case EVENT_SCRIPT_ENCOUNTER_ON_OBJECT_EXIT:         OnEncounterExit();        break;
+                case EVENT_SCRIPT_ENCOUNTER_ON_HEARTBEAT:           OnEncounterHeartbeat();   break;
+                case EVENT_SCRIPT_ENCOUNTER_ON_ENCOUNTER_EXHAUSTED: OnEncounterExhausted();   break;
+                case EVENT_SCRIPT_ENCOUNTER_ON_USER_DEFINED_EVENT:  OnEncounterUserDefined(); break;
             } break;
         }
         case EVENT_TYPE_STORE:
         {
             switch (nCurrentEvent)
             {
-                case EVENT_SCRIPT_STORE_ON_OPEN:    framework_OnStoreOpen();    break;
-                case EVENT_SCRIPT_STORE_ON_CLOSE:   framework_OnStoreClose();   break;
+                case EVENT_SCRIPT_STORE_ON_OPEN:    OnStoreOpen();    break;
+                case EVENT_SCRIPT_STORE_ON_CLOSE:   OnStoreClose();   break;
             } break;
         }
     }
