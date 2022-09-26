@@ -27,6 +27,7 @@ void framework_OnAoEEnter()
         AddListObject(OBJECT_SELF, oPC, AOE_ROSTER, TRUE);
 
     RunEvent(AOE_EVENT_ON_ENTER, oPC);
+    AddScriptSource(oPC);
 }
 
 void framework_OnAoEHeartbeat()
@@ -41,6 +42,7 @@ void framework_OnAoEExit()
     if (INCLUDE_NPC_IN_AOE_ROSTER || GetIsPC(oPC))
         RemoveListObject(OBJECT_SELF, oPC, AOE_ROSTER);
 
+    RemoveScriptSource(oPC);
     int nState = RunEvent(AOE_EVENT_ON_EXIT, oPC);
 
     if (!(nState & EVENT_STATE_ABORT))
