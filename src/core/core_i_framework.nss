@@ -4,7 +4,6 @@
 /// @brief  Main include for the Core Framework.
 /// ----------------------------------------------------------------------------
 
-#include "util_i_lists"
 #include "util_i_libraries"
 #include "util_i_timers"
 #include "core_i_constants"
