@@ -39,9 +39,7 @@ void OnAoEExit()
 {
     object oPC = GetExitingObject();
 
-    if (INCLUDE_NPC_IN_AOE_ROSTER || GetIsPC(oPC))
-        RemoveListObject(OBJECT_SELF, oPC, AOE_ROSTER);
-
+    RemoveListObject(OBJECT_SELF, oPC, AOE_ROSTER);
     RemoveScriptSource(oPC);
     int nState = RunEvent(AOE_EVENT_ON_EXIT, oPC);
 
