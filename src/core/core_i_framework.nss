@@ -955,7 +955,7 @@ void HookObjectEvents(object oObject, int bSkipHeartbeat = TRUE, int bStoreOldEv
                 break;
             case OBJECT_TYPE_AREA_OF_EFFECT:
                 nStart = EVENT_SCRIPT_AREAOFEFFECT_ON_HEARTBEAT;
-                nEnd   = EVENT_SCRIPT_AREA_ON_EXIT;
+                nEnd   = EVENT_SCRIPT_AREAOFEFFECT_ON_OBJECT_EXIT;
                 if (bSkipHeartbeat)
                     nStart++;
                 break;
