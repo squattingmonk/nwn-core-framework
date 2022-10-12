@@ -324,6 +324,7 @@ void InitializeCoreFramework()
         SetEventDebugLevel(AREA_EVENT_ON_HEARTBEAT,      HEARTBEAT_DEBUG_LEVEL);
         SetEventDebugLevel(AOE_EVENT_ON_HEARTBEAT,       HEARTBEAT_DEBUG_LEVEL);
         SetEventDebugLevel(CREATURE_EVENT_ON_HEARTBEAT,  HEARTBEAT_DEBUG_LEVEL);
+        SetEventDebugLevel(PC_EVENT_ON_HEARTBEAT,        HEARTBEAT_DEBUG_LEVEL);
         SetEventDebugLevel(DOOR_EVENT_ON_HEARTBEAT,      HEARTBEAT_DEBUG_LEVEL);
         SetEventDebugLevel(ENCOUNTER_EVENT_ON_HEARTBEAT, HEARTBEAT_DEBUG_LEVEL);
         SetEventDebugLevel(PLACEABLE_EVENT_ON_HEARTBEAT, HEARTBEAT_DEBUG_LEVEL);
@@ -331,7 +332,10 @@ void InitializeCoreFramework()
     }
 
     if (PERCEPTION_DEBUG_LEVEL)
+    {
         SetEventDebugLevel(CREATURE_EVENT_ON_PERCEPTION, PERCEPTION_DEBUG_LEVEL);
+        SetEventDebugLevel(PC_EVENT_ON_PERCEPTION,       PERCEPTION_DEBUG_LEVEL);
+    }
 
     Notice("Initializing Core Framework...");
     Notice("Creating database tables...");
