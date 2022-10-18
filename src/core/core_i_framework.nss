@@ -132,6 +132,8 @@ void ClearEventState(string sEvent = "");
 ///     whether oTarget is a plugin or other object.
 void RegisterEventScript(object oTarget, string sEvent, string sScripts, float fPriority = -1.0);
 
+void RegisterEventLibrary(object oPlugin, string sLibrary);
+
 /// @brief Run an event, causing all subscribed scripts to trigger.
 /// @param sEvent The name of the event
 /// @param oInit The object triggering the event (e.g, a PC OnClientEnter)
@@ -594,6 +596,28 @@ void RegisterEventScript(object oTarget, string sEvent, string sScripts, float f
 void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0)
 {
     RegisterEventScript(oTarget, sEvent, sScripts, fPriority);
+}
+
+void RegisterEventLibrary(object oPlugin, string sLibrary)
+{
+    string sRegex = "@EVENT\\[([A-Z_]*):?(\\d{1,2}\\.\\d{1}|first|only|last|default)?\\](?:.|\n)*?[a-z]\\s+([a-z_][a-zA-Z0-9_]*)\\s*\\(";
+    string sScript = ResManGetFileContents(sLibrary, RESTYPE_NSS);
+    if (sScript == "")
+        return;
+    
+    json jScripts = RegExpIterate(sRegex, sScript);
+    if (jScripts == JsonArray())
+        return;
+
+    int n; for (n; n < JsonGetLength(jScripts); n++)
+    {
+        string sIndex = IntToString(n);
+        string sEvent = JsonGetString(JsonPointer(jScripts, "/" + sIndex + "/1"));
+        float fPriority = StringToPriority(JsonGetString(JsonPointer(jScripts, "/" + sIndex + "/2")), GLOBAL_EVENT_PRIORITY);
+        string sScript = JsonGetString(JsonPointer(jScripts, "/" + sIndex + "/3"));
+
+        RegisterEventScript(oPlugin, sEvent, sScript, fPriority);
+    }
 }
 
 // Private function. Checks oTarget for a builder-specified event hook string
