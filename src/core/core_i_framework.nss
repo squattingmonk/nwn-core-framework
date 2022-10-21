@@ -986,6 +986,8 @@ void HookObjectEvents(object oObject, int bSkipHeartbeat = TRUE, int bStoreOldEv
                 nEnd   = EVENT_SCRIPT_TRIGGER_ON_CLICKED;
                 if (bSkipHeartbeat)
                     nStart++;
+                if (JsonPointer(ObjectToJson(oObject), "/LinkedTo/value") == JsonString(""))
+                    nEnd--;
                 break;
             case OBJECT_TYPE_STORE:
                 nStart = EVENT_SCRIPT_STORE_ON_OPEN;
