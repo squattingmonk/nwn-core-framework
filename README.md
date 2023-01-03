@@ -13,7 +13,7 @@ warned.
 - NWN:EE >= v87.8193.34
 - [nwnsc](https://github.com/nwneetools/nwnsc)
 - [neverwinter.nim](https://github.com/niv/neverwinter.nim) >= 1.5.5
-- [nasher](https://github.com/squattingmonk/nasher) >= 0.18.x
+- [nasher](https://github.com/squattingmonk/nasher) >= 0.20.x
 
 ## Installation
 Get the code:
