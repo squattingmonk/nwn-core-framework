@@ -120,7 +120,9 @@ const int INITIALIZATION_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
 const string INSTALLED_LIBRARIES = "*_l_plugin";
 
 /// This is a comma-separated list of plugins that should be activated when the
-/// Core Framework is initialized.
+/// Core Framework is initialized.  If this list is empty, all plugins discovered
+/// in INSTALLED_LIBRARIES above will be automatically activated.  If plugins
+/// are specified here, *only* the listed plugins will be activated.
 const string INSTALLED_PLUGINS = "";
 
 // -----------------------------------------------------------------------------
