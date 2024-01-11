@@ -178,6 +178,15 @@ void HookObjectEvents(object oObject, int bSkipHeartbeat = TRUE, int bStoreOldEv
 /// @param sPlugin The plugin's unique identifier in the database.
 object GetPlugin(string sPlugin);
 
+/// @brief Prepare a query that can be stepped to obtain the plugin_id of all
+///     installed plugins, regardless of activation status.
+sqlquery GetPlugins();
+
+/// @brief Count number of installed plugins.
+/// @returns 0 if no plugins are installed, otherwise the number of plugins
+///     installed, regardless of activation status.
+int CountPlugins();
+
 /// @brief Create a plugin object and register it in the database.
 /// @param sPlugin The plugin's unique identifier in the database.
 /// @returns The created plugin object.
@@ -373,9 +382,18 @@ void InitializeCoreFramework()
 
     Notice("Activating plugins...");
     {
-        int i, nCount = CountList(INSTALLED_PLUGINS);
-        for (i = 0; i < nCount; i++)
-            ActivatePlugin(GetListItem(INSTALLED_PLUGINS, i));
+        if (INSTALLED_PLUGINS == "" && CountPlugins() > 0)
+        {
+            sqlquery q = GetPlugins();
+            while (SqlStep(q))
+                ActivatePlugin(SqlGetString(q, 0));
+        }
+        else
+        {
+            int i, nCount = CountList(INSTALLED_PLUGINS);
+            for (i = 0; i < nCount; i++)
+                ActivatePlugin(GetListItem(INSTALLED_PLUGINS, i));
+        }
     }
 
     Notice("Successfully initialized Core Framework");
@@ -1018,6 +1036,17 @@ object GetPlugin(string sPlugin)
     return SqlStep(q) ? StringToObject(SqlGetString(q, 0)) : OBJECT_INVALID;
 }
 
+sqlquery GetPlugins()
+{
+    return SqlPrepareQueryModule("SELECT plugin_id FROM event_plugins;");
+}
+
+int CountPlugins()
+{
+    sqlquery q = SqlPrepareQueryModule("SELECT COUNT(plugin_id) FROM event_plugins;");
+    return SqlStep(q) ? SqlGetInt(q, 0) : 0;
+}
+
 object CreatePlugin(string sPlugin)
 {
     if (sPlugin == "")
@@ -1097,7 +1126,7 @@ int _ActivatePlugin(string sPlugin, int bActive, int bForce)
         SqlBindString(q, "@object_id", ObjectToString(oPlugin));
         SqlStep(q);
 
-        Notice("Plugin " + sVerbed, oPlugin);
+        Notice("Plugin " + sPlugin + " " + sVerbed, oPlugin);
         return TRUE;
     }
 
