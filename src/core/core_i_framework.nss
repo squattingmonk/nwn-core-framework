@@ -346,8 +346,8 @@ void InitializeCoreFramework()
         SetEventDebugLevel(PC_EVENT_ON_PERCEPTION,       PERCEPTION_DEBUG_LEVEL);
     }
 
-    Notice("Initializing Core Framework...");
-    Notice("Creating database tables...");
+    Debug("Initializing Core Framework...");
+    Debug("Creating database tables...");
 
     SqlCreateTableModule("event_plugins",
         "plugin_id TEXT NOT NULL PRIMARY KEY, " +
@@ -377,10 +377,10 @@ void InitializeCoreFramework()
         "SELECT plugin_id, object_id, event, script, priority " +
         "FROM event_scripts LEFT JOIN v_active_plugins USING(object_id);");
 
-    Notice("Loading libraries...");
+    Debug("Loading libraries...");
     LoadLibrariesByPattern(INSTALLED_LIBRARIES);
 
-    Notice("Activating plugins...");
+    Debug("Activating plugins...");
     {
         if (INSTALLED_PLUGINS == "" && CountPlugins() > 0)
         {
@@ -396,7 +396,7 @@ void InitializeCoreFramework()
         }
     }
 
-    Notice("Successfully initialized Core Framework");
+    Debug("Successfully initialized Core Framework");
     SetDebugLevel(DEFAULT_DEBUG_LEVEL, oModule);
 }
 
@@ -406,7 +406,7 @@ void InitializeCoreFramework()
 
 void AddScriptSource(object oTarget, object oSource = OBJECT_SELF)
 {
-    Notice("Adding script source " + GetDebugPrefix(oSource), oTarget);
+    Debug("Adding script source " + GetDebugPrefix(oSource), DEBUG_LEVEL_DEBUG, oTarget);
     sqlquery q = SqlPrepareQueryModule("INSERT OR IGNORE INTO event_sources " +
         "(object_id, source_id) VALUES (@object_id, @source_id);");
     SqlBindString(q, "@object_id", ObjectToString(oTarget));
@@ -416,7 +416,7 @@ void AddScriptSource(object oTarget, object oSource = OBJECT_SELF)
 
 void RemoveScriptSource(object oTarget, object oSource = OBJECT_SELF)
 {
-    Notice("Removing script source " + GetDebugPrefix(oSource), oTarget);
+    Debug("Removing script source " + GetDebugPrefix(oSource), DEBUG_LEVEL_DEBUG, oTarget);
     sqlquery q = SqlPrepareQueryModule("DELETE FROM event_sources WHERE " +
                     "object_id = @object_id AND source_id = @source_id;");
     SqlBindString(q, "@object_id", ObjectToString(oTarget));
@@ -434,8 +434,8 @@ sqlquery GetScriptSources(object oTarget)
 
 void SetSourceBlacklisted(object oSource, int bBlacklist = TRUE, object oTarget = OBJECT_SELF)
 {
-    Notice((bBlacklist ? "Blacklisting" : "Unblacklisting") + " script source " +
-        GetDebugPrefix(oSource), oTarget);
+    Debug((bBlacklist ? "Blacklisting" : "Unblacklisting") + " script source " +
+        GetDebugPrefix(oSource), DEBUG_LEVEL_DEBUG, oTarget);
     string sSql = bBlacklist ?
         "INSERT OR IGNORE INTO event_blacklists VALUES (@object_id, @source_id);" :
         "DELETE FROM event_blacklists WHERE object_id = @object_id AND source_id = @source_id;";
@@ -591,11 +591,11 @@ void RegisterEventScript(object oTarget, string sEvent, string sScripts, float f
     for (i = 0; i < nCount; i++)
     {
         string sScript = GetListItem(sScripts, i);
-        Notice("Registering event script :" +
+        Debug("Registering event script :" +
             "\n    Source: " + sTarget +
             "\n    Event: " + sEvent +
             "\n    Script: " + sScript +
-            "\n    Priority: " + sPriority, oTarget);
+            "\n    Priority: " + sPriority, DEBUG_LEVEL_DEBUG, oTarget);
 
         sqlquery q = SqlPrepareQueryModule("INSERT INTO event_scripts " +
                         "(object_id, event, script, priority) VALUES " +
@@ -640,7 +640,7 @@ void ExpandEventScripts(object oTarget, string sEvent, float fDefaultPriority)
     for (i = 0; i < nScripts; i++)
     {
         sScript = GetListItem(sScripts, i);
-        Notice("Expanding " + sEvent + " scripts: " + sScript, oTarget);
+        Debug("Expanding " + sEvent + " scripts: " + sScript, DEBUG_LEVEL_DEBUG, oTarget);
 
         sPriority = StringParse(sScript, ":", TRUE);
         if (sPriority != sScript)
@@ -674,7 +674,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // Initialize event status
     ClearEventState(sEvent);
 
-    Notice("Preparing to run event " + sEvent, oSelf);
+    Debug("Preparing to run event " + sEvent, DEBUG_LEVEL_DEBUG, oSelf);
 
     // Expand the target's own local event scripts
     ExpandEventScripts(oSelf, sEvent, LOCAL_EVENT_PRIORITY);
@@ -748,9 +748,9 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
         if (nExecuted++ && fPriority == EVENT_PRIORITY_DEFAULT)
             break;
 
-        Notice("Executing event script " + sScript + " from " +
+        Debug("Executing event script " + sScript + " from " +
                GetDebugPrefix(StringToObject(sSource)) + " with a priority of " +
-               PriorityToString(fPriority), oSelf);
+               PriorityToString(fPriority), DEBUG_LEVEL_DEBUG, oSelf);
 
         SetScriptParam(EVENT_LAST, sEvent);       // Current event
         SetScriptParam(EVENT_TRIGGERED, sInit);   // Triggering object
@@ -1052,7 +1052,7 @@ object CreatePlugin(string sPlugin)
     if (sPlugin == "")
         return OBJECT_INVALID;
 
-    Notice("Creating plugin " + sPlugin);
+    Debug("Creating plugin " + sPlugin);
 
     // It's possible the builder has pre-created a plugin object with all
     // the necessary variables on it. Try to create it. If it's not valid,
@@ -1126,7 +1126,7 @@ int _ActivatePlugin(string sPlugin, int bActive, int bForce)
         SqlBindString(q, "@object_id", ObjectToString(oPlugin));
         SqlStep(q);
 
-        Notice("Plugin " + sPlugin + " " + sVerbed, oPlugin);
+        Debug("Plugin " + sPlugin + " " + sVerbed, DEBUG_LEVEL_DEBUG, oPlugin);
         return TRUE;
     }
 
