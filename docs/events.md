@@ -34,6 +34,34 @@ game events for the module, AoEs, areas, doors, encounters, placeables, stores,
 triggers, traps, and creatures. PCs also have their own creature events that use
 the prefix `OnPC*` instead of `OnCreature*`.
 
+Scripts can also be registered using the `RegisterPluginScripts()` function.
+This function takes the [object to register the script on](#script-sources) and
+a CSV list of glob patterns matching nss filenames.  This function requires
+a specified decorator be applied to each event script in a script library.
+The decorator must reside in a comment immediately preceding the specific
+function and must contain the following:
+
+- Decorator (required):  `@EVENT[...]`
+- Event Reference (required):  `OnModuleLoad`
+- [Priority](#script-priorities) (optional)
+
+Example decorators:
+
+```c
+// @EVENT[OnModuleLoad:first]
+void pw_OnModuleLoad() {...}
+
+// @EVENT[OnPlayerDeath]
+void pw_OnPlayerDeath() {...}
+
+// @EVENT[OnPlayerChat:3.0]
+void pw_OnPlayerChat() {...}
+```
+
+While registering scripts decorated with `@EVENT[...]`, `RegisterPluginScripts()`
+will also register any library scripts decorated with `@LIBRARY[]` in script
+libraries matching the given glob patterns.
+
 ## Script Sources
 Since scripts are not placed directly into an object's event script slots, the
 framework needs to know what scripts should be run for an event. There are
