@@ -939,13 +939,38 @@ void HookObjectEvent(object oObject, int nEvent, int bStoreOldEvent = TRUE)
 {
     string sScript = GetEventScript(oObject, nEvent);
     SetEventScript(oObject, nEvent, CORE_HOOK_NWN);
+
+    if (sScript == "" || sScript == "default")
+    {
+        switch (nEvent)
+        {
+            case EVENT_SCRIPT_DOOR_ON_TRAPTRIGGERED:
+            case EVENT_SCRIPT_PLACEABLE_ON_TRAPTRIGGERED:
+            case EVENT_SCRIPT_TRIGGER_ON_TRAPTRIGGERED:
+                sScript = Get2DAString("traps", "TrapScript", GetTrapBaseType(oObject));
+                if (sScript != "")
+                    sScript = GetStringLowerCase(sScript + ":default");
+                break;
+            case EVENT_SCRIPT_CREATURE_ON_DIALOGUE:
+            case EVENT_SCRIPT_DOOR_ON_DIALOGUE:
+            case EVENT_SCRIPT_PLACEABLE_ON_DIALOGUE:
+                sScript = "nw_g0_conversat:default"; break;
+            case EVENT_SCRIPT_DOOR_ON_CLICKED:
+            case EVENT_SCRIPT_TRIGGER_ON_CLICKED:
+                sScript = "nw_g0_transition:default"; break;
+        }
+
+        if (sScript != "")
+            bStoreOldEvent = TRUE;
+    }
+
     if (!bStoreOldEvent || sScript == "" || sScript == CORE_HOOK_NWN)
         return;
 
     string sEvent = GetEventName(nEvent);
     if (GetIsPC(oObject) && GetStringLeft(sEvent, 10) == "OnCreature")
         sEvent = ReplaceSubString(sEvent, "OnPC", 0, 9);
-    AddLocalListItem(oObject, sEvent, sScript);
+    AddLocalListItem(oObject, sEvent, sScript, TRUE);
 }
 
 void HookObjectEvents(object oObject, int bSkipHeartbeat = TRUE, int bStoreOldEvents = TRUE)
