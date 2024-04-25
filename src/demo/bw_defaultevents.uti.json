@@ -286,7 +286,7 @@
         },
         "Value": {
           "type": "cexostring",
-          "value": "nw_c2_default4,nw_g0_conversat:default"
+          "value": "nw_c2_default4"
         }
       },
       {
@@ -437,66 +437,6 @@
         "Value": {
           "type": "cexostring",
           "value": "nw_c2_defaultd"
-        }
-      },
-      {
-        "__struct_id": 0,
-        "Name": {
-          "type": "cexostring",
-          "value": "OnPlaceableConversation"
-        },
-        "Type": {
-          "type": "dword",
-          "value": 3
-        },
-        "Value": {
-          "type": "cexostring",
-          "value": "nw_g0_conversat:default"
-        }
-      },
-      {
-        "__struct_id": 0,
-        "Name": {
-          "type": "cexostring",
-          "value": "OnDoorConversation"
-        },
-        "Type": {
-          "type": "dword",
-          "value": 3
-        },
-        "Value": {
-          "type": "cexostring",
-          "value": "nw_g0_conversat:default"
-        }
-      },
-      {
-        "__struct_id": 0,
-        "Name": {
-          "type": "cexostring",
-          "value": "OnDoorAreaTransitionClick"
-        },
-        "Type": {
-          "type": "dword",
-          "value": 3
-        },
-        "Value": {
-          "type": "cexostring",
-          "value": "nw_g0_transition:default"
-        }
-      },
-      {
-        "__struct_id": 0,
-        "Name": {
-          "type": "cexostring",
-          "value": "OnTriggerClick"
-        },
-        "Type": {
-          "type": "dword",
-          "value": 3
-        },
-        "Value": {
-          "type": "cexostring",
-          "value": "nw_g0_transition:default"
         }
       }
     ]
