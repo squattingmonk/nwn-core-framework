@@ -286,7 +286,22 @@
         },
         "Value": {
           "type": "cexostring",
-          "value": "nw_c2_default4, nw_g0_conversat:default"
+          "value": "nw_c2_default4,nw_g0_conversat:default"
+        }
+      },
+      {
+        "__struct_id": 0,
+        "Name": {
+          "type": "cexostring",
+          "value": "OnPCConversation"
+        },
+        "Type": {
+          "type": "dword",
+          "value": 3
+        },
+        "Value": {
+          "type": "cexostring",
+          "value": "nw_g0_conversat:default"
         }
       },
       {
@@ -467,6 +482,36 @@
         "Value": {
           "type": "cexostring",
           "value": "nw_g0_conversat:default"
+        }
+      },
+      {
+        "__struct_id": 0,
+        "Name": {
+          "type": "cexostring",
+          "value": "OnDoorAreaTransitionClick"
+        },
+        "Type": {
+          "type": "dword",
+          "value": 3
+        },
+        "Value": {
+          "type": "cexostring",
+          "value": "nw_g0_transition:default"
+        }
+      },
+      {
+        "__struct_id": 0,
+        "Name": {
+          "type": "cexostring",
+          "value": "OnTriggerClick"
+        },
+        "Type": {
+          "type": "dword",
+          "value": 3
+        },
+        "Value": {
+          "type": "cexostring",
+          "value": "nw_g0_transition:default"
         }
       }
     ]
