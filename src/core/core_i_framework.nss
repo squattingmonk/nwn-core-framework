@@ -611,12 +611,17 @@ void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float 
     RegisterEventScript(oTarget, sEvent, sScripts, fPriority);
 }
 
+void DumpEventScripts(string sEvent, int bSearchAll = FALSE)
+{
+
+}
+
 void RegisterPluginScripts(object oPlugin, string sPatterns, int bLoadLibraries = TRUE)
 {
     Debug("Loading plugin script libraries matching \"" + sPatterns + "\"");
     
     json jLibraries, jScripts;
-    if ((jLibraries = FilterByPatterns(_GetScriptsByPrefix(JsonArray(), "", RESTYPE_NSS), ListToJson(sPatterns))) == JsonArray())
+    if ((jLibraries = FilterByPatterns(_GetScriptsByPrefix(JSON_ARRAY, "", RESTYPE_NSS), ListToJson(sPatterns))) == JSON_ARRAY)
     {
         Debug("No plugin script libraries found matching \"" + sPatterns + "\"");
         return;
@@ -639,7 +644,7 @@ void RegisterPluginScripts(object oPlugin, string sPatterns, int bLoadLibraries 
             continue;
         }
 
-        if ((jScripts = RegExpIterate(sEventRegex, sContent)) == JsonArray())
+        if ((jScripts = RegExpIterate(sEventRegex, sContent)) == JSON_ARRAY)
             Debug("No @EVENT[...] decorators found in " + sLibrary + ".nss");
         else
         {
@@ -657,7 +662,7 @@ void RegisterPluginScripts(object oPlugin, string sPatterns, int bLoadLibraries 
 
         if (bLoadLibraries)
         {
-            if ((jScripts = RegExpIterate(sLibRegex, sContent)) == JsonArray())
+            if ((jScripts = RegExpIterate(sLibRegex, sContent)) == JSON_ARRAY)
                 Debug("No @LIBRARY[] decorators found in " + sLibrary + ".nss");
             else
             {
