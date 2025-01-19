@@ -572,7 +572,7 @@ void RegisterEventScript(object oTarget, string sEvent, string sScripts, float f
          fPriority != EVENT_PRIORITY_ONLY  && fPriority != EVENT_PRIORITY_DEFAULT))
     {
         CriticalError("Could not register scripts: " +
-            "\n    Source: " + sTarget +
+            "\n    Source: " + sTarget + " (" + GetName(oTarget) + " [" + GetTag(oTarget) + "])" +
             "\n    Event: " + sEvent +
             "\n    Scripts: " + sScripts +
             "\n    Priority: " + sPriority +
@@ -591,11 +591,14 @@ void RegisterEventScript(object oTarget, string sEvent, string sScripts, float f
     for (i = 0; i < nCount; i++)
     {
         string sScript = GetListItem(sScripts, i);
-        Debug("Registering event script :" +
-            "\n    Source: " + sTarget +
-            "\n    Event: " + sEvent +
-            "\n    Script: " + sScript +
-            "\n    Priority: " + sPriority, DEBUG_LEVEL_DEBUG, oTarget);
+        if (IsDebugging(DEBUG_LEVEL_DEBUG))
+        {
+            Debug("Registering event script :" +
+                "\n    Source: " + sTarget + " (" + GetName(oTarget) + " [" + GetTag(oTarget) + "])" +
+                "\n    Event: " + sEvent +
+                "\n    Script: " + sScript +
+                "\n    Priority: " + sPriority, DEBUG_LEVEL_DEBUG, oTarget);
+        }
 
         sqlquery q = SqlPrepareQueryModule("INSERT INTO event_scripts " +
                         "(object_id, event, script, priority) VALUES " +
@@ -674,7 +677,13 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
     // Initialize event status
     ClearEventState(sEvent);
 
-    Debug("Preparing to run event " + sEvent, DEBUG_LEVEL_DEBUG, oSelf);
+    if (IsDebugging(DEBUG_LEVEL_DEBUG))
+    {
+        Debug("Preparing to run event " + sEvent + ":" +
+            "\n    Initializer: " + (oInit == OBJECT_INVALID ? "[Invalid]" : GetName(oInit)) + " [" + GetTag(oInit) + "]" +
+            "\n    Self: " + (oSelf == OBJECT_INVALID ? "[Invalid]" : GetName(oSelf)) + " [" + GetTag(oSelf) + "]" +
+            "\n    Local: " + (bLocalOnly ? "TRUE" : "FALSE"), DEBUG_LEVEL_DEBUG, oSelf);
+    }
 
     // Expand the target's own local event scripts
     ExpandEventScripts(oSelf, sEvent, LOCAL_EVENT_PRIORITY);
@@ -748,9 +757,12 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
         if (nExecuted++ && fPriority == EVENT_PRIORITY_DEFAULT)
             break;
 
-        Debug("Executing event script " + sScript + " from " +
-               GetDebugPrefix(StringToObject(sSource)) + " with a priority of " +
-               PriorityToString(fPriority), DEBUG_LEVEL_DEBUG, oSelf);
+        if (IsDebugging)
+        {
+            Debug("Executing event script " + sScript + " from " +
+                GetDebugPrefix(StringToObject(sSource)) + " with a priority of " +
+                PriorityToString(fPriority), DEBUG_LEVEL_DEBUG, oSelf);
+        }
 
         SetScriptParam(EVENT_LAST, sEvent);       // Current event
         SetScriptParam(EVENT_TRIGGERED, sInit);   // Triggering object
