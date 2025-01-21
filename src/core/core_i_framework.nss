@@ -582,8 +582,21 @@ void RegisterEventScript(object oTarget, string sEvent, string sScripts, float f
     // Handle NWNX script registration.
     if (GetStringLeft(sEvent, 4) == "NWNX")
     {
-        SetScriptParam(EVENT_NAME, sEvent);
-        ExecuteScript(CORE_HOOK_NWNX);
+        if (NWNXGetIsAvailable())
+        {
+            SetScriptParam(EVENT_NAME, sEvent);
+            ExecuteScript(CORE_HOOK_NWNX);
+        }
+        else
+        {
+            CriticalError("Could not register scripts: " +
+                "\n    Source: " + sTarget +
+                "\n    Event: " + sEvent +
+                "\n    Scripts: " + sScripts +
+                "\n    Priority: " + sPriority +
+                "\n    Error: NWNX:EE not available", oTarget);
+            return;
+        }
     }
 
     int i, nCount = CountList(sScripts);
@@ -592,7 +605,7 @@ void RegisterEventScript(object oTarget, string sEvent, string sScripts, float f
         string sScript = GetListItem(sScripts, i);
         if (IsDebugging(DEBUG_LEVEL_DEBUG))
         {
-            Debug("Registering event script :" +
+            Debug("Registering event script:" +
                 "\n    Source: " + sTarget + " (" + GetName(oTarget) + " [" + GetTag(oTarget) + "])" +
                 "\n    Event: " + sEvent +
                 "\n    Script: " + sScript +
