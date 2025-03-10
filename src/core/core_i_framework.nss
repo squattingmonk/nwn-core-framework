@@ -132,6 +132,22 @@ void ClearEventState(string sEvent = "");
 ///     whether oTarget is a plugin or other object.
 void RegisterEventScript(object oTarget, string sEvent, string sScripts, float fPriority = -1.0);
 
+/// @brief Register all scripts decoarted with @EVENT[...] in any nss file
+///     matching the given glob patterns.
+/// @param oPlugin A plugin's data object.
+/// @param sPatterns A CSV list of glob patterns to match. Supported syntax:
+///     - `*`: match zero or more characters
+///     - `?`: match a single character
+///     - `[abc]` : match any of a, b, or c
+///     - `[a-z]` : match any character from a-z
+///     - other text is matched literally
+/// @param bLoadLibraries If TRUE, will register all scripts decorated with
+///     with @LIBRARY[].
+/// @note Scripts marked with @EVENT[...] will automatically be registered
+///     as library scripts, only use @LIBRARY[] for library scripts not
+///     associated with events.
+void RegisterPluginScripts(object oPlugin, string sPatterns, int bLoadLibraries = TRUE);
+
 /// @brief Run an event, causing all subscribed scripts to trigger.
 /// @param sEvent The name of the event
 /// @param oInit The object triggering the event (e.g, a PC OnClientEnter)
@@ -608,10 +624,71 @@ void RegisterEventScript(object oTarget, string sEvent, string sScripts, float f
     }
 }
 
-// Alias function for backward compatibility.
 void RegisterEventScripts(object oTarget, string sEvent, string sScripts, float fPriority = -1.0)
 {
     RegisterEventScript(oTarget, sEvent, sScripts, fPriority);
+}
+
+void DumpEventScripts(string sEvent, int bSearchAll = FALSE)
+{
+
+}
+
+void RegisterPluginScripts(object oPlugin, string sPatterns, int bLoadLibraries = TRUE)
+{
+    Debug("Loading plugin script libraries matching \"" + sPatterns + "\"");
+    
+    json jLibraries, jScripts;
+    if ((jLibraries = FilterByPatterns(_GetScriptsByPrefix(JSON_ARRAY, "", RESTYPE_NSS), ListToJson(sPatterns))) == JSON_ARRAY)
+    {
+        Debug("No plugin script libraries found matching \"" + sPatterns + "\"");
+        return;
+    }
+
+    string sPriorities = "first|only|last|default";
+    string sReturns    = "void|int|string|json|object|float|sqlquery|talent|effect|location|vector|cassowary|itemproperty";
+    json   jAlternates = ListToJson(sPriorities + "," + sReturns);
+    
+    string sEventRegex = SubstituteString("@EVENT\\[([ -~]*?):?(10\\.0|\\d{1}\\.\\d{1}|$1)?\\](?:.|\\r?\\n)*?(?:$2)\\s+([a-z_]\\w*)\\s*\\(", jAlternates);
+    string sLibRegex   = SubstituteString("@LIBRARY\\[\\](?:.|\\r?\\n)*?(?:$2)\\s+([a-z_]\\w*)\\s*\\(", jAlternates);
+    
+    int i; for (i; i < JsonGetLength(jLibraries); i++)
+    {
+        string sLibrary = JsonGetString(JsonArrayGet(jLibraries, i));
+        string sContent = ResManGetFileContents(sLibrary, RESTYPE_NSS);
+        if (sContent == "")
+        {
+            Debug("Unable to retrieve contents of " + sLibrary + ".nss");
+            continue;
+        }
+
+        if ((jScripts = RegExpIterate(sEventRegex, sContent)) == JSON_ARRAY)
+            Debug("No @EVENT[...] decorators found in " + sLibrary + ".nss");
+        else
+        {
+            int n; for (n; n < JsonGetLength(jScripts); n++)
+            {
+                string sIndex   = IntToString(n);
+                string sEvent   = JsonGetString(JsonPointer(jScripts, "/" + sIndex + "/1"));
+                string sScript  = JsonGetString(JsonPointer(jScripts, "/" + sIndex + "/3"));
+                float fPriority = StringToPriority(JsonGetString(JsonPointer(jScripts, "/" + sIndex + "/2")), GLOBAL_EVENT_PRIORITY);
+
+                RegisterEventScript(oPlugin, sEvent, sScript, fPriority);
+                AddLibraryScript(sLibrary, sScript);
+            }
+        }
+
+        if (bLoadLibraries)
+        {
+            if ((jScripts = RegExpIterate(sLibRegex, sContent)) == JSON_ARRAY)
+                Debug("No @LIBRARY[] decorators found in " + sLibrary + ".nss");
+            else
+            {
+                int n; for (n; n < JsonGetLength(jScripts); n++)
+                    AddLibraryScript(sLibrary, JsonGetString(JsonPointer(jScripts, "/" + IntToString(n) + "/1")));
+            }
+        }
+    }
 }
 
 // Private function. Checks oTarget for a builder-specified event hook string
