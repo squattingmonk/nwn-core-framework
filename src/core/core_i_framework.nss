@@ -304,14 +304,12 @@ void InitializeCoreFramework()
 
             if (AUTO_HOOK_OBJECT_EVENTS)
             {
-                // Once .35 is released, we can use the nObjectFilter parameter.
-                object oObject = GetFirstObjectInArea(oArea);
+                object oObject = GetFirstObjectInArea(oArea, AUTO_HOOK_OBJECT_EVENTS);
                 while (GetIsObjectValid(oObject))
                 {
-                    int nType = GetObjectType(oObject);
-                    if (AUTO_HOOK_OBJECT_EVENTS & nType && !GetLocalInt(oObject, SKIP_AUTO_HOOK))
-                        HookObjectEvents(oObject, !(AUTO_HOOK_OBJECT_HEARTBEAT_EVENT & nType));
-                    oObject = GetNextObjectInArea(oArea);
+                    if (!GetLocalInt(oObject, SKIP_AUTO_HOOK))
+                        HookObjectEvents(oObject, !(AUTO_HOOK_OBJECT_HEARTBEAT_EVENT & GetObjectType(oObject)));
+                    oObject = GetNextObjectInArea(oArea, AUTO_HOOK_OBJECT_EVENTS);
                 }
             }
 
