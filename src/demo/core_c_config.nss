@@ -65,7 +65,7 @@ int DEBUG_LOGGING = DEBUG_LOG_ALL;
 /// - DEBUG_LEVEL_WARNING: indicates unexpected behavior may occur
 /// - DEBUG_LEVEL_NOTICE: information to track the flow of functions
 /// - DEBUG_LEVEL_DEBUG: data dumps used for debugging
-const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
+const int DEFAULT_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
 
 /// This controls the level of debug messages to generate on heartbeat events.
 /// This can be used to prevent the excessive generation of debug messages that
@@ -101,6 +101,13 @@ const int PERCEPTION_DEBUG_LEVEL = DEBUG_LEVEL_ERROR;
 /// initialization is complete, module debug level will revert to
 /// DEFAULT_DEBUG_LEVEL
 const int INITIALIZATION_DEBUG_LEVEL = DEBUG_LEVEL_DEBUG;
+
+/// This is the level of debug messages to generate when the debug message will
+/// be sent to the game's logfile.  Debug messages that qualify at this
+/// debug level will be sent to the game's log, regardless of the debug level
+/// set on a specific object or DEFAULT_DEBUG_LEVEL above.  If DEBUG_LOG_FILE
+/// is not included in DEBUG_LOGGING above, this value will be ignored.
+const int LOGFILE_DEBUG_LEVEL = DEFAULT_DEBUG_LEVEL;
 
 // -----------------------------------------------------------------------------
 //                         Library and Plugin Management
