@@ -322,6 +322,7 @@ void InitializeCoreFramework()
     // Start debugging
     SetDebugLevel(INITIALIZATION_DEBUG_LEVEL, oModule);
     SetDebugLogging(DEBUG_LOGGING);
+    SetLogfileDebugLevel(LOGFILE_DEBUG_LEVEL);
     SetDebugPrefix(HexColorString("[Module]",  COLOR_CYAN), oModule);
     SetDebugPrefix(HexColorString("[Events]",  COLOR_CYAN), EVENTS);
     SetDebugPrefix(HexColorString("[Plugins]", COLOR_CYAN), PLUGINS);
