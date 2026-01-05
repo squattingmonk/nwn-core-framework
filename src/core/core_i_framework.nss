@@ -769,7 +769,7 @@ int RunEvent(string sEvent, object oInit = OBJECT_INVALID, object oSelf = OBJECT
         if (nExecuted++ && fPriority == EVENT_PRIORITY_DEFAULT)
             break;
 
-        if (IsDebugging)
+        if (IsDebugging(DEBUG_LEVEL_DEBUG))
         {
             Debug("Executing event script " + sScript + " from " +
                 GetDebugPrefix(StringToObject(sSource)) + " with a priority of " +
